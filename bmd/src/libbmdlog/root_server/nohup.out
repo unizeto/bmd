@@ -1,0 +1,924 @@
+BMDCONFIGINF Initializing bmd configuration
+bmd_db_init_log_Server_utils
+dl error: (null)
+Inicjuje db2
+bmd_db_connect2_log_server_utils
+db2_bmd_db_connect2
+db2_bmd_db_connect SQLAllocHandle
+db_name: AUDYT
+user: DB2INST1
+pass: 12345678
+>Connected to: 'AUDYT'
+db2_bmd_db_connect  return BMD_OK
+db2_bmd_db_execute_sql
+Autocommit is: ON
+Operation SQLExecDirect with sql querry: select * from events_table_behavior order by id;
+Function notes as fallows: SQLExecDirect, SQL_SUCCESS
+Function notes as fallows: SQLNumResultCols, SQL_SUCCESS
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetDBMDCONFIGINF Initializing bmd configuration
+bmd_db_init_log_Server_utils
+dl error: (null)
+Inicjuje db2
+bmd_db_connect2_log_server_utils
+db2_bmd_db_connect2
+db2_bmd_db_connect SQLAllocHandle
+db_name: UDO
+user: DB2INST1
+pass: 12345678
+>Connected to: 'UDO'
+db2_bmd_db_connect  return BMD_OK
+db2_bmd_db_execute_sql
+Autocommit is: ON
+Operation SQLExecDirect with sql querry: select * from events_table_behavior order by id;
+Function notes as fallows: SQLExecDirect, SQL_SUCCESS
+Function notes as fallows: SQLNumResultCols, SQL_SUCCESS
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_NO_DATA_FOUND
+>db2_bmd_db_result_free
+db2_bmd_db_disconnect
+>Succes disonnected from database: 
+Czytam d≈Çugo≈õƒá:
+start byte read 0 
+Czytam:
+0Çç•2014-08-20 17:34:14.525152¶25318ßP1®	service©	operation™11:4k´2014-08-20 17:34:08.867¨Ç Ç<Envelope><Body>
+    <loguj>
+  <wpis>
+    <czasZdarzenia>2014-08-12T16:29:27.042Z</czasZdarzenia>
+    <idOsoby extension="ABC" root="2.16.840.1.113883.3.4424.1"/>
+    <kodPodsystemu extension="BDE" root="2.16.840.1.113883.3.4424.12.3"/>
+    <kodUslugi/>
+    <podmiotZdarzenia>
+      <adresIP>127.0.0.1</adresIP>
+       <kodPodsystemuWolajacego extension="EFG" root="2.16.840.1.113883.3.4424.12.3"/>
+</podmiotZdarzenia>
+    <przetwarzaneDane>
+      <idObiektu>ABCDE</idObiektu>
+    </przetwarzaneDane>
+  </wpis>
+</loguj>
+  </Body></Envelope>Przeczyta≈Çem: 657
+Wysy≈Çam d≈Çugo≈õƒá: 679
+Wysy≈Çam d≈Çugo≈õƒá: 679
+Wysy≈Çam:
+0Ç£†	127.0.0.1°60619•2014-08-20 17:34:14.525152¶25318ßP1®	service©	operation™11:4k´2014-08-20 17:34:08.867¨Ç Ç<Envelope><Body>
+    <loguj>
+  <wpis>
+    <czasZdarzenia>2014-08-12T16:29:27.042Z</czasZdarzenia>
+    <idOsoby extension="ABC" root="2.16.840.1.113883.3.4424.1"/>
+    <kodPodsystemu extension="BDE" root="2.16.840.1.113883.3.4424.12.3"/>
+    <kodUslugi/>
+    <podmiotZdarzenia>
+      <adresIP>127.0.0.1</adresIP>
+       <kodPodsystemuWolajacego extension="EFG" root="2.16.840.1.113883.3.4424.12.3"/>
+</podmiotZdarzenia>
+    <przetwarzaneDane>
+      <idObiektu>ABCDE</idObiektu>
+    </przetwarzaneDane>
+  </wpis>
+</loguj>
+  </Body></Envelope>Wys≈Ça≈Çem: 679
+ata, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_NO_DATA_FOUND
+>db2_bmd_db_result_free
+db2_bmd_db_disconnect
+>Succes disonnected from database: 
+Czytam d≈Çugo≈õƒá:
+start byte read 0 
+Czytam:
+0ÇË•2014-08-20 17:40:53.612921¶25346ßP1®	service©	operation™11:4k´2014-08-20 17:40:51.832¨Ç{Çw<Envelope><Body>
+    <loguj><wpis><czasZdarzenia>2014-08-20T15:37:13.069Z</czasZdarzenia><daneZdarzenia><kategoriaZdarzenia>zadaniePrzychodzace</kategoriaZdarzenia><kodyBledow>004</kodyBledow><nazwaZdarzenia/><statusPrzetwarzania>udane</statusPrzetwarzania></daneZdarzenia><idSystemuLogujacego root="2.16.840.1.113883.3.4424.12"/><kodPodsystemu extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/><kodUslugi/><krytycznoscWpisu>INFO</krytycznoscWpisu><podmiotZdarzenia><adresIP>133.50.32.1</adresIP><kodPodsystemuWolajacego extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/></podmiotZdarzenia></wpis></loguj></Body></Envelope>Przeczyta≈Çem: 748
+Wysy≈Çam d≈Çugo≈õƒá: 770
+Wysy≈Çam d≈Çugo≈õƒá: 770
+Wysy≈Çam:
+0Ç˛†	127.0.0.1°41288•2014-08-20 17:40:53.612921¶25346ßP1®	service©	operation™11:4k´2014-08-20 17:40:51.832¨Ç{Çw<Envelope><Body>
+    <loguj><wpis><czasZdarzenia>2014-08-20T15:37:13.069Z</czasZdarzenia><daneZdarzenia><kategoriaZdarzenia>zadaniePrzychodzace</kategoriaZdarzenia><kodyBledow>004</kodyBledow><nazwaZdarzenia/><statusPrzetwarzania>udane</statusPrzetwarzania></daneZdarzenia><idSystemuLogujacego root="2.16.840.1.113883.3.4424.12"/><kodPodsystemu extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/><kodUslugi/><krytycznoscWpisu>INFO</krytycznoscWpisu><podmiotZdarzenia><adresIP>133.50.32.1</adresIP><kodPodsystemuWolajacego extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/></podmiotZdarzenia></wpis></loguj></Body></Envelope>Wys≈Ça≈Çem: 770
+ata, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_SUCCESS
+Function notes as fallows: SQLGetStmtAttr, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+Function notes as fallows: SQLGetData, SQL_SUCCESS
+db2_bmd_db_row_struct_free
+db2_bmd_db_result_get_row
+Function notes as fallows: SQLFetch, SQL_NO_DATA_FOUND
+>db2_bmd_db_result_free
+db2_bmd_db_disconnect
+>Succes disonnected from database: 
+Czytam d≈Çugo≈õƒá:
+start byte read 0 
+Czytam:
+0Ç•2014-08-22 12:07:57.714315¶8772ßP1®	service©	operation™11:4k´2014-08-22 12:07:57.485¨ÇüÇõ<Envelope><Body>
+    <loguj><wpis><czasZdarzenia>2014-08-20T15:37:13.069Z</czasZdarzenia><daneZdarzenia><kategoriaZdarzenia>zadaniePrzychodzace</kategoriaZdarzenia><kodyBledow>004</kodyBledow><nazwaZdarzenia/><statusPrzetwarzania>udane</statusPrzetwarzania></daneZdarzenia><idSystemuLogujacego root="2.16.840.1.113883.3.4424.12"/><kodPodsystemu extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/><kodUslugi/><krytycznoscWpisu>INFO</krytycznoscWpisu><podmiotZdarzenia><adresIP>133.50.32.1</adresIP><kodPodsystemuWolajacego extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/></podmiotZdarzenia><przetwarzaneDane><idDokumentu extension="CDE" root="5.32.123.5.3333.1.2.333"/><idObiektu>033xE</idObiektu><numerSygnaturyKontrolnej>94xFE03</numerSygnaturyKontrolnej><opisZakresuDanych>Jaki&#347; opis</opisZakresuDanych><rodzajDanych>input</rodzajDanych></przetwarzaneDane><przetwarzaneDane><idDokumentu extension="DEF" root="5.32.123.5.3333.1.2.336"/><idObiektu>021xC</idObiektu><numerSygnaturyKontrolnej>9t5x33</numerSygnaturyKontrolnej><opisZakresuDanych>Jaki&#347; opis2</opisZakresuDanych><rodzajDanych>input</rodzajDanych></przetwarzaneDane></wpis></loguj></Body></Envelope>Przeczyta≈Çem: 1295
+Wysy≈Çam d≈Çugo≈õƒá: 1317
+Wysy≈Çam d≈Çugo≈õƒá: 1317
+Wysy≈Çam:
+0Ç!†	127.0.0.1°41554•2014-08-22 12:07:57.714315¶8772ßP1®	service©	operation™11:4k´2014-08-22 12:07:57.485¨ÇüÇõ<Envelope><Body>
+    <loguj><wpis><czasZdarzenia>2014-08-20T15:37:13.069Z</czasZdarzenia><daneZdarzenia><kategoriaZdarzenia>zadaniePrzychodzace</kategoriaZdarzenia><kodyBledow>004</kodyBledow><nazwaZdarzenia/><statusPrzetwarzania>udane</statusPrzetwarzania></daneZdarzenia><idSystemuLogujacego root="2.16.840.1.113883.3.4424.12"/><kodPodsystemu extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/><kodUslugi/><krytycznoscWpisu>INFO</krytycznoscWpisu><podmiotZdarzenia><adresIP>133.50.32.1</adresIP><kodPodsystemuWolajacego extension="ABC" root="2.16.840.1.113883.3.4424.12.3"/></podmiotZdarzenia><przetwarzaneDane><idDokumentu extension="CDE" root="5.32.123.5.3333.1.2.333"/><idObiektu>033xE</idObiektu><numerSygnaturyKontrolnej>94xFE03</numerSygnaturyKontrolnej><opisZakresuDanych>Jaki&#347; opis</opisZakresuDanych><rodzajDanych>input</rodzajDanych></przetwarzaneDane><przetwarzaneDane><idDokumentu extension="DEF" root="5.32.123.5.3333.1.2.336"/><idObiektu>021xC</idObiektu><numerSygnaturyKontrolnej>9t5x33</numerSygnaturyKontrolnej><opisZakresuDanych>Jaki&#347; opis2</opisZakresuDanych><rodzajDanych>input</rodzajDanych></przetwarzaneDane></wpis></loguj></Body></Envelope>Wys≈Ça≈Çem: 1317
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty
+[===>]Plik [log_server_utils.c] Linia [943] Funkcja [LogSendLoop]:
+EC: -9001002
+LP: empty
+AD: Zapis logu zako≈Ñczony niepowodzeniem
+AS: empty

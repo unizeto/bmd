@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AWIZO>
+    <DOCUMENT>
+	<TITLE>Awizo</TITLE>
+	<RECIPIENT_EMAIL>wlodzimierz.szczygiel@unizeto.pl</RECIPIENT_EMAIL>
+<!--	<RECIPIENT_EMAIL>wojciech.niwinski@unizeto.pl</RECIPIENT_EMAIL> -->
+<!--	<RECIPIENT_SMS>694596782</RECIPIENT_SMS>-->
+	<SENDER>system</SENDER>
+        <TEMPLATENAME>Rejestracja Biura</TEMPLATENAME>
+        <TEMPLATEVERSION>1.0</TEMPLATEVERSION>
+        <LANGUAGE>PL</LANGUAGE>
+        <ATTACHMENTS> 
+<!--	<ATTACH type="bmd" name="test.c" group="1" source="BMD1">6</ATTACH>-->
+<!--	<ATTACH type="url" name="polecenie_zapłaty.pdf">http://127.0.0.1/test/druk.pdf</ATTACH>-->
+        </ATTACHMENTS>
+<!--
+    	<METADATA source_type="bmd">
+		<SOURCE>BMD1</SOURCE>
+		<GROUP_ID>1</GROUP_ID>
+		<FILE_ID>40</FILE_ID>
+    	</METADATA>
+-->
+	<METADATA source_type="inline">
+	    <NUMER_FAKTURY>F/1123123/02/10</NUMER_FAKTURY>
+	    <DATA_WYSTAWIENIA>2010-02-03</DATA_WYSTAWIENIA>
+	    <DATA_PLATNOSCI>2010-02-17</DATA_PLATNOSCI>
+	    <KWOTA_PLATNOSCI>78,00</KWOTA_PLATNOSCI>
+	    <FORMA_PLATNOSCI>przelew</FORMA_PLATNOSCI>
+	</METADATA>
+    </DOCUMENT>
+</AWIZO>

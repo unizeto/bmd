@@ -1,0 +1,119 @@
+# Attribute Certificate Authority configuration file
+# Copyright:	Unizeto Technologies SA
+# Author:	Marcin Szulga
+# Version:	2.0.3 (2006-10-12)
+
+########################################
+# ATTRIBUTE CERTIFICATE SECTION        #
+########################################
+[version]
+# wersja certyfikatu - nie zmieniac!
+#
+ac_version = "1"
+
+[holder]
+# zrodlo danych dot wlasciciela AC
+# "PKC" - nazwa wlasciciela jest kopiowana z jego certyfikatu klucza publicznego
+#
+ac_holder_source = "PKC"
+
+[issuer]
+# dane dotyczace wystawcy certyfikatow atrybutów
+# TODO - usunac opcje issuer_dns_name jako obsolete
+#
+issuer_dns_name = "issuer.ac.unizeto.pl"
+issuer_dn_C = "PL"
+issuer_dn_ST = "Zachodniopomorskie"
+issuer_dn_O = "Unizeto Technologies SA"
+issuer_dn_OU = "Attribute Authority"
+
+[signature]
+# algorytm skrotu i podpisu
+# "faked" - wartosc podpisu to 128 bajtow 0xFF
+# "SHA1withRSA" - funkcja skrotu SHA1, podpis RSA
+# plik z kluczem prywatnym umieszczony w "privatekey_filename"
+# haslo do koperty chroniacej klucz w "privatekey_password"
+#
+# signature_algorithm = "SHA1withRSA"
+signature_algorithm = "faked"
+privatekey_filename = "./conf/privkey.pem"
+privatekey_password = "1234"
+
+[serial_number]
+serial_number_filename = "./conf/aa.serial"
+
+[ac_validity_period]
+# rodzaj ważności certyfikatu atrybutów
+# "session" - certyfikat ważny podczas pojedynczej sesji (jednorazowy)
+# "period" - certyfikat ważny przez wskazany ponizej okres czasu
+# validity_* - czas waznosci certyfikatu atrybutow, dla certyfikatow 
+# sesyjnych czas wygenerowania rowny jest czasowi wygasniecia
+#
+ac_lifetime = "session"
+validity_period_years = "1"
+validity_period_months = "1"
+validity_period_days = "1"
+validity_period_hours = "1"
+validity_period_minutes = "1"
+validity_period_seconds = "1"
+
+########################################
+# Attributes configuration
+#
+[attribute_role]
+# oid atrybutu rola i dane role authority
+#
+att_role_oid = "2.5.4.72"
+att_role_authority_dn_C = "PL"
+att_role_authority_dn_ST = "Zachodniopomorskie"
+att_role_authority_dn_O = "Unizeto Technologies SA"
+att_role_authority_dn_OU = "Role Authority"
+
+[attribute_group]
+# oid atrybutu grupa i dane policy authority
+#
+att_group_oid = "1.3.6.1.5.5.7.10.4"
+att_group_policy_authority_dn_C = "PL"
+att_group_policy_authority_dn_ST = "Zachodniopomorskie"
+att_group_policy_authority_dn_O = "Unizeto Technologies SA"
+att_group_policy_authority_dn_OU = "Policy Authority"
+
+[attribute_clearance]
+# oid atrybutu clearance i oid polityki bezpieczenstwa
+#
+att_clearance_oid = "2.5.1.5.55"
+att_clearance_policy_oid = "1.2.3.4.5.6"
+
+[attribute_unizeto]
+# oid atrybutu unizeto i dane policy authority
+#
+att_unizeto_oid = "1.2.3.4.5.6.7.8.9"
+att_unizeto_policy_authority_dn_C = "PL"
+att_unizeto_policy_authority_dn_ST = "Zachodniopomorskie"
+att_unizeto_policy_authority_dn_O = "Unizeto Technologies SA"
+att_unizeto_policy_authority_dn_OU = "Policy Authority"
+
+########################################
+# Extensions configuration
+#
+[extensions]
+
+
+########################################
+# ATTRIBUTE AUTHORITY SERVER SECTION   #
+########################################
+[data_source]
+# zrodla danych z atrybutami i ich konfiguracja
+# "plaintext" - plik tekstowy (attributes.db)
+# "database" - baza danych
+# obecnie opcja database_type moze przybierac tylko wartosc
+# "postgresql"
+plaintext_source_enabled	= "yes"
+plaintext_filename		= "./conf/attributes.db"
+database_source_enabled		= "no"
+database_type			= "postgresql"
+database_connection_string	= "hostaddr=127.0.0.1 port=5432 dbname=aa user=aa password=12345678"
+
+
+
+

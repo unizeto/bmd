@@ -1,0 +1,3 @@
+libbmdpkcs11_la-libbmdpkcs11.lo: libbmdpkcs11.c ../../src/config.h
+
+../../src/config.h:

@@ -1,0 +1,328 @@
+--!! by WSZ
+--!! rfc 3125: modul z aneksu A-1 (modul ma pierwszenstwo nad modulem z aneksu A-2 ("jest silniejszy") )
+
+ETS-ElectronicSignaturePolicies-88syntax { iso(1) member-body(2)
+           us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-mod(0) 7}
+
+DEFINITIONS EXPLICIT TAGS ::=
+BEGIN
+-- EXPORTS All
+
+IMPORTS
+
+-- Internet X.509 Public Key Infrastructure
+-- Certificate and CRL Profile: RFC 2560
+        Certificate, AlgorithmIdentifier, CertificateList, Name,
+        DirectoryString,Attribute,
+        AttributeTypeAndValue, AttributeType, AttributeValue,
+	PolicyInformation --, BmpString, Utf8String
+
+  FROM PKIX1Explicit88
+        {iso(1) identified-organization(3) dod(6) internet(1)
+        security(5) mechanisms(5) pkix(7) id-mod(0)
+        id-pkix1-explicit-88(18)}
+--!! zmienione przez WSZ: wartosc socketu id-pkix1-explicit-88 zmieniona z 1 na 18 (na nowsze rfc)
+
+--!! zmienione przez WSZ: w nowszych rfc definicje GeneralNames i GeneralName znajduja sie w module *Implicit*
+--!! dlatego ponizej dostawiam import tego modulu zamiast importu z modulu Explicit
+
+	GeneralNames, GeneralName,
+	--!! w ramach eliminacji konfliktow dorzucam import definicji ponizszych pol
+	CertPolicyId, NameConstraints, GeneralSubtrees, GeneralSubtree, BaseDistance,
+	PolicyConstraints, SkipCerts
+	FROM
+		PKIX1Implicit88 { iso(1) identified-organization(3) dod(6) internet(1)
+		security(5) mechanisms(5) pkix(7) id-mod(0) id-pkix1-implicit(19) }
+	;
+
+
+-- Signature Policy Specification
+-- ==============================
+
+SignaturePolicy ::= SEQUENCE {
+        signPolicyHashAlg      AlgorithmIdentifier,
+        signPolicyInfo         SignPolicyInfo,
+        signPolicyHash         SignPolicyHash     OPTIONAL }
+
+SignPolicyHash ::= OCTET STRING
+
+SignPolicyInfo ::= SEQUENCE {
+        signPolicyIdentifier            SignPolicyId,
+        dateOfIssue                     GeneralizedTime,
+        policyIssuerName                PolicyIssuerName,
+        fieldOfApplication              FieldOfApplication,
+        signatureValidationPolicy       SignatureValidationPolicy,
+        signPolExtensions               SignPolExtensions
+                                              OPTIONAL
+                                                      }
+--!! poprawione przez WSZ : panowie od rfc tradycyjnie zapomnieli o jakiejs definicji w module asn1
+--!! w tym przypadku o definicji SignPolicyId, tak wiec dostawiam
+
+SignPolicyId ::= OBJECT IDENTIFIER
+
+PolicyIssuerName ::= GeneralNames
+
+FieldOfApplication ::= DirectoryString
+
+SignatureValidationPolicy ::= SEQUENCE {
+        signingPeriod          SigningPeriod,
+        commonRules            CommonRules,
+        commitmentRules        CommitmentRules,
+        signPolExtensions       SignPolExtensions
+                                        OPTIONAL
+                                                }
+
+SigningPeriod ::= SEQUENCE {
+        notBefore       GeneralizedTime,
+        notAfter        GeneralizedTime OPTIONAL }
+
+
+CommonRules  ::= SEQUENCE {
+        signerAndVeriferRules          [0]  SignerAndVerifierRules
+                                                          OPTIONAL,
+        signingCertTrustCondition      [1]  SigningCertTrustCondition
+                                                          OPTIONAL,
+        timeStampTrustCondition        [2]  TimestampTrustCondition
+                                                        OPTIONAL,
+        attributeTrustCondition        [3]  AttributeTrustCondition
+                                                        OPTIONAL,
+        algorithmConstraintSet         [4]  AlgorithmConstraintSet
+                                                         OPTIONAL,
+        signPolExtensions              [5]  SignPolExtensions
+                                                         OPTIONAL
+                                                                 }
+
+CommitmentRules ::= SEQUENCE OF CommitmentRule
+
+CommitmentRule  ::= SEQUENCE {
+        selCommitmentTypes                  SelectedCommitmentTypes,
+        signerAndVeriferRules          [0]  SignerAndVerifierRules
+                                                           OPTIONAL,
+        signingCertTrustCondition      [1]  SigningCertTrustCondition
+                                                           OPTIONAL,
+        timeStampTrustCondition        [2]  TimestampTrustCondition
+                                                           OPTIONAL,
+
+
+
+        attributeTrustCondition        [3]  AttributeTrustCondition
+                                                           OPTIONAL,
+        algorithmConstraintSet         [4]  AlgorithmConstraintSet
+                                                           OPTIONAL,
+        signPolExtensions              [5]  SignPolExtensions
+                                                            OPTIONAL
+                                                                  }
+SelectedCommitmentTypes ::= SEQUENCE OF CHOICE {
+        empty                        NULL,
+        recognizedCommitmentType     CommitmentType }
+
+CommitmentType ::= SEQUENCE {
+        identifier                      CommitmentTypeIdentifier,
+        fieldOfApplication      [0] FieldOfApplication OPTIONAL,
+        semantics                       [1] DirectoryString OPTIONAL }
+
+--!! dodane przez WSZ
+--!! w module asn1 w rfc brakuje definicji CommitmentTypeIdentifier, ktora dostawiam ponizej
+
+CommitmentTypeIdentifier ::= OBJECT IDENTIFIER
+
+
+
+SignerAndVerifierRules ::= SEQUENCE {
+        signerRules      SignerRules,
+        verifierRules    VerifierRules }
+
+
+SignerRules ::= SEQUENCE {
+        externalSignedData         BOOLEAN      OPTIONAL,
+                     -- True if signed data is external to CMS structure
+                      -- False if signed data part of CMS structure
+                      -- not present if either allowed
+        mandatedSignedAttr         CMSAttrs,
+                      -- Mandated CMS signed attributes
+        mandatedUnsignedAttr       CMSAttrs,
+                      -- Mandated CMS unsigned attributed
+        mandatedCertificateRef     [0] CertRefReq DEFAULT signerOnly,
+                      -- Mandated Certificate Reference
+        mandatedCertificateInfo    [1] CertInfoReq DEFAULT none,
+                      -- Mandated Certificate Info
+        signPolExtensions                [2] SignPolExtensions
+                                                OPTIONAL}
+
+CMSAttrs ::= SEQUENCE OF OBJECT IDENTIFIER
+
+CertRefReq ::= ENUMERATED {
+                                signerOnly (1),
+-- Only reference to signer cert mandated
+                                fullPath (2)
+-- References for full cert path up to a trust point required
+
+                                                  }
+
+CertInfoReq ::= ENUMERATED {
+
+
+
+                                none (0),
+-- No mandatory requirements
+                                signerOnly (1),
+-- Only reference to signer cert mandated
+                                fullPath (2)
+-- References for full cert path up to a trust point mandated
+                                                  }
+
+VerifierRules ::= SEQUENCE {
+                mandatedUnsignedAttr    MandatedUnsignedAttr,
+                signPolExtensions       SignPolExtensions   OPTIONAL
+                                                  }
+
+MandatedUnsignedAttr ::=  CMSAttrs
+-- Mandated CMS unsigned attributed
+
+CertificateTrustTrees ::=   SEQUENCE OF CertificateTrustPoint
+
+CertificateTrustPoint ::= SEQUENCE {
+        trustpoint                              Certificate,
+                            -- self-signed certificate
+        pathLenConstraint       [0] PathLenConstraint   OPTIONAL,
+        acceptablePolicySet     [1] AcceptablePolicySet OPTIONAL,
+                            -- If not present "any policy"
+        nameConstraints         [2] NameConstraints     OPTIONAL,
+        policyConstraints       [3] PolicyConstraints   OPTIONAL }
+
+PathLenConstraint    ::=   INTEGER (0..MAX)
+
+AcceptablePolicySet ::= SEQUENCE OF CertPolicyId
+
+--!! eliminacja konfliktu poprzez import
+--!!CertPolicyId ::= OBJECT IDENTIFIER
+
+
+--!! eliminacja konfliktu poprzez import
+
+--!!NameConstraints ::= SEQUENCE {
+--!!           permittedSubtrees       [0]     GeneralSubtrees OPTIONAL,
+--!!           excludedSubtrees        [1]     GeneralSubtrees OPTIONAL }
+
+--!! eliminacja konfliktu poprzez import
+--!!      GeneralSubtrees ::= SEQUENCE SIZE (1..MAX) OF GeneralSubtree
+
+--!! eliminacja konfliktu poprzez import
+--!!      GeneralSubtree ::= SEQUENCE {
+--!!           base                    GeneralName,
+--!!           minimum         [0]     BaseDistance DEFAULT 0,
+--!!           maximum         [1]     BaseDistance OPTIONAL }
+
+--!! eliminacja konfliktu poprzez import
+--!!      BaseDistance ::= INTEGER (0..MAX)
+
+--!! eliminacja konfliktu poprzez import
+--!!PolicyConstraints ::= SEQUENCE {
+--!!        requireExplicitPolicy           [0] SkipCerts OPTIONAL,
+--!!        inhibitPolicyMapping            [1] SkipCerts OPTIONAL }
+
+--!! eliminacja konfliktu poprzez import
+--!!SkipCerts ::= INTEGER (0..MAX)
+
+CertRevReq ::= SEQUENCE {
+        endCertRevReq   RevReq,
+        caCerts   [0] RevReq
+                             }
+
+RevReq ::= SEQUENCE  {
+    enuRevReq  EnuRevReq,
+    exRevReq    SignPolExtensions OPTIONAL}
+
+EnuRevReq  ::= ENUMERATED {
+        clrCheck        (0), --Checks must be made against current CRLs
+        -- (or authority revocation lists)
+        ocspCheck       (1), -- The revocation status must be checked
+        -- using the Online Certificate Status Protocol (RFC 2450)
+        bothCheck       (2),
+      -- Both CRL and OCSP checks must be carried out
+        eitherCheck     (3),
+      -- At least one of CRL or OCSP checks must be carried out
+        noCheck         (4),
+      -- no check is mandated
+        other           (5)
+      -- Other mechanism as defined by signature policy extension
+                                                }
+
+SigningCertTrustCondition ::=   SEQUENCE {
+     signerTrustTrees              CertificateTrustTrees,
+     signerRevReq                  CertRevReq
+                                               }
+
+TimestampTrustCondition ::= SEQUENCE {
+    ttsCertificateTrustTrees    [0]             CertificateTrustTrees
+                                                        OPTIONAL,
+    ttsRevReq                   [1]             CertRevReq
+                                                        OPTIONAL,
+    ttsNameConstraints          [2]             NameConstraints
+                                                        OPTIONAL,
+    cautionPeriod               [3]             DeltaTime
+                                                        OPTIONAL,
+    signatureTimestampDelay     [4]             DeltaTime
+                                                       OPTIONAL }
+
+DeltaTime ::= SEQUENCE {
+        deltaSeconds    INTEGER,
+        deltaMinutes    INTEGER,
+        deltaHours      INTEGER,
+        deltaDays       INTEGER }
+
+AttributeTrustCondition ::= SEQUENCE {
+        attributeMandated            BOOLEAN,
+                                -- Attribute must be present
+        howCertAttribute             HowCertAttribute,
+        attrCertificateTrustTrees   [0] CertificateTrustTrees OPTIONAL,
+        attrRevReq                  [1] CertRevReq            OPTIONAL,
+        attributeConstraints        [2] AttributeConstraints  OPTIONAL }
+
+HowCertAttribute ::= ENUMERATED {
+        claimedAttribute    (0),
+        certifiedAttribtes  (1),
+        either              (2) }
+
+AttributeConstraints ::= SEQUENCE {
+        attributeTypeConstarints        [0] AttributeTypeConstraints
+                                                        OPTIONAL,
+        attributeValueConstarints       [1] AttributeValueConstraints
+                                                       OPTIONAL }
+
+
+AttributeTypeConstraints ::= SEQUENCE OF AttributeType
+
+AttributeValueConstraints ::= SEQUENCE OF AttributeTypeAndValue
+
+
+AlgorithmConstraintSet ::= SEQUENCE {   -- Algorithm constrains on:
+signerAlgorithmConstraints      [0]     AlgorithmConstraints OPTIONAL,
+                                 -- signer
+eeCertAlgorithmConstraints      [1]     AlgorithmConstraints OPTIONAL,
+                                 -- issuer of end entity certs.
+caCertAlgorithmConstraints      [2]     AlgorithmConstraints OPTIONAL,
+                                 -- issuer of CA certificates
+aaCertAlgorithmConstraints      [3]     AlgorithmConstraints OPTIONAL,
+                                 -- Attribute Authority
+tsaCertAlgorithmConstraints     [4]     AlgorithmConstraints OPTIONAL
+                                 -- Time-Stamping Authority
+                                                    }
+
+AlgorithmConstraints ::= SEQUENCE OF AlgAndLength
+
+AlgAndLength ::= SEQUENCE {
+        algID                   OBJECT IDENTIFIER,
+        minKeyLength    INTEGER         OPTIONAL,
+                             -- Minimum key length in bits 
+        other  SignPolExtensions OPTIONAL
+                 }
+
+SignPolExtensions ::= SEQUENCE OF SignPolExtn
+
+SignPolExtn ::= SEQUENCE {
+        extnID      OBJECT IDENTIFIER,
+                extnValue   OCTET STRING  }
+
+
+END -- ETS-ElectronicSignaturePolicies-88syntax --

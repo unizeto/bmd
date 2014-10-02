@@ -1,0 +1,315 @@
+PKCS-15 {iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-15(15) modules(1) pkcs-15(1)} 
+
+-- wykonane zmiany w pliku pkcs15_ms_changes.txt
+
+DEFINITIONS IMPLICIT TAGS ::=
+
+BEGIN
+
+IMPORTS
+	Attribute,AlgorithmIdentifier,Certificate,CertificateSerialNumber,
+	Name,OOBCertHash,RSAPublicKey,SubjectPublicKeyInfo,
+	PBKDF2-params,PKCS15Salt
+		FROM PKIX1Explicit88
+		
+	CertId,GeneralNames, KeyUsage
+        FROM PKIX1Implicit88
+
+	RecipientInfos, RecipientInfo, OriginatorInfo
+		FROM CryptographicMessageSyntax;
+
+	-- Constants
+
+	pkcs15-ub-identifier          INTEGER ::= 255
+	pkcs15-ub-reference           INTEGER ::= 255
+	pkcs15-ub-index               INTEGER ::= 65535
+	pkcs15-ub-label               INTEGER ::= pkcs15-ub-identifier
+	pkcs15-lb-minPinLength        INTEGER ::= 4
+	pkcs15-ub-minPinLength        INTEGER ::= 8
+	pkcs15-ub-storedPinLength     INTEGER ::= 64
+	pkcs15-ub-recordLength        INTEGER ::= 16383
+	pkcs15-ub-userConsent         INTEGER ::= 15
+	pkcs15-ub-securityConditions  INTEGER ::= 255
+	pkcs15-ub-seInfo              INTEGER ::= 255
+	
+	-- Object Identifiers
+	ds ID ::= {joint-iso-itu-t ds(5)}
+	module ID ::= {ds  1}
+	informationFramework ID ::= {module informationFramework(1) 3}
+	authenticationFramework ID ::= {module authenticationFramework(7) 3}
+	certificateExtensions ID ::= {module certificateExtensions(26) 0}
+	rsadsi OBJECT IDENTIFIER ::= {iso(1) member-body(2) us(840) 113549}
+	pkcs OBJECT IDENTIFIER ::= {rsadsi 1}
+	pkcs-5 OBJECT IDENTIFIER ::= {pkcs 5}
+	id-PBKDF2 OBJECT IDENTIFIER ::= {pkcs-5 12}
+	digestAlgorithm OBJECT IDENTIFIER     ::= {rsadsi 2}
+	id-hmacWithSHA1 OBJECT IDENTIFIER ::= {digestAlgorithm 7}
+
+	pkcs15 OBJECT IDENTIFIER ::= { iso(1) member-body(2) us(840)
+                               rsadsi(113549) pkcs(1) pkcs-15(15)}
+	pkcs15-mo OBJECT IDENTIFIER ::= {pkcs15 1} -- Modules branch
+	pkcs15-at OBJECT IDENTIFIER ::= {pkcs15 2} -- Attribute branch
+	pkcs15-ct OBJECT IDENTIFIER ::= {pkcs15 3} -- Content type branch
+
+	-- Content Types
+	pkcs15-ct-PKCS15Token OBJECT IDENTIFIER ::= {pkcs15-ct 1}
+
+	-- Basic types
+
+	PKCS15Identifier ::= OCTET STRING (SIZE (0..pkcs15-ub-identifier))
+
+	PKCS15Reference ::= INTEGER (0..pkcs15-ub-reference)
+
+	PKCS15Label ::= UTF8String (SIZE(0..pkcs15-ub-label))
+
+	PKCS15CredentialIdentifier ::= SEQUENCE {
+		idType INTEGER,
+		idValue ANY DEFINED BY idType
+	}
+	
+	PKCS15ReferencedValue ::= CHOICE {
+		path	PKCS15Path,
+		url		PKCS15URL
+	} 
+
+	PKCS15urlWithDigest ::= SEQUENCE {
+		url	IA5String,
+		digest	PKCS15DigestInfoWithDefault	
+	}
+	
+	PKCS15URL ::= CHOICE {
+		url		PrintableString,
+		urlWithDigest [3] PKCS15urlWithDigest
+	}
+
+	PKCS15DigestInfoWithDefault ::= SEQUENCE {
+		digestAlg	AlgorithmIdentifier,
+		digest	OCTET STRING (SIZE(8..128))
+	}
+
+	PKCS15Path ::= SEQUENCE {
+		path 	OCTET STRING,
+		index  	INTEGER (0..pkcs15-ub-index) OPTIONAL,
+		length 	[0] INTEGER (0..pkcs15-ub-index) OPTIONAL
+    }
+	
+	PKCS15CommonObjectAttributes ::= SEQUENCE {
+		label		PKCS15Label OPTIONAL,
+		flags  		PKCS15CommonObjectFlags OPTIONAL,
+		authId 		PKCS15Identifier OPTIONAL,
+		userConsent 	INTEGER (1..pkcs15-ub-userConsent) OPTIONAL,
+		accessControlRules	SEQUENCE SIZE (1..MAX) OF PKCS15AccessControlRule OPTIONAL
+	}
+
+	PKCS15CommonObjectFlags ::= BIT STRING {
+		private	(0),
+		modifiable 	(1)
+	}
+	
+	PKCS15AccessControlRule ::= SEQUENCE {
+		accessMode		PKCS15AccessMode,
+		securityCondition 	PKCS15SecurityCondition
+	}
+
+	PKCS15AccessMode ::= BIT STRING {
+		read	(0),
+		update	(1),
+		execute	(2)
+	}
+
+	PKCS15SecurityCondition ::= CHOICE {
+		authId	PKCS15Identifier,
+		not    	[0] PKCS15SecurityCondition,
+		and    	[1] SEQUENCE SIZE (2..pkcs15-ub-securityConditions) OF PKCS15SecurityCondition, 
+		or     	[2] SEQUENCE SIZE (2..pkcs15-ub-securityConditions) OF PKCS15SecurityCondition
+	}
+	
+	PKCS15CommonKeyAttributes ::= SEQUENCE {
+		iD 		 PKCS15Identifier,
+		usage 	 PKCS15KeyUsageFlags,
+		native	 BOOLEAN DEFAULT TRUE,
+		accessFlags	 PKCS15KeyAccessFlags OPTIONAL,
+		keyReference PKCS15Reference OPTIONAL,
+		startDate 	 GeneralizedTime OPTIONAL,
+		endDate  	 [0] GeneralizedTime OPTIONAL
+	}
+
+	PKCS15KeyUsageFlags ::= BIT STRING {
+		encrypt 		(0),
+		decrypt 		(1),
+		sign 			(2),
+		signRecover 	(3),
+		wrap 			(4),
+		unwrap 			(5),
+		verify 			(6),
+		verifyRecover  	(7),
+		derive 			(8),
+		nonRepudiation	(9)
+	}
+
+	PKCS15KeyAccessFlags ::= BIT STRING {
+		sensitive  		 (0),
+		extractable 	 (1),
+		alwaysSensitive  (2),
+		neverExtractable (3),
+		local			 (4)
+	}
+
+	PKCS15CommonPrivateKeyAttributes ::= SEQUENCE {
+		subjectName	Name OPTIONAL,
+		keyIdentifiers 	[0] SEQUENCE OF PKCS15CredentialIdentifier OPTIONAL
+	}
+	
+	PKCS15CommonCertificateAttributes ::= SEQUENCE {
+		iD 		PKCS15Identifier, 
+		authority	BOOLEAN DEFAULT FALSE,
+		identifier 	PKCS15CredentialIdentifier OPTIONAL,
+		certHash	[0] OOBCertHash OPTIONAL,
+		trustedUsage [1] PKCS15Usage OPTIONAL,
+		identifiers	[2] SEQUENCE OF PKCS15CredentialIdentifier OPTIONAL, 
+		implicitTrust [3] BOOLEAN DEFAULT FALSE,
+		startDate 	 GeneralizedTime OPTIONAL,
+		endDate  	 [4] GeneralizedTime OPTIONAL
+	}
+
+	PKCS15Usage ::= SEQUENCE {
+		keyUsage	KeyUsage OPTIONAL,
+		extKeyUsage	SEQUENCE SIZE (1..MAX) OF OBJECT IDENTIFIER OPTIONAL
+		}
+	
+	PKCS15Objects ::= CHOICE {
+		privateKeys 	[0] PKCS15PrivateKeys,
+		certificates	[4] PKCS15Certificates
+	}
+
+	PKCS15PrivateRSAKeyObject ::= SEQUENCE {
+		commonObjectAttributes PKCS15CommonObjectAttributes,
+		classAttributes PKCS15CommonKeyAttributes,
+		subClassAttributes [0] PKCS15CommonPrivateKeyAttributes OPTIONAL,
+		typeAttributes [1] PKCS15PrivateRSAKeyAttributes
+	}
+	
+	PKCS15PrivateKeyType ::= CHOICE {
+		privateRSAKey PKCS15PrivateRSAKeyObject
+	}
+	
+	PKCS15PrivateKeys ::= CHOICE {
+		path PKCS15Path,
+		objects [0] SEQUENCE OF PKCS15PrivateKeyType,
+		indirect-protected [1] PKCS15ReferencedValue,
+		direct-protected [2] PKCS15EnvelopedData
+	}
+
+	PKCS15RSAParamsAndOps ::= SEQUENCE {
+			parameters NULL,
+			supportedOperations PKCS15PublicKeyOperations OPTIONAL
+	}
+	
+	PKCS15RSAPrivateKeyInfo ::= CHOICE {
+		reference PKCS15Reference,
+		paramsAndOps PKCS15RSAParamsAndOps
+	}
+	
+	PKCS15RSAPrivateKeyObjectValue ::= SEQUENCE {
+		direct-protected [2] PKCS15EnvelopedData,
+		modulusLength 	INTEGER
+	}
+	
+	PKCS15PrivateRSAKeyAttributes ::= SEQUENCE {
+		value 			PKCS15RSAPrivateKeyObjectValue,
+		keyInfo  		PKCS15RSAPrivateKeyInfo OPTIONAL
+	}
+
+	PKCS15RSAPrivateKeyObject ::= SEQUENCE {
+		modulus 		[0] INTEGER OPTIONAL, -- n
+		publicExponent 	[1] INTEGER OPTIONAL, -- e
+		privateExponent [2] INTEGER OPTIONAL, -- d
+		prime1 			[3] INTEGER OPTIONAL, -- p
+		prime2 			[4] INTEGER OPTIONAL, -- q
+		exponent1  		[5] INTEGER OPTIONAL, -- d mod (p-1)
+		exponent2  		[6] INTEGER OPTIONAL, -- d mod (q-1)
+		coefficient 	[7] INTEGER OPTIONAL -- inv(q) mod p
+	}
+
+	
+	
+	PKCS15Certificates ::= CHOICE {
+		path PKCS15Path,
+		objects [0] SEQUENCE OF PKCS15CertificateObject,
+		indirect-protected [1] PKCS15ReferencedValue,
+		direct-protected [2] PKCS15EnvelopedData
+	}
+
+	PKCS15CertificateType ::= SEQUENCE {
+		x509Certificate  	PKCS15CertificateObject
+	}
+		
+	PKCS15CertificateObject ::= SEQUENCE {
+		commonObjectAttributes PKCS15CommonObjectAttributes,
+		classAttributes PKCS15CommonCertificateAttributes,
+		subClassAttributes [0] NULL OPTIONAL,
+		typeAttributes [1] PKCS15X509CertificateAttributes
+	}
+	
+	PKCS15CertificateValue ::= SEQUENCE {
+		direct Certificate
+	}
+	
+	PKCS15X509CertificateAttributes ::= SEQUENCE {
+		value		PKCS15CertificateValue,
+		subject  		Name OPTIONAL,
+		issuer 		[0] Name OPTIONAL,
+		serialNumber 	CertificateSerialNumber OPTIONAL
+	}
+
+	PKCS15PublicKeyOperations ::= PKCS15Operations 
+
+	PKCS15Operations ::= BIT STRING {
+			compute-checksum  (0), -- H/W computation of checksum
+			compute-signature (1), -- H/W computation of signature
+			verify-checksum   (2), -- H/W verification of checksum
+			verify-signature  (3), -- H/W verification of signature
+			encipher          (4), -- H/W encryption of data
+			decipher          (5), -- H/W decryption of data
+			hash              (6), -- H/W hashing
+			generate-key      (7)  -- H/W key generation
+	}
+
+	-- Soft token related types and objects
+
+	PKCS15EnvelopedData ::= SEQUENCE {
+		version		 INTEGER{v0(0),v1(1),v2(2),v3(3),v4(4)},
+		originatorInfo	 [0] OriginatorInfo OPTIONAL,
+		recipientInfos 	 RecipientInfos,
+		encryptedContentInfo PKCS15EncryptedContentInfo,
+		unprotectedAttrs	 [1] SET SIZE (1..MAX) OF Attribute OPTIONAL
+	}
+
+	PKCS15EncryptedContentInfo ::= SEQUENCE {
+		contentType		       OBJECT IDENTIFIER,
+		contentEncryptionAlgorithm AlgorithmIdentifier,
+		encryptedContent 	       [0] OCTET STRING OPTIONAL
+	}
+
+	PKCS15Token ::= SEQUENCE {
+		version		INTEGER {v1(0)} (v1,...),
+		keyManagementInfo	[0] PKCS15KeyManagementInfo OPTIONAL,
+		pkcs15Objects	SEQUENCE OF PKCS15Objects
+	}
+
+	PKCS15keyInfo ::= CHOICE {
+		recipientInfo	RecipientInfo,
+		passwordInfo	[0] PKCS15PasswordInfo
+	}
+	
+	PKCS15KeyManagementInfo ::= SEQUENCE OF SEQUENCE {
+		keyId		PKCS15Identifier,
+		keyInfo		PKCS15keyInfo
+	}
+
+	PKCS15PasswordInfo ::= SEQUENCE {
+		hint	PKCS15Label OPTIONAL,
+		algId	AlgorithmIdentifier
+	}
+
+END

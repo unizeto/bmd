@@ -1,0 +1,9 @@
+libbmdnet_init.lo: libbmdnet_init.c ../../src/config.h \
+ ../../include/bmd/libbmdnet/libbmdnet.h \
+ ../../include/bmd/common/bmd-errors.h
+
+../../src/config.h:
+
+../../include/bmd/libbmdnet/libbmdnet.h:
+
+../../include/bmd/common/bmd-errors.h:

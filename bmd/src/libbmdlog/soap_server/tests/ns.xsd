@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <schema targetNamespace="ns.xsd"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="ns.xsd"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="logDatagram">
+   <sequence>
+     <element name="remoteHost" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="remotePort" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="srcFile" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="srcLine" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="srcFunction" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logOwner" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="service" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="operationType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logLevel" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="dateTimeBegin" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logString" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logSolution" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="documentSize" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="documentFilename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logReferto" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="eventCode" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logOwnerEventVisible" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logRefertoEventVisible" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="logServerSend">
+   <complexType>
+    <sequence>
+     <element name="logDatagram" type="ns:logDatagram" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="logServerSendResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyLog">
+   <complexType>
+    <sequence>
+     <element name="logNode" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyLogResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyTree">
+   <complexType>
+    <sequence>
+     <element name="signNode" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyTreeResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+

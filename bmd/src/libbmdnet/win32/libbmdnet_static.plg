@@ -1,0 +1,34 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: libbmdnet - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\si\USTAWI~1\Temp\RSP3F6.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../include" /I "../../../include/win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fp"Debug/libbmdnet_static.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"H:\svn\bmd\trunk\src\libbmdnet\libbmdnet.c"
+"H:\svn\bmd\trunk\src\libbmdnet\mech_null.c"
+"H:\svn\bmd\trunk\src\libbmdnet\mech_openssl_bio.c"
+"H:\svn\bmd\trunk\src\libbmdnet\mech_plaintcp.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\si\USTAWI~1\Temp\RSP3F6.tmp" 
+Creating command line "link.exe -lib /nologo /out:"Debug\libbmdnet_static.lib"  .\Debug\libbmdnet.obj .\Debug\mech_null.obj .\Debug\mech_openssl_bio.obj .\Debug\mech_plaintcp.obj "
+<h3>Output Window</h3>
+Compiling...
+libbmdnet.c
+mech_null.c
+h:\svn\bmd\trunk\src\libbmdnet\mech_null.c(81) : warning C4113: 'int (__cdecl *)(struct __bmdnet_handler_struct *,unsigned int ,int ,char *)' differs in parameter lists from 'int (__cdecl *)(struct __bmdnet_handler_struct *,char *,unsigned int ,int ,char *)'
+mech_openssl_bio.c
+mech_plaintcp.c
+Creating library...
+
+
+
+<h3>Results</h3>
+libbmdnet_static.lib - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

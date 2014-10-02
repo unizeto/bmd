@@ -1,0 +1,54 @@
+
+
+# NOTE: 1. ORACLE_HOME must be either:
+#		   . set in the user's environment
+#		   . passed in on the command line
+#		   . defined in a modified version of this makefile
+#
+#       2. If the target platform support shared libraries (e.g. Solaris)
+#          look in the platform specific documentation for information
+#          about environment variables that need to be properly
+#          defined (e.g. LD_LIBRARY_PATH in Solaris).
+#
+
+
+
+CC = gcc
+MAKE = make
+OPTIONS = -Wall -D__UNIX__ -D_DEBUG_UNIX_
+
+PREFIX=../../../inc/bmd
+OUTPUT_DIR = ../../../libs/linux
+CRYPTLIB_INCLUDE=-I../../../inc/cl322
+
+OCI_INCLUDE_DIR = -I/opt/oracle/app/oracle/rdbms/public
+
+
+SOURCE = libbmddb_oracle.c
+PROJECTN = libbmddb_oracle.a
+
+BMD_ORACLE_HEADER = $(PREFIX)/libbmddb/oracle/libbmddb_oracle.h
+BMD_ORACLE_INCLUDE = -I$(PREFIX)/libbmddb/oracle
+
+COMMON_INCLUDE = -I$(PREFIX)/common
+ASN1_CORE_INCL = -I$(PREFIX)/libbmdasn1_core
+
+RSA_PKCS11_INCLUDE=-I../../../inc/pkcs11
+
+AA_INCLUDE=-I$(PREFIX)/libbmdaa/asn1
+UTILS_INCLUDE = -I$(PREFIX)/libbmdutils
+INCL = $(BMD_ORACLE_INCLUDE) $(OCI_INCLUDE_DIR) $(UTILS_INCLUDE) $(COMMON_INCLUDE) $(ASN1_CORE_INCL) $(CRYPTLIB_INCLUDE) $(AA_INCLUDE)
+
+OBJECTS = libbmddb_oracle.o
+
+all: $(PROJECTN)
+
+$(PROJECTN): $(SOURCE) $(BMD_ORACLE_HEADER)
+	$(CC) -c $(SOURCE) $(OPTIONS) $(INCL)
+	ar rcs $(PROJECTN) $(OBJECTS)
+
+install:
+	cp $(PROJECTN) $(OUTPUT_DIR)
+
+clean:
+	rm -f *.o *.a

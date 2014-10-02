@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="http://euptest.unizeto.biz/eup/php/index.php?_mod=filemod&_op=download&_obj=xslt/ro/1.2.616.1.113527.6.43.5.1.1.xsl&domain=da"?>
+<f:pismo xmlns:f="http://www.unizeto.pl/szablon/formularz/1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ndap="http://www.mswia.gov.pl/standardy/ndap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.unizeto.pl/szablon/formularz/1 formularz.xsd http://www.w3.org/2000/09/xmldsig# http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd http://www.mswia.gov.pl/standardy/ndap C:\java\eclipse_workspace\XML-EUP\src\mswia_archiwa.xsd ">
+  <f:dane id="_signedData">
+    <ndap:dokument>
+      <ndap:odbiorca>
+        <ndap:podmiot>
+            <ndap:instytucja>
+                <ndap:nazwa>Test DA</ndap:nazwa>
+                <ndap:adres>
+                    <ndap:kod>70-486</ndap:kod>
+                    <ndap:poczta></ndap:poczta>
+                    <ndap:miejscowosc>Szczecin</ndap:miejscowosc>
+                    <ndap:ulica></ndap:ulica>
+                    <ndap:budynek>21</ndap:budynek>
+                    <ndap:lokal></ndap:lokal>
+                    <ndap:kraj>PL</ndap:kraj>
+                </ndap:adres>
+                <ndap:kontakt typ="email">akarczmarczyk@unet.pl</ndap:kontakt>
+            </ndap:instytucja>
+        </ndap:podmiot>
+        <ndap:rodzaj>glowny</ndap:rodzaj>
+      </ndap:odbiorca>
+      <ndap:data>
+        <ndap:typ>stworzony</ndap:typ>
+        <ndap:czas>2008-08-05</ndap:czas>
+      </ndap:data>
+      <ndap:dostep>
+        <ndap:dostepnosc>wszystko</ndap:dostepnosc>
+      </ndap:dostep>
+      <ndap:format>
+        <ndap:typ>text/xml</ndap:typ>
+      </ndap:format>
+      <ndap:identyfikator>
+        <ndap:typ>sha1</ndap:typ>
+        <ndap:wartosc/>
+      </ndap:identyfikator>
+      <ndap:tworca>
+        <ndap:funkcja/>
+        <ndap:podmiot>
+          <ndap:osoba>
+            <ndap:id typ="pesel">22222222222</ndap:id>
+            <ndap:id typ="nip"/>
+            <ndap:nazwisko>Test</ndap:nazwisko>
+            <ndap:imie>Artur</ndap:imie>
+            <ndap:adres>
+                <ndap:kod>11-111</ndap:kod>
+                <ndap:poczta/>
+                <ndap:miejscowosc>Szczecin</ndap:miejscowosc>
+                <ndap:ulica></ndap:ulica>
+                <ndap:budynek>1</ndap:budynek>
+                <ndap:lokal></ndap:lokal>
+                <ndap:kraj>PL</ndap:kraj>
+            </ndap:adres>
+            <ndap:kontakt typ="faks"/>
+            <ndap:kontakt typ="email">akarczmarczyk@unet.pl</ndap:kontakt>
+            <ndap:kontakt typ="telefon"/>
+          </ndap:osoba>
+        </ndap:podmiot>
+      </ndap:tworca>
+      <ndap:typ>
+        <ndap:kategoria>Text</ndap:kategoria>
+      </ndap:typ>
+      <ndap:tytul>
+        <ndap:oryginalny>Złożenie sprawy do urzędu</ndap:oryginalny>
+      </ndap:tytul>
+    </ndap:dokument>
+    <f:tresc>
+      <f:tekst>eryuk</f:tekst>
+      <f:miejscowosc>Szczecin</f:miejscowosc>
+    </f:tresc>
+    <f:zalaczniki>
+    </f:zalaczniki>
+    <f:inne>
+      <oid>1.2.616.1.113527.6.43.5.1.1</oid>
+    </f:inne>
+  </f:dane>
+</f:pismo>

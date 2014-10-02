@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+counter=1
+while [ $counter -ne 10000 ]
+do	
+    echo ${counter}
+    ./awizo_test_send -d 0 -p ../messages/awizo_message.xml
+    counter=$(($counter+1))
+    #usleep 100000
+done

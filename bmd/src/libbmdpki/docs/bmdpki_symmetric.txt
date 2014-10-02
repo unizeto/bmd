@@ -1,0 +1,127 @@
+Autor: Włodzimierz Szczygieł (Dział Programowania, Unizeto Technologies SA)
+
+Przeznaczenie PKI SYMMETRIC API:
+API udostępnia szyfrator i deszyfrator symetryczny. Oba rozwiązania wykonują operacje jednorundowe, jak i pracują w trybie strumieniowym.
+Umożliwiona jest również szyfracja danych zerowej długości.
+
+Zależności z innymi bibliotekami:
+PKI SYMMETRIC API operte jest na bibliotece openSSL.
+
+Wykorzysanie PKI SYMMETRIC API:
+1) odpowiednio przygotowac kontekst symetryczny za pomocą funkcji bmd_set_ctx_sym() udostępnianej przez libbmdpki API
+2) wywołać fukcję szyfrującą/deszyfrująca:
+	a) jednokrotnie dla operacji jednorundowej
+	b) dla każdej porcji danych w przypadku operacji strumieniowej
+3) zwolnić kontekst symetryczny za pomocą funkcji bmd_ctx_destroy() udostępnianej przez libbmdpki API
+Uwagi:
+1) Całość strumieniowej szyfracji/deszyfracji musi się odbywać na tym samym kontekście.
+2) Ten sam kontekst nie może służyć do szyfracji i deszyfracji.
+
+
+
+/*--------*/
+PKI SYMMETRIC API - szczegółowy opis:
+/*--------*/
+
+1) Szyfrator symetryczny
+
+int bmdpki_symmetric_encrypt(bmd_crypt_ctx_t *ctx_enc, GenBuf_t *data, unsigned int is_last, GenBuf_t **output);
+
+Funkcja bmdpki_symmetric_encrypt() realizuje funkcjonalność szyfratora symetrycznego.
+a) 	Szyfrowanie jednorundowe oznacza, że całość danych od razu jest przekazywana na wejście i operacja szyfrowania odbywa się za pomocą
+	jednego	wywołania opisywanej funkcji. W takim przypadku należy wywołać funkcję z flagą is_last ustawioną na BMDPKI_SYM_LAST_CHUNK.
+	Szyfrowanie jednorundowe jest szczególnym przypadkiem szyfrowania strumieniowego, gdy podawana jest jedna porcja danych. Porcja ta
+	w tym wyjątkowym przypadku może mieć również zerowy rozmiar (bufor generyczny z rozmiarem = 0). 
+b)	Szyfrowanie strumieniowe oznacza, że szyfrowanie odbywa się na kolejno przekazywanych porcjach danych. Ilość wywołań funkcji szyfrującej 	równa jest ilości przekazywanych porcji danych. Porcje danych mogą być różnych rozmiarów, ale nie mogą być rozmiaru zerowego.
+	Dla ostatniej porcji danych funkcję należy wywołać z flagą is_last ustawioną na BMDPKI_SYM_LAST_CHUNK. Dla każdej poprzedniej
+	porcji danych, funkcja wywoływana jest z flagą is_last ustawioną na BMDPKI_SYM_NOT_LAST_CHUNK.
+
+Uwaga!!!
+Funkcja może utworzyć bufor generyczny zerowego rozmiaru, jeśli nie wystarczyło danych wejściowych do zaszyfrowania kolejnego bloku, bądź 
+szyfracja ostatniej porcji nie dała już żadnych danych wyjściowych. Jest to zachowanie poprawne. Jeśli wystąpił niedostatek danych wejściowych do
+zapełnienia bloku do szyfracji, owe "niepełne" dane są pamiętane i przy wywołaniu szyfracji dla kolejnej porcji, jeśli jest już możliwe dopełnienie bloku, wyjściowy bufor nie będzie już pusty.
+
+Parametry wejściowe:
+- ctx_enc to przygotowany kontekst symetryczny
+- data to bufor generyczny z danymi przeznaczonymi do szyfrowania
+- is_last to flaga określająca, czy przekazywana jest ostatnia porcja danych
+
+Parametry wyjsciowe:
+- output to adres wskaznika na tworzony bufor generyczny z zaszyfrowanymi danymi
+
+Wartość zwracana:
+- 0 w przypadku sukcesu operacji
+- w przypadku błędu odpowiednia wartość ujemna:
+	-1 dla błędnego argumentu ctx_enc
+	-2 dla błędnego argumentu data
+	-3 dla błędnego argumentu output
+	-4 dla błędu inicjalizacji szyfratora
+	-5 dla błędu ustawienia długości klucza
+	-6 dla błędu alokacji pamięci
+	-7 dla błędu operacji szyfrowania
+	-8 , -9 , -11 dla błędu finalizacji szyfrowania
+	-10 jeśli przekazano do szyfrowania dane zerowej długości podczas szyfrowania strumieniowego (jest to niedopuszczalne)
+
+Przykład wywołania:
+
+bmd_crypt_ctx_t *ctx_enc=NULL;
+GenBuf_t *dane=NULL;
+GenBuf_t *output=NULL;
+//przygotowanie kontekstu oraz danych do zaszyfrowania
+bmdpki_symmetric_encrypt(ctx_enc, dane, BMDPKI_SYM_LAST_CHUNK, &output);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+2) Deszyfrator symetryczny
+
+int bmdpki_symmetric_decrypt(bmd_crypt_ctx_t *ctx_dec, GenBuf_t *enc_buf, unsigned int is_last, GenBuf_t **output);
+
+Funkcja bmdpki_symmetric_decrypt() realizuje funkcjonalność deszyfratora symetrycznego.
+a) 	Deszyfrowanie jednorundowe oznacza, że całość danych od razu jest przekazywana na wejście i operacja deszyfrowania odbywa się za pomocą
+	jednego	wywołania opisywanej funkcji. W takim przypadku należy wywołać funkcję z flagą is_last ustawioną na BMDPKI_SYM_LAST_CHUNK.
+	Deszyfrowanie jednorundowe jest szczególnym przypadkiem deszyfrowania strumieniowego, gdy podawana jest jedna porcja danych.
+b)	Deszyfrowanie strumieniowe oznacza, że deszyfrowanie odbywa się na kolejno przekazywanych porcjach danych. Ilość wywołań funkcji
+	deszyfrującej równa jest ilości przekazywanych porcji danych. Porcje danych mogą być różnych rozmiarów, ale nie mogą być rozmiaru zerowego.
+	Dla ostatniej porcji danych funkcję należy wywołać z flagą is_last ustawioną na BMDPKI_SYM_LAST_CHUNK. Dla każdej poprzedniej
+	porcji danych, funkcja wywoływana jest z flagą is_last ustawioną na BMDPKI_SYM_NOT_LAST_CHUNK.
+
+Uwaga!!!
+Funkcja może utworzyć bufor generyczny zerowego rozmiaru, jeśli nie wystarczyło danych wejściowych do zdeszyfrowania kolejnego bloku, bądź deszyfracja ostatniej porcji ne dała już żadnych danych wyjściowych. Jest to zachowanie poprawne. Jeśli wystąpił niedostatek danych wejściowych do
+zapełnienia bloku do deszyfracji, owe "niepełne" dane są pamiętane i przy wywołaniu deszyfracji dla kolejnej porcji, jeśli jest już możliwe dopełnienie bloku, wyjściowy bufor nie będzie już pusty.
+
+Parametry wejściowe:
+- ctx_dec to przygotowany kontekst symetryczny
+- enc_buf to bufor generyczny z danymi przeznaczonymi do zdeszyfrowania
+- is_last to flaga określająca, czy przekazywana jest ostatnia porcja danych do zdeszyfrowania
+
+Parametry wyjściowe:
+- output to aderes wskaznika na tworzony bufor generyczny ze zdeszyfrowanymi danymi
+
+Wartość zwracana:
+- 0 w przypadku sukcesu operacji
+- w przypadku błędu odpowiednia wartość ujemna:
+	-1 dla błędnego argumentu ctx_enc
+	-2 dla błędnego argumentu enc_buf
+	-3 dla błędnego argumentu output
+	-4 dla błędu inicjalizacji deszyfratora
+	-5 dla błędu ustawienia długości klucza
+	-6 dla błędu alokacji pamięci
+	-7 dla błędu operacji deszyfrowania
+	-8 , -9 dla błędu finalizacji deszyfrowania
+	-10 jeśli przekazano do deszyfrowania dane zerowej długości
+
+Przykład wywołania:
+
+bmd_crypt_ctx_t *ctx_dec=NULL;
+GenBuf_t *enc_buf=NULL;
+GenBuf_t *output=NULL;
+//przygotowanie kontekstu oraz danych do zaszyfrowania
+bmdpki_symmetric_decrypt(ctx_dec, enc_buf, BMDPKI_SYM_LAST_CHUNK, &output);
+.
+.
+
+/*----------------------------------------------------------------*/

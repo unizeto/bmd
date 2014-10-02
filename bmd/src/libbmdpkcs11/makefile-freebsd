@@ -1,0 +1,36 @@
+# makefile biblioteki libbmdpkcs11.a
+# Autorzy: marua, bozon
+
+CC = gcc
+FLAGS = -Wall
+PROJECTN_STATIC=libbmdpkcs11.a
+OBJECT=libbmdpkcs11.o
+OPTIONS=-D__UNIX__
+
+CRYPTLIB_INCLUDE=-I../../inc/cl322
+OPENSSL_INCLUDE=-I/usr/local
+
+PREFIX=../../inc/bmd
+PREFIX_PKCS11=$(PREFIX)/libbmdpkcs11
+
+COMMON_INCLUDE=-I$(PREFIX)/common
+PKI_INCLUDE=-I$(PREFIX)/libbmdpki
+PKCS11_INCLUDE=-I$(PREFIX_PKCS11)
+
+RSA_PKCS11_INCLUDE=-I../../inc/pkcs11
+
+INCLUDE=$(COMMON_INCLUDE) $(PKI_INCLUDE) $(CRYPTLIB_INCLUDE) $(OPENSSL_INCLUDE) $(PKCS11_INCLUDE) $(RSA_PKCS11_INCLUDE)
+
+OUTPUT_DIR = ../../libs/freebsd
+
+all: $(OBJECT)
+	ar rcs $(PROJECTN_STATIC) $(OBJECT)
+	
+$(OBJECT): libbmdpkcs11.c $(PREFIX_PKCS11)/libbmdpkcs11.h
+	$(CC) -c libbmdpkcs11.c $(OPTIONS) $(INCLUDE) $(FLAGS)
+	
+clean:
+	rm -rf *.o $(PROJECTN_STATIC)
+
+install:
+	cp $(PROJECTN_STATIC) $(OUTPUT_DIR)

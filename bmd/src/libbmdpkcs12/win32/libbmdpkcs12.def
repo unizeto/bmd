@@ -1,0 +1,6 @@
+LIBRARY "LIBBMDPKCS12"
+DESCRIPTION "BMD PKCS#12 Library"
+EXPORTS
+	bmd_parse_p12_file
+	_bmd_binary_content_to_BIO
+	bmd_check_p12_pass

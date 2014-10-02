@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbmdmail", "libbmdmail.vcproj", "{54CEE416-1AC0-402B-9079-C6E1AEC4A5D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbmdmail_test", "..\libbmdmail_test\libbmdmail_test.vcproj", "{686E37FC-56A6-4A33-A893-CCC313EDCC58}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D} = {C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D}
+		{54CEE416-1AC0-402B-9079-C6E1AEC4A5D6} = {54CEE416-1AC0-402B-9079-C6E1AEC4A5D6}
+		{AA378CF6-FB52-4D08-87D7-60BFC649710A} = {AA378CF6-FB52-4D08-87D7-60BFC649710A}
+		{1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4} = {1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbmdutils", "..\..\..\libbmdutils\win32\vs2005\libbmdutils\libbmdutils.vcproj", "{1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbmderr", "..\..\..\libbmderr\win32\vs2005\libbmderr\libbmderr.vcproj", "{AA378CF6-FB52-4D08-87D7-60BFC649710A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libbmdbase64", "..\..\..\libbmdbase64\win32\vs2005\libbmdbase64\libbmdbase64.vcproj", "{C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54CEE416-1AC0-402B-9079-C6E1AEC4A5D6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{54CEE416-1AC0-402B-9079-C6E1AEC4A5D6}.Debug|Win32.Build.0 = Debug|Win32
+		{54CEE416-1AC0-402B-9079-C6E1AEC4A5D6}.Release|Win32.ActiveCfg = Release|Win32
+		{54CEE416-1AC0-402B-9079-C6E1AEC4A5D6}.Release|Win32.Build.0 = Release|Win32
+		{686E37FC-56A6-4A33-A893-CCC313EDCC58}.Debug|Win32.ActiveCfg = Debug|Win32
+		{686E37FC-56A6-4A33-A893-CCC313EDCC58}.Debug|Win32.Build.0 = Debug|Win32
+		{686E37FC-56A6-4A33-A893-CCC313EDCC58}.Release|Win32.ActiveCfg = Release|Win32
+		{686E37FC-56A6-4A33-A893-CCC313EDCC58}.Release|Win32.Build.0 = Release|Win32
+		{1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4}.Debug|Win32.Build.0 = Debug|Win32
+		{1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4}.Release|Win32.ActiveCfg = Release|Win32
+		{1F6CF7A8-DF9C-4C86-B67E-15E4ABB5B0A4}.Release|Win32.Build.0 = Release|Win32
+		{AA378CF6-FB52-4D08-87D7-60BFC649710A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA378CF6-FB52-4D08-87D7-60BFC649710A}.Debug|Win32.Build.0 = Debug|Win32
+		{AA378CF6-FB52-4D08-87D7-60BFC649710A}.Release|Win32.ActiveCfg = Release|Win32
+		{AA378CF6-FB52-4D08-87D7-60BFC649710A}.Release|Win32.Build.0 = Release|Win32
+		{C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D}.Debug|Win32.Build.0 = Debug|Win32
+		{C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D}.Release|Win32.ActiveCfg = Release|Win32
+		{C9895C13-87B5-4ACC-AAB9-9B4EF4F1661D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+counter=0
+while [ $counter -ne 1000 ]
+do	
+    counter=$(($counter+1))
+    echo ${counter}
+    ./test_bmd_delete
+done

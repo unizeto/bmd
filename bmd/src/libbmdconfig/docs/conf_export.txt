@@ -1,0 +1,24 @@
+
+Przygotowane są dwa programiki umożliwiające eksport konfiguracji.
+
+
+
+1) conf2db.c
+Programik umożliwia wrzucenie konfiguracji przechowywanej w pliku konfiguracyjnym do bazy danych. Baza danych musi być wcześniej założona. Jeśli w bazie istnieją już wpisy konfiguracyjne, to są one wymazywane przed faktycznym eksportem konfiguracji.
+
+Wywołanie z lini poleceń:
+	conf2db  <conf_file_name>  <db_connection_params>
+
+Przykład:
+	conf2db test_file.conf "host=localhost dbname=testconf"
+
+
+
+2) db2conf.c
+Programik umożliwia zwrzucenie konfiguracji przechowywanej w bazie danych do pliku.
+
+Wywołanie z lini poleceń:
+	db2conf  <db_connection_params>  <conf_file_name>
+
+Przykład:
+	db2conf "host=localhost dbname=testconf" dump.conf

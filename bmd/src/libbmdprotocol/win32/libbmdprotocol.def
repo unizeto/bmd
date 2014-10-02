@@ -1,0 +1,15 @@
+LIBRARY "libbmdprotocol"
+DESCRIPTION "BMD protocol library"
+EXPORTS
+	set_prefix_from_int
+	get_prefix_from_gb
+	get_asn1_data_block_size
+	bmd_get_from_socket	
+	strip_prefix
+	bmd2_create_login_request
+	bmd2_decode_login_response
+	bmd2_decode_session_request
+	bmd2_create_session_request
+	bmd2_datagram_set_symkey
+	bmd2_datagram_get_symkey
+	bmd2_datagram_get_ki_mod_n

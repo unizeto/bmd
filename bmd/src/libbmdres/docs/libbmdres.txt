@@ -1,0 +1,176 @@
+﻿autor: Włodzimierz Szczygieł (Dział Programowania, Unizeto Technologies SA)
+
+
+DOKUMENTACJA BIBLIOTEKI LIBBMDRES
+
+
+
+Przeznaczenie biblioteki:
+Biblioteka libbmdres dedykowana jest dla graficznej aplikacji klienckiej SOE/BAE/EUP. Biblioteka
+służy do wyszukiwnia plików zasobów graficznych znajdujących się w zaszyfrowanym archiwum zip.
+Obecny interfejs umożliwia wydobywanie ikon oraz różnego rodzaju bitmap. Znalezione zasoby 
+przygotowywane są w postaci obiektów klas wxWidgetowych i mogą być w łatwy sposób wykorzystywane
+w aplikacji klienckiej.
+
+
+Zależności z innymi bibliotekami:
+- biblioteka napisana jest na potrzeby klienta GUI i głównie wykorzystuje bibliotekę wxWidgets
+- kryptografia realizowana jest przy pomocy mechanizmów bibilioteki libbmdpki
+- pomocniczno wykorzystana jest biblioteka libbmdutils
+
+
+Wykorzystanie API biblioteki libbmdres:
+
+Wydobywanie zasobów graficznych z zaszyfrowanego archiwum zip realizuje się za pomocą sekwencji 
+wywołań funkcji stanowiących publiczny interfejs biblioteki libbmdres. Każda z tych funkcji operuje
+na specjalnym typie libbmdres_t. Pojedyńczy obiekt tego typu odpowiada pojedyńczemu zaszyfrowanemu
+archiwum zip. Sekwencja wywołań wygląda następująco:
+1)Za pomocą funkcji libbmdres_init() tworzy i inicjalizuje się strukturę typu libbmdres_t
+2)Przy wykorzystaniu funkcji libbmdres_get_wxIcon() bądź libbmdres_get_wxBitmap() wydobywa się 
+	odpowiednio ikony bądź bitmapy
+3)Za pomocą funkcji libbmdres_destroy() niszczy się już niepotrzebną strukturę libbmdres_t
+
+Uwagi:
+Pomiędzy tworzeniem i niszczeniem struktury libbmdres_t, może występować dowolna ilość wywołań funkcji 
+libbmdres_get_wxIcon() bądź libbmdres_get_wxBitmap() na tej strukturze. Nie jest narzucone żadne
+ograniczenie na kolejność wywoływania tych dwóch funkcji co oznacza, że można naprzemiennie wydobywać
+ikony i bitmapy.
+
+
+
+/*--------*/
+LIBBMDRES PUBLIC API - szczegółowy opis
+/*--------*/
+
+int libbmdres_init(wxString& archive_name, libbmdres_t **res);
+
+Funkcja libbmdres_init() alokuje i przygotowuje strukturę libbmdres_t odpowiadającą pojedyńczemu 
+zaszyfrowanemu archiwum zip przechowującemu zasoby graficzne aplikacji. Funkcja dokonuje
+deszyfrowania pliku archive_name, zdeszyfrowane dane zapisuje w pliku tymczasowym i ustawia
+pola tworzonej struktury libbmdres_t.
+
+Parametry wejściowe:
+- archive_name to wxString z nazwą pliku zaszyfrowanego archiwum zip
+
+Parametry wyjściowe:
+- res to adres wskaźnika na tworzona strukture libbmdres_t
+
+Wartość zwracana:
+- 0 w przypadku sukcesu operacji (res wskazuje na stworzoną strukturę libbmdres_t)
+- w przypadku błędu odpowiednia wartość ujemna:
+	-1 dla błędnego argumentu res
+	-2 dla błędu alokacji pamięci
+	-3 dla błędu przy odczytywaniu ścieżki do katalogu plików tymczasowych
+	-4 dla błędu deszyfrowania archiwum zip
+	-5 , -6 dla błędu otwierania strumienia archiwum zip
+	-7 , -8 dla błędu otwierania strumienia dekompresji zip 
+
+Przykład wywołania:
+
+libbmdres_t *res=NULL;
+libbmdres_init(wxString(wxT("bmdres")), &res);
+.
+.
+
+/*----------------------------------------------------------------------*/
+
+
+
+int libbmdres_get_wxIcon(libbmdres_t *res, wxString& icon_filename, wxIcon** icon);
+
+Funkcja libbmdres_get_wxIcon() w zdeszyfrowanym archiwum zip reprezentowanym przez strukturę res,
+wyszukuje plik ikony o nazwie icon_filename i na jego podstawie tworzy obiekt klasy wxIcon.
+Funkcja operuje na strukturze libbmdres_t przygotowanej za pomocą funkcji libbmdres_init().
+
+Parametry wejściowe:
+- res to wskaźnik na przygotowaną wcześniej strukturę libbmdres_t
+- icon_filename to wxString z nazwą pliku ikony w archiwum zip
+
+Parametry wyjściowe:
+- icon to adres wskaźnika na tworzony obiekt klasy wxIcon
+
+Wartość zwracana:
+- 0 w przypadku sukcesu operacji (icon wskazuje na stworzony obiekt klasy wxIcon)
+- w przypadku błędu odpowiednia wartość ujemna:
+	-1 dla błędnego argumentu res
+	-2 dla błędnego argumentu icon
+	-3 dla błędu alokacji pamięci
+	-4 dla błędu otwierania do zapisu strumienia pliku tymczasowego
+	-5 , -6 dla błędu przy tworzeniu obiektu klasy wxIcon
+	-7 , -8 dla błędu przy resetowaniu strumienia dekompresji zip
+	-9 gdy plik nie zostanie odnaleziony w archiwum
+
+Przykład wywołania:
+
+libbmdres_t *res=NULL;
+wxIcon *icon=NULL;
+libbmdres_init(wxString(wxT("bmdres")), &res);
+libbmdres_get_wxIcon(res, wxString(wxT("ikona.ico")), &icon);
+.
+.
+
+/*----------------------------------------------------------------------*/
+
+
+
+int libbmdres_get_wxBitmap(libbmdres_t *res, wxString& bitmap_filename, int wxBITMAP_TYPE, wxBitmap** bitmap);
+
+Funkcja libbmdres_get_wxBitmap() w zdeszyfrowanym archiwum zip reprezentowanym przez strukturę res,
+wyszukuje plik bitmapy o nazwie bitmap_filename i na jego podstawie tworzy obiekt klasy wxBitmap
+specyfikowany prze typ bitmapy wxBITMAP_TYPE (patrz dokumantacja wxWidgets, klasa wxBitmap, typy bitmap).
+Funkcja operuje na strukturze libbmdres_t przygotowanej za pomocą funkcji libbmdres_init().
+
+Parametry wejściowe:
+- res to wskaźnik na przygotowaną wcześniej strukturę libbmdres_t
+- bitmap_filename to wxString z nazwą pliku bitmapy w archiwum zip
+- wxBITMAP_TYPE to flaga definiowana w bibliotece wxWidgets, określająca typ bitmapy (bmp, jpeg itd. )
+
+Parametry wyjściowe:
+- bitmap to adres wskaźnika na tworzony obiekt klasy wxBitmap
+
+Wartość zwracana:
+- 0 w przypadku sukcesu operacji (bitmap wskazuje na stworzony obiekt wxBitmap)
+- w przypadku błędu odpowiednia wartość ujemna:
+	-1 dla błędnego argumentu res
+	-2 dla błędnego argumentu bitmap
+	-3 dla błędu alokacji pamięci
+	-4 dla błędu otwierania do zapisu strumienia pliku tymczasowego
+	-5 , -6 dla błędu przy tworzeniu obiektu klasy wxBitmap
+	-7 , -8 dla błędu przy resetowaniu strumienia dekompresji zip
+	-9 gdy plik nie zostanie odnaleziony w archiwum
+
+Przykład wywołania:
+
+libbmdres_t *res=NULL;
+wxBitmap *bitmap=NULL;
+libbmdres_init(wxString(wxT("bmdres")), &res);
+libbmdres_get_wxIcon(res, wxString(wxT("obrazek.jpg")), wxBITMAP_TYPE_JPEG, &bitmap);
+.
+.
+
+/*----------------------------------------------------------------------*/
+
+
+
+int libbmdres_destroy(libbmdres_t **res);
+
+Funkcja libbmdres_destroy() niszczy strukturę libbmdres_t. Każda struktura libbmdres_t stworzona
+za pomocą funkcji libbmdres_init(), musi być niszczona za pomocą opisywanej funkcji.
+
+Parametry wyjściowe:
+- res to adres wskaźnika na nisczoną strukturę libbmdres_t
+
+Wartość zwracana:
+- 0 w przypadku sukcesu operacji (wskaźnik res zostaje ustawiony na NULL)
+
+Przykład wywołania:
+
+libbmdres_t *res=NULL;
+wxBitmap *bitmap=NULL;
+libbmdres_init(wxString(wxT("bmdres")), &res);
+libbmdres_get_wxIcon(res, wxString(wxT("obrazek.jpg")), wxBITMAP_TYPE_JPEG, &bitmap);
+libbmdres_destroy(&res);
+.
+.
+
+

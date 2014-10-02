@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f:pismo xmlns:f="http://www.unizeto.pl/szablon/formularz/1" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ndap="http://www.mswia.gov.pl/standardy/ndap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <f:dane id="_signedData">
+    <ndap:dokument>
+      <ndap:odbiorca>
+        <ndap:podmiot>
+            <ndap:instytucja>
+                <ndap:nazwa></ndap:nazwa>
+                <ndap:adres>
+                    <ndap:kod></ndap:kod>
+                    <ndap:poczta></ndap:poczta>
+                    <ndap:miejscowosc></ndap:miejscowosc>
+                    <ndap:ulica></ndap:ulica>
+                    <ndap:budynek></ndap:budynek>
+                    <ndap:lokal></ndap:lokal>
+                    <ndap:kraj></ndap:kraj>
+                </ndap:adres>
+                <ndap:kontakt typ="email"></ndap:kontakt>
+            </ndap:instytucja>
+        </ndap:podmiot>
+        <ndap:rodzaj>glowny</ndap:rodzaj>
+      </ndap:odbiorca>
+      <ndap:data>
+        <ndap:typ>stworzony</ndap:typ>
+        <ndap:czas>20070401</ndap:czas>
+      </ndap:data>
+      <ndap:dostep>
+        <ndap:dostepnosc>wszystko</ndap:dostepnosc>
+      </ndap:dostep>
+      <ndap:format>
+        <ndap:typ>text/xml</ndap:typ>
+      </ndap:format>
+      <ndap:identyfikator>
+        <ndap:typ>sha1</ndap:typ>
+        <ndap:wartosc></ndap:wartosc>
+      </ndap:identyfikator>
+      <ndap:tworca>
+        <ndap:funkcja></ndap:funkcja>
+        <ndap:podmiot>
+          <ndap:osoba>
+            <ndap:id typ="pesel">894385634891478935</ndap:id>
+            <ndap:id typ="nip">3940729304</ndap:id>
+            <ndap:nazwisko></ndap:nazwisko>
+            <ndap:imie>Lesioo</ndap:imie>
+            <ndap:adres>
+                <ndap:kod></ndap:kod>
+                <ndap:poczta></ndap:poczta>
+                <ndap:miejscowosc></ndap:miejscowosc>
+                <ndap:ulica></ndap:ulica>
+                <ndap:budynek></ndap:budynek>
+                <ndap:lokal></ndap:lokal>
+                <ndap:kraj>PL</ndap:kraj>
+            </ndap:adres>
+            <ndap:kontakt typ="faks"></ndap:kontakt>
+            <ndap:kontakt typ="email"></ndap:kontakt>
+            <ndap:kontakt typ="telefon"></ndap:kontakt>
+          </ndap:osoba>
+        </ndap:podmiot>
+      </ndap:tworca>
+      <ndap:typ>
+        <ndap:kategoria>Text</ndap:kategoria>
+      </ndap:typ>
+      <ndap:tytul>
+        <ndap:oryginalny>Złożenie sprawy do urzędu</ndap:oryginalny>
+      </ndap:tytul>
+    </ndap:dokument>
+    <f:tresc>
+      <f:tekst></f:tekst>
+      <f:miejscowosc></f:miejscowosc>
+    </f:tresc>
+    <f:zalaczniki>
+    </f:zalaczniki>
+    <f:inne>
+      <oid>1.2.616.1.113527.6.43.5.1.1</oid>
+    </f:inne>
+  </f:dane>
+</f:pismo>

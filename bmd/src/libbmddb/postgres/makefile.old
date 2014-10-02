@@ -1,0 +1,39 @@
+CC = gcc
+MAKE = make
+OPTIONS = -Wall -D__UNIX__ -D_DEBUG_UNIX_ -D_REENTRANT
+
+PREFIX=../../../inc/bmd
+OUTPUT_DIR = ../../../libs/linux
+PQ_LIB_INCLUDE = -I/opt/pq803/include
+CRYPTLIB_INCLUDE=-I../../../inc/cl322
+
+SOURCE = pq_libbmddb.c
+
+PROJECTN = libbmddb_postgres.a
+
+PQ_HEADER = $(PREFIX)/libbmddb/postgres/pq_libbmddb.h
+
+PQ_INCLUDE = -I$(PREFIX)/libbmddb/postgres
+
+COMMON_INCLUDE = -I$(PREFIX)/common
+ASN1_CORE_INCL = -I$(PREFIX)/libbmdasn1_core
+
+RSA_PKCS11_INCLUDE=-I../../../inc/pkcs11
+
+AA_INCLUDE=-I$(PREFIX)/libbmdaa/asn1
+UTILS_INCLUDE = -I$(PREFIX)/libbmdutils
+INCL = $(PQ_INCLUDE) $(PQ_LIB_INCLUDE) $(UTILS_INCLUDE) $(COMMON_INCLUDE) $(ASN1_CORE_INCL) $(CRYPTLIB_INCLUDE) $(AA_INCLUDE)
+
+OBJECTS = pq_libbmddb.o
+
+all: $(PROJECTN)
+
+$(PROJECTN): $(SOURCE) $(PQ_HEADER)
+	$(CC) -c $(SOURCE) $(OPTIONS) $(INCL)
+	ar rcs $(PROJECTN) $(OBJECTS)
+
+install:
+	cp $(PROJECTN) $(OUTPUT_DIR)
+
+clean:
+	rm -f *.o *.a

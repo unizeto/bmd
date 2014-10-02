@@ -1,0 +1,35 @@
+# makefile biblioteki libbmdpkcs12.a - obsluga plikow P12/PFX w oparciu o OpenSSL
+# Autorzy: marua, bozon
+# Data: marzec 2005
+
+CC = gcc
+FLAGS = -Wall
+PROJECTN_STATIC=libbmdpkcs12.a
+OBJECT=libbmdpkcs12.o
+
+OPTIONS=-D__UNIX__ -D_REENTRANT
+
+CRYPTLIB_INCLUDE=-I../../inc/cl322
+OPENSSL_INCLUDE=-I/usr/local
+
+PREFIX=../../inc/bmd
+PREFIX_PKCS12=$(PREFIX)/libbmdpkcs12
+
+DIALOGS_INCLUDE=-I$(PREFIX)/libbmddialogs
+COMMON_INCLUDE=-I$(PREFIX)/common
+PKCS12_INCLUDE=-I$(PREFIX_PKCS12)
+INCLUDE= $(PKCS12_INCLUDE) $(DIALOGS_INCLUDE) $(COMMON_INCLUDE) $(CRYPTLIB_INCLUDE) $(OPENSSL_INCLUDE)
+
+OUTPUT_DIR = ../../libs/linux
+
+all: $(OBJECT)
+	ar rcs $(PROJECTN_STATIC) $(OBJECT)
+	
+$(OBJECT):
+	$(CC) -c libbmdpkcs12.c $(OPTIONS) $(INCLUDE) $(FLAGS)
+	
+clean:
+	rm -rf *.o $(PROJECTN_STATIC)
+
+install:
+	cp $(PROJECTN_STATIC) $(OUTPUT_DIR)

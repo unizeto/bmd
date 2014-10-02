@@ -1,0 +1,323 @@
+
+/**/
+API do atrybutów wymaganych w podpisie CMS (podpis kwalifikowany).
+/**/
+
+
+/*JAK UŻYWAĆ*/
+
+Prezentowane API umożliwia wstawianie do struktury podpisu CMS, trzech atrybutów podpisanych. Atrybuty są
+tworzone odpowiednio funkcjami:
+- SigAttr_Create_SigningTime() dla SigningTime,
+- SigAttr_Create_SigningCertificate() dla SigningCertificate,
+- SigAttr_Create_SignaturePolicyId() dla SignaturePolicyIdentifier.
+Stworzone atrybuty zostają dodane do zbioru atrybutów podpisanych za pomocą wywołań funkcji
+SignedAtributes_add(). Aby jednak dodawanie było możliwe, najpierw należy zainicjować zbiór atrybutów
+podpisanych za pomocą funkcji SignedAtributes_init(). Dla porządku zaimplementowane zostały również funkcja
+inicjująca zbiór atrybutów niepodpisanych UnsignedAtributes_init() oraz funkcja UnsignedAtributes_add()
+umożliwiająca dodawanie atrybutów do zbioru atrybutów niepodpisanych.
+Funkcja SigningParams_Create() tworzy na bazie zainicjowanych zbiorów atrybutów, strukturę typu
+bmd_signature_params_t będącą argumentem przekazywanym do funkcji tworzącej podpis [ bmd_sign_data() ].
+Dopełnieniem jest funkcja SigningParams_Destroy() niszcząca strukturę typu bmd_signature_params_t utworzoną za
+pomocą funkcji SigningParams_Create().
+
+[ Program testowy: trunk/src/libbmdcms/test_attrs.c ]
+
+
+
+/**/
+/*SZCZEGÓŁOWY OPIS API*/
+/**/
+
+
+int SigAttr_Create_SigningTime(Attribute_t **sigtime_attr);
+
+Funkcja SigAttr_Create_SigningTime() alokuje pamięć i tworzy atrybut podpisany SigningTime. Stworzony atrybut
+trafić ma do zbioru atrybutów podpisanych.
+
+@ARG sigtime_attr to adres wskaznika na stowrzony atrybut 
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku pomyślnego utworzenia atrybutu SigningTime
+	-1 jeśli operacja nie powiodła się
+
+
+Przykład:
+
+Attribute_t *attr=NULL;
+SigAttr_Create_SigningTime(&attr);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int SigAttr_Create_SigningCertificate(GenBuf_t *cert_hash, Certificate_t *cert, Attribute_t **sigcert_attr);
+
+Funkcja SigAttr_Create_SigningCertificate() alokuje pamięć i tworzy atrybut podpisany SigningCertificate.
+Stworzony atrybut trafić ma do zbioru atrybutów podpisanych.
+
+@ARG cert_hash to bufor zawierający skrót z certyfikatu podpisującego. Wyliczenie strótu pozostawiam
+	programiście. Dzięki takiemu podejściu funkcja nie jest uzależniona od źródła certyfikatu.
+@ARG cert to przygotowana Lev Walkinowa struktura certyfikatu. Uzyskanie tej struktury pozostawiam także
+	programiście.
+@ARG sigcert_attr to adres wskaznika na tworzony atrybut
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku pomyślnego utworzenia atrybutu SigningCertificate
+	-1 jeśli operacja nie powiodła się
+
+
+Przykład:
+
+Attribute_t *attr=NULL;
+GenBuf_t *cert_hash=NULL;
+Certificate_t *cert=NULL;
+.
+/*alokowany jest bufor cert_hash, do którego wrzucony jest skrót z certyfikatu;
+	alokowana i wypełniana jest struktura certyfikatu cert; */
+.
+SigAttr_Create_SigningCertificate(cert_hash, cert, &attr);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int SigAttr_Create_SignaturePolicyId(char *spol_oid, char *uri, GenBuf_t *spol_hash,
+									Attribute_t **sigpolid_attr);
+
+Funkcja SigAttr_Create_SignaturePolicyId() alokuje pamięć i tworzy atrybut podpisany SignaturePolicyIdentifier.
+Stworzony atrybut trafić ma do zbioru atrybutów podpisanych.
+
+@ARG spol_oid to łańcuch znakowy z OID'em polityki podpisu, dla której tworzony jest identyfikator
+@ARG uri to łańcuch znakowy z uri wskazującym politykę podpisu 
+@ARG spol_hash to bufor ze skrotem polityki podpisu wskazywanej przez tworzony identyfikator. Funkcja wymaga,
+	aby skrót liczony był sha1.
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku pomyślnego utworzenia atrybutu SignaturePolicyIdentifier
+	-1 jeśli operacja nie powiodła się
+
+
+Przykład:
+
+Attribute_t *attr=NULL;
+char *spol_oid="1.2.616.1.113527.2.10.3.2";
+char *uri="www.certyfikat.pl/repozytorium/cck002.spol";
+GenBuf_t *spol_hash=NULL;
+.
+/*alokowany jest bufor spol_hash, do ktorego wrzucany jest skrót z polityki podpisu*/
+.
+.
+SigAttr_Create_SignaturePolicyId(spol_oid, uri, spol_hash, &attr);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int SignedAtributes_init(SignedAttributes_t **signed_attrs);
+
+Funkcja SignedAtributes_init() alokuje zbior atrybutów podpisanych.
+
+@ARG signed_attrs to adres wskaźnika na alokowany zbiór atrybutów podpisanych
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli operacja się powiodła
+	-1 w przypadku niepowodzenia operacji
+
+
+Przykład:
+
+SignedAttributes_t *attrs=NULL;
+.
+SignedAtributes_init(&attrs);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int SignedAtributes_add(Attribute_t *new_attr, SignedAttributes_t *signed_attrs);
+
+Funkcja SignedAtributes_add() dodaje atrybut do zbioru atrybutów podpisanych. Dodawanie atrybutu do zbioru
+atrybutów podpisanych możliwe jest po uprzednim zainicjowanu tego zbioru za pomocą funkcji
+SignedAtributes_init().
+
+@ARG new_attr to dodawany atrybut
+@ARG signed_attrs to zbiór atrybutów podpisanych
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli operacja powiodła się
+	-1 w przypadku niepowodzenia operacji
+
+
+Przykład:
+
+Attribute_t *attr=NULL;
+SignedAttributes_t *signed_attrs=NULL;
+.
+/*towrzenie atrybutu attr i inicjacja zbioru atrybutów podpisanych*/
+.
+SignedAtributes_add(attr, signed_attrs);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int UnsignedAtributes_init(UnsignedAttributes_t **unsigned_attrs);
+
+Funkcja UnsignedAtributes_init() alokuje zbior atrybutów niepodpisanych.
+
+@ARG unsigned_attrs to adres wskaźnika na alokowany zbiór atrybutów niepodpisanych
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli operacja powiodła się
+	-1 w przypadku niepowodzenia operacji
+
+
+Przykład:
+
+UnsignedAttributes_t *attrs=NULL;
+.
+UnsignedAtributes_init(&attrs);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int UnsignedAtributes_add(Attribute_t *new_attr, UnsignedAttributes_t *unsigned_attrs);
+
+Funkcja UnsignedAtributes_add() dodaje atrybut do zbioru atrybutów niepodpisanych. Dodawanie atrybutu do zbioru
+atrybutów niepodpisanych możliwe jest po uprzednim zainicjowanu tego zbioru za pomocą funkcji
+UnsignedAtributes_init().
+
+@ARG new_attr to dodawany atrybut
+@ARG unsigned_attrs to zbiór atrybutów niepodpisanych
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli operacja powiodła się
+	-1 w przypadku niepowodzenia operacji
+
+
+Przykład:
+
+Attribute_t *attr=NULL;
+UnsignedAttributes_t *unsigned_attrs=NULL;
+.
+/*towrzenie atrybutu attr i inicjacja zbioru atrybutów niepodpisanych*/
+.
+UnsignedAtributes_add(attr, unsigned_attrs);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+int SigningParams_Create(SignedAttributes_t *sig_attrs, UnsignedAttributes_t *unsig_attrs,
+									bmd_signature_params_t **params)
+
+Funkcja SigningParams_Create() alokuje pamięć na strukurę bmd_signature_params_t, ustawia typ podpisu na
+wewntętrzny oraz podpina, przekazywane jako argumenty, wskaźniki zbiorów atrybutów.
+
+@ARG sig_attrs to wskaźnik na listę atrybutów podpisanych (można podać NULL przy braku atrybutów podpisanych)
+@ARG unsig_attrs to wskaźnik na listę atrybutów niepodpisanych (można podać NULL przy braku atrybutów
+	niepodpisanych)
+@ARG params to adres wskaznika na tworzoną strukturę z parametrami podpisu
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli operacja powiodła się
+	-1 w przypadku niepowodzenia operacji
+
+
+Przykład:
+
+bmd_signature_params_t *params=NULL;
+SignedAttributes_t *sig_attrs=NULL;
+UnsignedAttributes_t *unsig_attrs=NULL;
+.
+/*przygotowanie zbiorów atrybutów*/
+.
+SigningParams_Create(sig_attrs, unsig_attrs, &params);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+void SigningParams_Destroy(bmd_signature_params_t **params);
+
+Funkcja SigningParams_Destroy() niszczy strukturę parametrów podpisu wraz z podpiętymi zbiorami atrybutów
+podpisanych i niepodpisanych.
+
+@ARG params to adres wskaźnika na strukturę z parametrami podpisu
+
+@RETURN
+Funkcja nie zwraca wartości.
+
+Przykład:
+
+bmd_signature_params_t *params=NULL;
+.
+/*tworzenie parametrów podpisu za pomocą funkcji SigningParams_Create()*/
+.
+SigningParams_Destroy(&params);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+/* FUNKCJE DODANE DLA UŁATWIENIA  */
+
+
+int Certificate_from_ctx_file(bmd_crypt_ctx_t *ctx, Certificate_t **cert);
+
+Funkcja Certificate_from_ctx_file() alokuje i wypełnia strukture Certifacate_t na podstawie danych zawartych w
+strukturze bmd_crypt_context_t.
+
+@ARG ctx to kontekst przygotowany wcześniej przez programistę
+@ARG cert to adres wskaznika na tworzoną strukturę certyfikatu
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli operacja powiodła się
+	-1 w przypadku niepowodzenia operacji
+
+
+Przykład:
+
+bmd_crypt_ctx_t *ctx=NULL;
+Certificate_t *cert=NULL;
+.
+/*przygotowanie ctx*/
+.
+Certificate_from_ctx_file(ctx, &cert);
+.
+.
+/*----------------------------------------------------------------*/
+
+
+void Destroy_Certificate(Certificate_t **cert)
+
+Funkcja Destroy_Certificate() niszczy strukturę certyfikatu utworzoną funkcją Certificate_from_ctx_file().
+
+@ARG cert to adres wskaźnika niszczonej struktury certyfikatu
+
+@RETURN
+Funkcja nie zwraca wartości.
+
+
+Przykład:
+
+Certificate_t *cert=NULL;
+.
+/*tworzenie Certificate_t za pomocą funkcji Certificate_from_ctx_file()*/
+.
+Destroy_Certificate(&cert);
+.
+.
+/*----------------------------------------------------------------*/
+

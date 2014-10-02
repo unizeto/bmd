@@ -1,0 +1,267 @@
+-- by Wlodzimierz Szczygiel-  Unizeto Technologies SA (marzec 2007)
+-- from rfc 3029
+
+
+PKIXDVCS {iso(1) identified-organization(3) dod(6) internet(1)
+   security(5) mechanisms(5) pkix(7) id-mod(0) id-mod-dvcs(15)}
+
+DEFINITIONS IMPLICIT TAGS ::=
+
+BEGIN
+
+-- EXPORTS ALL --
+
+IMPORTS
+  Extensions, AlgorithmIdentifier,
+--!! added by WSZ(zdefiniowane w Explicit88 , a tutaj Implicit88, stąd byly problemy)
+	Certificate, CertificateSerialNumber, CertificateList, Extension
+  FROM PKIX1Explicit88 {iso(1) identified-organization(3)
+  dod(6) internet(1) security(5) mechanisms(5) pkix(7)
+  id-mod(0) id-pkix1-explicit-88(18)}
+--!! modified by WSZ - ostatni sokcet zmieniony z 1 na 18
+
+  GeneralName, PolicyInformation,
+--!! added by WSZ(zdefiniowane w Implicit88, a tutaj Explicit88, stąd problemy)
+	GeneralNames , CRLReason
+  FROM PKIX1Implicit88 {iso(1) identified-organization(3)
+  dod(6) internet(1) security(5) mechanisms(5) pkix(7)
+  id-mod(0) id-pkix1-implicit-88(19)}
+--!! modified by WSZ - ostatni sokcet zmieniony z 2 na 19
+
+--!! by WSZ - zamiast importu, wymagane definicje wrzucone do tego modulu
+--!!  PKIStatusInfo, PKIStatusField FROM PKIXCMP {iso(1)
+--!!  identified-organization(3) dod(6) internet(1) security(5)
+--!!  mechanisms(5) pkix(7) id-mod(0)
+--!!  id-mod-cmp(9)}
+
+  ContentInfo, DigestAlgorithmIdentifier, Digest, SignerInfos
+	 FROM CryptographicMessageSyntax {iso(1)
+  	member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-9(9)
+  	smime(16) modules(0) cms(24)}
+--!! modified by WSZ - ostatni sokcet zmieniony z 1 na 24
+
+--!! by WSZ - zamiast importu, wymagane definicje wrzucone do tego modulu
+--!!  ESSCertID FROM ExtendedSecurityServices
+--!!  { iso(1) member-body(2) us(840) rsadsi(113549)
+--!!  pkcs(1) pkcs-9(9) smime(16) modules(0) ess(2) }
+
+  CertID, OCSPResponse, CertStatus
+  FROM OCSP  {iso(1) identified-organization(3)
+  dod(6) internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+  id-mod-ocsp(14)}
+
+   SMIMECapabilities FROM SecureMimeMessageV3
+  { iso(1) member-body(2) us(840) rsadsi(113549)
+   pkcs(1) pkcs-9(9) smime(16) modules(0) smime(4) }
+
+  ;
+
+-- Authority Information Access for DVCS
+
+id-ad-dvcs  OBJECT IDENTIFIER ::= {id-pkix id-ad(48) 4}
+
+-- Key Purpose for DVCS
+
+id-kp-dvcs  OBJECT IDENTIFIER ::= {id-pkix id-kp(3) 10}
+
+-- eContentType for a dvcs requests and responses
+
+id-ct-DVCSRequestData  OBJECT IDENTIFIER ::= { id-smime ct(1) 7 }
+id-ct-DVCSResponseData OBJECT IDENTIFIER ::= { id-smime ct(1) 8 }
+
+-- Data validation certificate attribute
+
+id-aa-dvcs-dvc OBJECT IDENTIFIER ::= { id-smime aa(2) 29 }
+
+-- using the following bases :
+
+--!! by WSZ - zdefioniowane w Explicit88
+--!! id-pkix     OBJECT IDENTIFIER ::= {iso(1)
+--!! identified-organization(3) dod(6)
+--!! internet(1) security(5) mechanisms(5) pkix(7)}
+
+id-smime    OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+               us(840) rsadsi(113549) pkcs(1) pkcs-9(9) 16 }
+
+--!! by WSZ - zdefiniowane w Explicit88
+--!! Version ::= Integer
+
+DigestInfo ::= SEQUENCE {
+    digestAlgorithm   DigestAlgorithmIdentifier,
+    digest            Digest
+}
+
+-- commented by WSZDigest ::= OCTET STRING
+
+Nonce ::= INTEGER
+
+DVCSTime ::= CHOICE  {
+     genTime                      GeneralizedTime,
+     timeStampToken               ContentInfo
+}
+TargetEtcChain ::= SEQUENCE {
+     target                       CertEtcToken,
+     chain                        SEQUENCE SIZE (1..MAX) OF
+                                     CertEtcToken OPTIONAL,
+     pathProcInput                [0] PathProcInput OPTIONAL
+}
+
+PathProcInput ::= SEQUENCE {
+     acceptablePolicySet          SEQUENCE SIZE (1..MAX) OF
+                                     PolicyInformation,
+     inhibitPolicyMapping         BOOLEAN DEFAULT FALSE,
+     explicitPolicyReqd           [1] BOOLEAN DEFAULT FALSE --dodany jawnie tag [1]
+}
+
+--!! wstawione by WSZ
+
+--added by WSZ ESSCertID
+
+ESSCertID ::=  SEQUENCE {
+     certHash                 Hash,
+     issuerSerial             IssuerSerial OPTIONAL
+}
+
+Hash ::= OCTET STRING -- SHA1 hash of entire certificate
+
+IssuerSerial ::= SEQUENCE {
+     issuer                   GeneralNames,
+     serialNumber             CertificateSerialNumber
+}
+
+
+--!! wstawione by WSZ
+
+
+CertEtcToken ::= CHOICE {
+     certificate                  [0] IMPLICIT Certificate ,
+     esscertid                    [1] ESSCertID ,
+     pkistatus                    [2] IMPLICIT PKIStatusInfo ,
+     assertion                    [3] ContentInfo ,
+     crl                          [4] IMPLICIT CertificateList,
+     ocspcertstatus               [5] CertStatus, --!!!! by WSZ - nie moze by IMPLICIT !!!
+     oscpcertid                   [6] IMPLICIT CertID ,
+     oscpresponse                 [7] IMPLICIT OCSPResponse,
+     capabilities                 [8] SMIMECapabilities,
+     extension                    Extension
+}
+
+DVCSRequestInformation ::= SEQUENCE  {
+        version                      INTEGER DEFAULT 1 ,
+        service                      ServiceType,
+        nonce                        Nonce OPTIONAL,
+        requestTime                  DVCSTime OPTIONAL,
+        requester                    [0] GeneralNames OPTIONAL,
+        requestPolicy                [1] PolicyInformation OPTIONAL,
+        dvcs                         [2] GeneralNames OPTIONAL,
+        dataLocations                [3] GeneralNames OPTIONAL,
+        extensions                   [4] IMPLICIT Extensions OPTIONAL
+}
+
+ServiceType ::= ENUMERATED { cpd(1), vsd(2), cpkc(3), ccpd(4) }
+
+DVCSRequest ::= SEQUENCE  {
+    requestInformation         DVCSRequestInformation,
+    data                       Data,
+    transactionIdentifier      GeneralName OPTIONAL
+}
+
+--!! by WSZ - dodane jawne tagowanie w ramach paprawy baboli w rfc
+Data ::= CHOICE {
+      message           OCTET STRING ,
+      messageImprint    DigestInfo,
+      certs1            [0] SEQUENCE SIZE (1..MAX) OF TargetEtcChain,
+      messageInfo       [1] MessageInfo
+}
+--!! !!!!!  nazwa certs zmieniona na certs1 ze wzgledu na redefinicje w kodzie wynikowym wygenerowanym przez
+--!! kompilator Walkina- skrutkura modulu asn.1 zostaje nietknieta
+--!! dodane messageInfo na potrzeby weryfikacji podpisu zewnetrznego
+
+MessageInfo ::= SEQUENCE  {
+      message           OCTET STRING ,
+      externalData      SET OF DigestInfo
+}
+--!! definicja struktury MessageInfo dodana poza standardem rfc3029 (propozycja Unizeto)
+--!! na potrzeby weryfikacji podpisu zewnetrznego
+
+
+DVCSResponse ::= CHOICE
+{
+    dvCertInfo         DVCSCertInfo ,
+    dvErrorNote        [0] DVCSErrorNotice
+}
+
+DVCSCertInfo::= SEQUENCE  {
+         version             INTEGER DEFAULT 1 ,
+         dvReqInfo           DVCSRequestInformation,
+         messageImprint      DigestInfo,
+         serialNumber        INTEGER,
+         responseTime        DVCSTime,
+         dvStatus            [0] PKIStatusInfo OPTIONAL,
+         policy              [1] PolicyInformation OPTIONAL,
+         reqSignature        [2] SignerInfos  OPTIONAL,
+         certs2               [3] SEQUENCE SIZE (1..MAX) OF
+                                 TargetEtcChain OPTIONAL,
+         extensions          Extensions OPTIONAL
+}
+
+--!! !!!!!  nazwa certs zmieniona na certs2 ze wzgledu na redefinicje w kodzie wynikowym wygenerowanym przez
+--!! kompilator Walkina- skrutkura modulu asn.1 zostaje nietknieta
+
+DVCSErrorNotice ::= SEQUENCE {
+    transactionStatus           PKIStatusInfo ,
+    transactionIdentifier       GeneralName OPTIONAL
+}
+
+--!! dodane by WSZ - definicje z PKIXCMP
+
+PKIStatusInfo ::= SEQUENCE {
+    status        PKIStatus,
+    statusString  PKIFreeText     OPTIONAL,
+    failInfo      PKIFailureInfo  OPTIONAL  }
+
+PKIStatus ::= INTEGER {
+    granted                (0),
+    -- when the PKIStatus contains the value zero a TimeStampToken, as requested, is present.
+    grantedWithMods        (1),
+     -- when the PKIStatus contains the value one a TimeStampToken, with modifications, is present.
+    rejection              (2),
+    waiting                (3),
+    revocationWarning      (4),
+     -- this message contains a warning that a revocation is
+     -- imminent
+    revocationNotification (5)
+     -- notification that a revocation has occurred 
+  }
+
+    -- When the TimeStampToken is not present
+    -- failInfo indicates the reason why the
+    -- time-stamp request was rejected and
+    -- may be one of the following values.
+
+PKIFailureInfo ::= BIT STRING {
+    badAlg               (0),
+      -- unrecognized or unsupported Algorithm Identifier
+    badRequest           (2),
+      -- transaction not permitted or supported
+    badDataFormat        (5),
+      -- the data submitted has the wrong format
+    timeNotAvailable    (14),
+      -- the TSA's time source is not available
+    unacceptedPolicy    (15),
+      -- the requested TSA policy is not supported by the TSA.
+    unacceptedExtension (16),
+      -- the requested extension is not supported by the TSA.
+    addInfoNotAvailable (17),
+      -- the additional information requested could not be understood
+      -- or is not available
+    systemFailure       (25)
+      -- the request cannot be handled due to system failure 
+ }
+
+PKIFreeText ::= SEQUENCE SIZE (1..MAX) OF UTF8String
+
+
+
+END
+

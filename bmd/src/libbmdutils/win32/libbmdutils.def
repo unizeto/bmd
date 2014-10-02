@@ -1,0 +1,39 @@
+LIBRARY "LIBBMDUTILS"
+DESCRIPTION "BMD UTILILTY FUNCTIONS LIBRARY"
+EXPORTS
+	allocStructure
+	Any2Octetstring2GenBuf
+	Any2Octetstring2String
+	find_substrings
+	free_BMD_attr
+	free_BMD_attr_list
+	free_BMD_attr_value_list
+	free_gen_buf
+	free_substrings
+	GenBuf2Octetstring2Any
+	set_gen_buf
+	str_of_OID_to_ulong
+	ulong_oid_to_string_oid
+	str_to_OID
+	asprintf
+	setenv
+	unsetenv
+	get_from_url
+	metadata_get_value_by_oid
+	buff_composer_reentrant
+	write_to_file
+	long2INTEGER
+	set_gen_buf2
+	create_unvisible_kontrolki
+	determine_oid_type
+	create_send_kontrolki
+	create_search_kontrolki
+	create_grid_kontrolki
+	write_to_gen_buf_callback
+	bmd_save_buf
+	bmd_load_binary_content
+	bmd_load_binary_content_wide
+	bmd_str_replace
+	bmd_get_files_from_dir
+
+

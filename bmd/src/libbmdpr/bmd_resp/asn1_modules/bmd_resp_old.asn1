@@ -1,0 +1,31 @@
+BMDResponse {iso(1) member-body(2) pl(616) unizeto(113527) 
+	bmd(4) response(2)}
+
+	DEFINITIONS IMPLICIT TAGS ::=
+
+	BEGIN
+		-- EXPORTS ALL --
+		
+		-- tutaj definicje OID
+
+		Kontrolki ::= SEQUENCE OF Kontrolka
+		
+		Kontrolka ::= SEQUENCE {
+			oid OBJECT IDENTIFIER,
+			etykieta OCTET STRING,
+			rodzaj ENUMERATED {
+				typeUserChoosableEditable (10),
+				typeUserEditableShort (11),
+				typeUserEditableLong (12),
+				typeUserChoosableDialog (13), 
+				typeUserChoosableOnly (14) 
+			},
+			vals SEQUENCE OF OCTET STRING,
+			pozycja INTEGER,
+			sizeX INTEGER,
+			sizeY INTEGER
+		}
+		
+		-- do uzyskania ANY w kompilatorze Leva Walkina --
+		Any1 ::= ANY
+	END

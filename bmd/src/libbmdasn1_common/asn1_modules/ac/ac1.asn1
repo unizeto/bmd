@@ -1,0 +1,289 @@
+PKIXAttributeCertificate {iso(1) identified-organization(3) dod(6)
+                internet(1) security(5) mechanisms(5) pkix(7) id-mod(0)
+                id-mod-attribute-cert(12)}
+
+      DEFINITIONS IMPLICIT TAGS ::=
+
+      BEGIN
+
+      -- EXPORTS ALL --
+
+id-pkix  OBJECT IDENTIFIER  ::=
+         { iso(1) identified-organization(3) dod(6) internet(1)
+                    security(5) mechanisms(5) pkix(7) }
+
+id-pe OBJECT IDENTIFIER  ::=  { id-pkix 1 }
+        -- arc for private certificate extensions
+
+id-kp OBJECT IDENTIFIER ::= { id-pkix 3 }
+        -- arc for extended key purpose OIDS
+id-ad OBJECT IDENTIFIER ::= { id-pkix 48 }
+        -- arc for access descriptors
+
+id-at           OBJECT IDENTIFIER ::= {joint-iso-ccitt(2) ds(5) 4}
+
+id-ce OBJECT IDENTIFIER  ::=  {joint-iso-ccitt(2) ds(5) 29}
+
+      id-pe-ac-auditIdentity       OBJECT IDENTIFIER ::= { id-pe 4 }
+      id-pe-aaControls             OBJECT IDENTIFIER ::= { id-pe 6 }
+      id-pe-ac-proxying            OBJECT IDENTIFIER ::= { id-pe 10 }
+      id-ce-targetInformation      OBJECT IDENTIFIER ::= { id-ce 55 }
+
+      id-aca                       OBJECT IDENTIFIER ::= { id-pkix 10 }
+
+      id-aca-authenticationInfo    OBJECT IDENTIFIER ::= { id-aca 1 }
+      id-aca-accessIdentity        OBJECT IDENTIFIER ::= { id-aca 2 }
+      id-aca-chargingIdentity      OBJECT IDENTIFIER ::= { id-aca 3 }
+      id-aca-group                 OBJECT IDENTIFIER ::= { id-aca 4 }
+      -- { id-aca 5 } is reserved
+      id-aca-encAttrs              OBJECT IDENTIFIER ::= { id-aca 6 }
+
+      id-at-role                   OBJECT IDENTIFIER ::= { id-at 72}
+      id-at-clearance              OBJECT IDENTIFIER ::=
+                  { joint-iso-ccitt(2) ds(5) module(1)
+                    selected-attribute-types(5) clearance (55) }
+
+             -- Uncomment this if using a 1988 level ASN.1 compiler
+             -- UTF8String ::= [UNIVERSAL 12] IMPLICIT OCTET STRING
+
+-- added by bozon 06.12.2004 ****************************************
+
+	id-dsa-with-sha1 OBJECT IDENTIFIER ::=  {
+           iso(1) member-body(2) us(840) x9-57 (10040)
+           x9cm(4) 3 }
+
+	id-sha1  OBJECT IDENTIFIER ::= {
+           iso(1) identified-organization(3) oiw(14) secsig(3)
+           algorithms(2) 26 }
+
+	Dss-Parms  ::=  SEQUENCE  {
+          p             INTEGER,
+          q             INTEGER,
+          g             INTEGER  }
+
+-- added by bozon 24.06.2005 *****************************************
+
+UnizetoAttrSyntax ::= SEQUENCE {
+	policyAuthority GeneralNames OPTIONAL,
+	syntaxId	OBJECT IDENTIFIER,
+	slots		SEQUENCE OF Slot }
+
+Slot ::= SEQUENCE {
+	slotType	OBJECT IDENTIFIER,
+	slotValues	SEQUENCE OF ANY DEFINED BY slotType OPTIONAL }
+
+-- *******************************************************************
+Attribute       ::=     SEQUENCE {
+        type            AttributeType,
+        values  SET OF AttributeValue
+                -- at least one value is required -- }
+
+AttributeType           ::=   OBJECT IDENTIFIER
+
+AttributeValue          ::=   ANY
+
+AttributeTypeAndValue           ::=     SEQUENCE {
+        type    AttributeType,
+        value   AttributeValue }
+
+AlgorithmIdentifier  ::=  SEQUENCE  {
+     algorithm               OBJECT IDENTIFIER,
+     parameters              ANY DEFINED BY algorithm OPTIONAL  }
+                                -- contains a value of the type
+                                -- registered for use with the
+                                -- algorithm object identifier value
+
+CertificateSerialNumber  ::=  INTEGER
+
+Extensions  ::=  SEQUENCE SIZE (1..MAX) OF Extension
+
+Extension  ::=  SEQUENCE  {
+     extnID      OBJECT IDENTIFIER,
+     critical    BOOLEAN DEFAULT FALSE,
+     extnValue   OCTET STRING  }
+
+UniqueIdentifier  ::=  BIT STRING
+
+Name            ::=   CHOICE { -- only one possibility for now --
+                                 rdnSequence  RDNSequence }
+
+RDNSequence     ::=   SEQUENCE OF RelativeDistinguishedName
+
+RelativeDistinguishedName  ::=
+                    SET SIZE (1 .. MAX) OF AttributeTypeAndValue
+
+GeneralNames ::= SEQUENCE SIZE (1..MAX) OF GeneralName
+
+GeneralName ::= CHOICE {
+     otherName                       [0]     AnotherName,
+     rfc822Name                      [1]     IA5String,
+     dNSName                         [2]     IA5String,
+     --x400Address                     [3]     ORAddress,
+     directoryName                   [4]     Name,
+     ediPartyName                    [5]     EDIPartyName,
+     uniformResourceIdentifier       [6]     IA5String,
+     iPAddress                       [7]     OCTET STRING,
+     registeredID                    [8]     OBJECT IDENTIFIER }
+
+-- AnotherName replaces OTHER-NAME ::= TYPE-IDENTIFIER, as
+-- TYPE-IDENTIFIER is not supported in the '88 ASN.1 syntax
+
+AnotherName ::= SEQUENCE {
+
+     type-id    OBJECT IDENTIFIER,
+     value      [0] EXPLICIT ANY DEFINED BY type-id }
+
+DirectoryString ::= CHOICE {
+      teletexString             TeletexString (SIZE (1..MAX)),
+      printableString           PrintableString (SIZE (1..MAX)),
+      universalString           UniversalString (SIZE (1..MAX)),
+      utf8String              UTF8String (SIZE (1..MAX)),
+      bmpString               BMPString (SIZE(1..MAX))   }
+
+EDIPartyName ::= SEQUENCE {
+     nameAssigner            [0]     DirectoryString OPTIONAL,
+     partyName               [1]     DirectoryString }
+
+
+             AttributeCertificate ::= SEQUENCE {
+                   acinfo               AttributeCertificateInfo,
+                   signatureAlgorithm   AlgorithmIdentifier,
+                   signatureValue       BIT STRING
+             }
+
+             AttributeCertificateInfo ::= SEQUENCE {
+                version        AttCertVersion, -- version is v2
+                holder         Holder,
+                issuer         AttCertIssuer,
+                signature      AlgorithmIdentifier,
+                serialNumber   CertificateSerialNumber,
+                attrCertValidityPeriod   AttCertValidityPeriod,
+                attributes     SEQUENCE OF Attribute,
+                issuerUniqueID UniqueIdentifier OPTIONAL,
+                extensions     Extensions     OPTIONAL
+             }
+
+             AttCertVersion ::= INTEGER { v2(1) }
+
+             Holder ::= SEQUENCE {
+                   baseCertificateID   [0] IssuerSerial OPTIONAL,
+                             -- the issuer and serial number of
+                             -- the holder's Public Key Certificate
+                   entityName          [1] GeneralNames OPTIONAL,
+                             -- the name of the claimant or role
+                   objectDigestInfo    [2] ObjectDigestInfo OPTIONAL
+                             -- used to directly authenticate the
+                             -- holder, for example, an executable
+             }
+
+             ObjectDigestInfo    ::= SEQUENCE {
+                   digestedObjectType  ENUMERATED {
+                        publicKey            (0),
+                        publicKeyCert        (1),
+                        otherObjectTypes     (2) },
+                                -- otherObjectTypes MUST NOT
+                                -- MUST NOT be used in this profile
+                   otherObjectTypeID   OBJECT IDENTIFIER  OPTIONAL,
+                   digestAlgorithm     AlgorithmIdentifier,
+                   objectDigest        BIT STRING
+             }
+
+             AttCertIssuer ::= CHOICE {
+                   v1Form   GeneralNames,  -- MUST NOT be used in this
+                                           -- profile
+                   v2Form   [0] V2Form     -- v2 only
+             }
+
+             V2Form ::= SEQUENCE {
+                   issuerName            GeneralNames  OPTIONAL,
+                   baseCertificateID     [0] IssuerSerial  OPTIONAL,
+                   objectDigestInfo      [1] ObjectDigestInfo  OPTIONAL
+                      -- issuerName MUST be present in this profile
+                      -- baseCertificateID and objectDigestInfo MUST
+                      -- NOT be present in this profile
+             }
+
+             IssuerSerial  ::=  SEQUENCE {
+                   issuer         GeneralNames,
+                   serial         CertificateSerialNumber,
+                   issuerUID      UniqueIdentifier OPTIONAL
+             }
+
+             AttCertValidityPeriod  ::= SEQUENCE {
+                   notBeforeTime  GeneralizedTime,
+                   notAfterTime   GeneralizedTime
+             }
+
+             Targets ::= SEQUENCE OF Target
+
+             Target  ::= CHOICE {
+                   targetName     [0] GeneralName,
+                   targetGroup    [1] GeneralName,
+                   targetCert     [2] TargetCert
+             }
+
+             TargetCert  ::= SEQUENCE {
+                   targetCertificate  IssuerSerial,
+                   targetName         GeneralName OPTIONAL,
+                   certDigestInfo     ObjectDigestInfo OPTIONAL
+             }
+
+             IetfAttrSyntax ::= SEQUENCE {
+                  policyAuthority[0] GeneralNames    OPTIONAL,
+                  values         SEQUENCE OF CHOICE {
+                                 octets    OCTET STRING,
+                                 oid       OBJECT IDENTIFIER,
+                                 string    UTF8String
+                 }
+             }
+
+             SvceAuthInfo ::=    SEQUENCE {
+                   service       GeneralName,
+                   ident         GeneralName,
+                   authInfo      OCTET STRING OPTIONAL
+             }
+
+             RoleSyntax ::= SEQUENCE {
+                   roleAuthority  [0] GeneralNames OPTIONAL,
+                   roleName       [1] GeneralName
+             }
+
+             Clearance  ::=  SEQUENCE {
+                   policyId       [0] OBJECT IDENTIFIER,
+                   classList      [1] ClassList DEFAULT {unclassified},
+                   securityCategories
+                                  [2] SET OF SecurityCategory  OPTIONAL
+             }
+
+             ClassList  ::=  BIT STRING {
+                   unmarked       (0),
+                   unclassified   (1),
+                   restricted     (2),
+                   confidential   (3),
+                   secret         (4),
+                   topSecret      (5)
+             }
+
+             SecurityCategory ::= SEQUENCE {
+                   type      [0]  IMPLICIT OBJECT IDENTIFIER,
+                   value     [1]  ANY DEFINED BY type
+             }
+
+             AAControls ::= SEQUENCE {
+                   pathLenConstraint INTEGER (0..MAX) OPTIONAL,
+                   permittedAttrs    [0] AttrSpec OPTIONAL,
+                   excludedAttrs     [1] AttrSpec OPTIONAL,
+                   permitUnSpecified BOOLEAN DEFAULT TRUE
+             }
+
+             AttrSpec::= SEQUENCE OF OBJECT IDENTIFIER
+
+             ACClearAttrs ::= SEQUENCE {
+                   acIssuer          GeneralName,
+                   acSerial          INTEGER,
+                   attrs             SEQUENCE OF Attribute
+             }
+
+             ProxyInfo ::= SEQUENCE OF Targets
+
+      END

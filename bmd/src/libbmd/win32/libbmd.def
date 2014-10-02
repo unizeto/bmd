@@ -1,0 +1,37 @@
+LIBRARY "libbmd"
+DESCRIPTION "BMD API Dynamic Link Library"
+EXPORTS 
+	bmd_init
+	bmd_end
+	bmd_info_create
+	bmd_info_login_set
+	bmd_info_set_role_callback
+	bmd_info_set_selected_role
+	bmd_info_set_cert_login_as
+	bmd_login
+	bmd_logout
+	bmd_send_request
+	bmd_send_request_lo
+	bmd_datagram_create
+	bmd_datagram_add_data
+	bmd_datagram_add_file
+	bmd_datagram_add_metadata
+	bmd_datagram_add_limits
+	bmd_genbuf_set
+	bmd_genbuf_free
+	genbuf_to_char
+	bmd_userform_free
+	bmd_datagram_free
+	bmd_datagram_get_id
+	bmd_datagram_set_id
+	bmd_datagram_save_file
+	bmd_oid_to_string
+	bmd_datagram_get_metadata
+	bmd_datagram_add_to_set
+	bmd_datagram_determine_pki_metadata_types
+	bmd_low_level_login
+	bmd_genbuf_hex_dump
+	bmd_lob_request_info_add_filename
+	bmd_lob_request_info_create
+	bmd_lob_request_info_destroy
+	bmd_datagram_set_filename

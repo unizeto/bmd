@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+counter=0
+
+while [ $counter -ne 400 ]
+do	
+    counter=$(($counter+1))
+    echo ${counter}
+    ./test_bmd_insert
+done

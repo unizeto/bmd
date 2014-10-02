@@ -1,0 +1,1050 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Service"
+ targetNamespace="ns.xsd"
+ xmlns:tns="ns.xsd"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns="ns.xsd"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="ns.xsd"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="ns.xsd"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="awizoConfig">
+   <sequence>
+     <element name="smtpAddr" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtpPort" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtpUser" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtpPswd" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="awizoSuccess" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="awizoFailed" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="allowImageAbsent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="csvDir" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="csvSeparator" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pfxfile" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pfxPIN" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="maxImageSize" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="awizoAction" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mailqueue" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="maxcachesize" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="maxmailqueue" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sendingtime" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="awizoMessage">
+   <sequence>
+     <element name="value" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="ns-dateTime">
+   <sequence>
+     <element name="dateTime" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="dateTimeComplexList">
+   <sequence>
+    <element name="item" type="ns:ns-dateTime" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="senderComplex">
+   <sequence>
+     <element name="id" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="email" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="created" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="deleted" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtpaddr" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtpport" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtpuser" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smtppassword" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pfxfile" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pfxpin" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="maximagesize" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="csvdir" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="csvseparator" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="awizoaction" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="allowimageabsent" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="smsapiurl" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="smsapierror" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="templateComplex">
+   <sequence>
+     <element name="id" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="created" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="deleted" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="messagesenderid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="lang" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="version" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="xsltohtml" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="xsltotext" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sign" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="attachmentComplex">
+   <sequence>
+     <element name="id" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="created" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="deleted" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="templateid" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="filename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mimetype" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="disposition" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="text" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="senderComplexList">
+   <sequence>
+    <element name="item" type="ns:senderComplex" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="awizoGetSendersList">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoGetSendersListResponse">
+   <complexType>
+    <sequence>
+     <element name="senderList" type="ns:senderComplexList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoInsertTemplate">
+   <complexType>
+    <sequence>
+     <element name="emailTemplate" type="ns:templateComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoInsertTemplateResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoDeleteTemplate">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoDeleteTemplateResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoDownloadTemplate">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoDownloadTemplateResponse">
+   <complexType>
+    <sequence>
+     <element name="emailTemplate" type="ns:templateComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoChangeTemplateInfo">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="emailTemplate" type="ns:templateComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoChangeTemplateInfoResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoInsertAttachment">
+   <complexType>
+    <sequence>
+     <element name="emailAttachment" type="ns:attachmentComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoInsertAttachmentResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoDeleteAttachment">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoDeleteAttachmentResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoDownloadAttachment">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoDownloadAttachmentResponse">
+   <complexType>
+    <sequence>
+     <element name="emailAttachment" type="ns:attachmentComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoChangeAttachmentInfo">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="emailAttachment" type="ns:attachmentComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoChangeAttachmentInfoResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoInsertSender">
+   <complexType>
+    <sequence>
+     <element name="sender" type="ns:senderComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoInsertSenderResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoDeleteSender">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoDeleteSenderResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoGetSenderInfo">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoGetSenderInfoResponse">
+   <complexType>
+    <sequence>
+     <element name="sender" type="ns:senderComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoChangeSenderInfo">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="sender" type="ns:senderComplex" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoChangeSenderInfoResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoSend">
+   <complexType>
+    <sequence>
+     <element name="message" type="ns:awizoMessage" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoSendResponse">
+   <complexType>
+    <sequence>
+     <element name="msgID" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoSetFromMsgQueueSend">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoSetFromMsgQueueSendResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="clearCache">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="clearCacheResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="clearMailQueue">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="clearMailQueueResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="countMailFromQueue">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="countMailFromQueueResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="stopSendingProcess">
+   <complexType>
+    <sequence>
+     <element name="awizo-switch" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="stopSendingProcessResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="changeConfiguration">
+   <complexType>
+    <sequence>
+     <element name="conf" type="ns:awizoConfig" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="changeConfigurationResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="awizoSendSMS">
+   <complexType>
+    <sequence>
+     <element name="message" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="to" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="awizoSendSMSResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="addAdviceDispatchSetting">
+   <complexType>
+    <sequence>
+     <element name="message" type="ns:awizoMessage" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="dateTime" type="ns:dateTimeComplexList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="addAdviceDispatchSettingResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="changeAdviceDispatchSetting">
+   <complexType>
+    <sequence>
+     <element name="dispatchSettingId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="message" type="ns:awizoMessage" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="dateTime" type="ns:dateTimeComplexList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="changeAdviceDispatchSettingResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="removeAdviceDispatchSetting">
+   <complexType>
+    <sequence>
+     <element name="dispatchSettingId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="removeAdviceDispatchSettingResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="awizoGetSendersListRequest">
+ <part name="parameters" element="ns:awizoGetSendersList"/>
+</message>
+
+<message name="awizoGetSendersListResponse">
+ <part name="parameters" element="ns:awizoGetSendersListResponse"/>
+</message>
+
+<message name="awizoInsertTemplateRequest">
+ <part name="parameters" element="ns:awizoInsertTemplate"/>
+</message>
+
+<message name="awizoInsertTemplateResponse">
+ <part name="parameters" element="ns:awizoInsertTemplateResponse"/>
+</message>
+
+<message name="awizoDeleteTemplateRequest">
+ <part name="parameters" element="ns:awizoDeleteTemplate"/>
+</message>
+
+<message name="awizoDeleteTemplateResponse">
+ <part name="parameters" element="ns:awizoDeleteTemplateResponse"/>
+</message>
+
+<message name="awizoDownloadTemplateRequest">
+ <part name="parameters" element="ns:awizoDownloadTemplate"/>
+</message>
+
+<message name="awizoDownloadTemplateResponse">
+ <part name="parameters" element="ns:awizoDownloadTemplateResponse"/>
+</message>
+
+<message name="awizoChangeTemplateInfoRequest">
+ <part name="parameters" element="ns:awizoChangeTemplateInfo"/>
+</message>
+
+<message name="awizoChangeTemplateInfoResponse">
+ <part name="parameters" element="ns:awizoChangeTemplateInfoResponse"/>
+</message>
+
+<message name="awizoInsertAttachmentRequest">
+ <part name="parameters" element="ns:awizoInsertAttachment"/>
+</message>
+
+<message name="awizoInsertAttachmentResponse">
+ <part name="parameters" element="ns:awizoInsertAttachmentResponse"/>
+</message>
+
+<message name="awizoDeleteAttachmentRequest">
+ <part name="parameters" element="ns:awizoDeleteAttachment"/>
+</message>
+
+<message name="awizoDeleteAttachmentResponse">
+ <part name="parameters" element="ns:awizoDeleteAttachmentResponse"/>
+</message>
+
+<message name="awizoDownloadAttachmentRequest">
+ <part name="parameters" element="ns:awizoDownloadAttachment"/>
+</message>
+
+<message name="awizoDownloadAttachmentResponse">
+ <part name="parameters" element="ns:awizoDownloadAttachmentResponse"/>
+</message>
+
+<message name="awizoChangeAttachmentInfoRequest">
+ <part name="parameters" element="ns:awizoChangeAttachmentInfo"/>
+</message>
+
+<message name="awizoChangeAttachmentInfoResponse">
+ <part name="parameters" element="ns:awizoChangeAttachmentInfoResponse"/>
+</message>
+
+<message name="awizoInsertSenderRequest">
+ <part name="parameters" element="ns:awizoInsertSender"/>
+</message>
+
+<message name="awizoInsertSenderResponse">
+ <part name="parameters" element="ns:awizoInsertSenderResponse"/>
+</message>
+
+<message name="awizoDeleteSenderRequest">
+ <part name="parameters" element="ns:awizoDeleteSender"/>
+</message>
+
+<message name="awizoDeleteSenderResponse">
+ <part name="parameters" element="ns:awizoDeleteSenderResponse"/>
+</message>
+
+<message name="awizoGetSenderInfoRequest">
+ <part name="parameters" element="ns:awizoGetSenderInfo"/>
+</message>
+
+<message name="awizoGetSenderInfoResponse">
+ <part name="parameters" element="ns:awizoGetSenderInfoResponse"/>
+</message>
+
+<message name="awizoChangeSenderInfoRequest">
+ <part name="parameters" element="ns:awizoChangeSenderInfo"/>
+</message>
+
+<message name="awizoChangeSenderInfoResponse">
+ <part name="parameters" element="ns:awizoChangeSenderInfoResponse"/>
+</message>
+
+<message name="awizoSendRequest">
+ <part name="parameters" element="ns:awizoSend"/>
+</message>
+
+<message name="awizoSendResponse">
+ <part name="parameters" element="ns:awizoSendResponse"/>
+</message>
+
+<message name="awizoSetFromMsgQueueSendRequest">
+ <part name="parameters" element="ns:awizoSetFromMsgQueueSend"/>
+</message>
+
+<message name="awizoSetFromMsgQueueSendResponse">
+ <part name="parameters" element="ns:awizoSetFromMsgQueueSendResponse"/>
+</message>
+
+<message name="clearCacheRequest">
+ <part name="parameters" element="ns:clearCache"/>
+</message>
+
+<message name="clearCacheResponse">
+ <part name="parameters" element="ns:clearCacheResponse"/>
+</message>
+
+<message name="clearMailQueueRequest">
+ <part name="parameters" element="ns:clearMailQueue"/>
+</message>
+
+<message name="clearMailQueueResponse">
+ <part name="parameters" element="ns:clearMailQueueResponse"/>
+</message>
+
+<message name="countMailFromQueueRequest">
+ <part name="parameters" element="ns:countMailFromQueue"/>
+</message>
+
+<message name="countMailFromQueueResponse">
+ <part name="parameters" element="ns:countMailFromQueueResponse"/>
+</message>
+
+<message name="stopSendingProcessRequest">
+ <part name="parameters" element="ns:stopSendingProcess"/>
+</message>
+
+<message name="stopSendingProcessResponse">
+ <part name="parameters" element="ns:stopSendingProcessResponse"/>
+</message>
+
+<message name="changeConfigurationRequest">
+ <part name="parameters" element="ns:changeConfiguration"/>
+</message>
+
+<message name="changeConfigurationResponse">
+ <part name="parameters" element="ns:changeConfigurationResponse"/>
+</message>
+
+<message name="awizoSendSMSRequest">
+ <part name="parameters" element="ns:awizoSendSMS"/>
+</message>
+
+<message name="awizoSendSMSResponse">
+ <part name="parameters" element="ns:awizoSendSMSResponse"/>
+</message>
+
+<message name="addAdviceDispatchSettingRequest">
+ <part name="parameters" element="ns:addAdviceDispatchSetting"/>
+</message>
+
+<message name="addAdviceDispatchSettingResponse">
+ <part name="parameters" element="ns:addAdviceDispatchSettingResponse"/>
+</message>
+
+<message name="changeAdviceDispatchSettingRequest">
+ <part name="parameters" element="ns:changeAdviceDispatchSetting"/>
+</message>
+
+<message name="changeAdviceDispatchSettingResponse">
+ <part name="parameters" element="ns:changeAdviceDispatchSettingResponse"/>
+</message>
+
+<message name="removeAdviceDispatchSettingRequest">
+ <part name="parameters" element="ns:removeAdviceDispatchSetting"/>
+</message>
+
+<message name="removeAdviceDispatchSettingResponse">
+ <part name="parameters" element="ns:removeAdviceDispatchSettingResponse"/>
+</message>
+
+<portType name="ServicePortType">
+ <operation name="awizoGetSendersList">
+  <documentation>Service definition of function ns__awizoGetSendersList</documentation>
+  <input message="tns:awizoGetSendersListRequest"/>
+  <output message="tns:awizoGetSendersListResponse"/>
+ </operation>
+ <operation name="awizoInsertTemplate">
+  <documentation>Service definition of function ns__awizoInsertTemplate</documentation>
+  <input message="tns:awizoInsertTemplateRequest"/>
+  <output message="tns:awizoInsertTemplateResponse"/>
+ </operation>
+ <operation name="awizoDeleteTemplate">
+  <documentation>Service definition of function ns__awizoDeleteTemplate</documentation>
+  <input message="tns:awizoDeleteTemplateRequest"/>
+  <output message="tns:awizoDeleteTemplateResponse"/>
+ </operation>
+ <operation name="awizoDownloadTemplate">
+  <documentation>Service definition of function ns__awizoDownloadTemplate</documentation>
+  <input message="tns:awizoDownloadTemplateRequest"/>
+  <output message="tns:awizoDownloadTemplateResponse"/>
+ </operation>
+ <operation name="awizoChangeTemplateInfo">
+  <documentation>Service definition of function ns__awizoChangeTemplateInfo</documentation>
+  <input message="tns:awizoChangeTemplateInfoRequest"/>
+  <output message="tns:awizoChangeTemplateInfoResponse"/>
+ </operation>
+ <operation name="awizoInsertAttachment">
+  <documentation>Service definition of function ns__awizoInsertAttachment</documentation>
+  <input message="tns:awizoInsertAttachmentRequest"/>
+  <output message="tns:awizoInsertAttachmentResponse"/>
+ </operation>
+ <operation name="awizoDeleteAttachment">
+  <documentation>Service definition of function ns__awizoDeleteAttachment</documentation>
+  <input message="tns:awizoDeleteAttachmentRequest"/>
+  <output message="tns:awizoDeleteAttachmentResponse"/>
+ </operation>
+ <operation name="awizoDownloadAttachment">
+  <documentation>Service definition of function ns__awizoDownloadAttachment</documentation>
+  <input message="tns:awizoDownloadAttachmentRequest"/>
+  <output message="tns:awizoDownloadAttachmentResponse"/>
+ </operation>
+ <operation name="awizoChangeAttachmentInfo">
+  <documentation>Service definition of function ns__awizoChangeAttachmentInfo</documentation>
+  <input message="tns:awizoChangeAttachmentInfoRequest"/>
+  <output message="tns:awizoChangeAttachmentInfoResponse"/>
+ </operation>
+ <operation name="awizoInsertSender">
+  <documentation>Service definition of function ns__awizoInsertSender</documentation>
+  <input message="tns:awizoInsertSenderRequest"/>
+  <output message="tns:awizoInsertSenderResponse"/>
+ </operation>
+ <operation name="awizoDeleteSender">
+  <documentation>Service definition of function ns__awizoDeleteSender</documentation>
+  <input message="tns:awizoDeleteSenderRequest"/>
+  <output message="tns:awizoDeleteSenderResponse"/>
+ </operation>
+ <operation name="awizoGetSenderInfo">
+  <documentation>Service definition of function ns__awizoGetSenderInfo</documentation>
+  <input message="tns:awizoGetSenderInfoRequest"/>
+  <output message="tns:awizoGetSenderInfoResponse"/>
+ </operation>
+ <operation name="awizoChangeSenderInfo">
+  <documentation>Service definition of function ns__awizoChangeSenderInfo</documentation>
+  <input message="tns:awizoChangeSenderInfoRequest"/>
+  <output message="tns:awizoChangeSenderInfoResponse"/>
+ </operation>
+ <operation name="awizoSend">
+  <documentation>Service definition of function ns__awizoSend</documentation>
+  <input message="tns:awizoSendRequest"/>
+  <output message="tns:awizoSendResponse"/>
+ </operation>
+ <operation name="awizoSetFromMsgQueueSend">
+  <documentation>Service definition of function ns__awizoSetFromMsgQueueSend</documentation>
+  <input message="tns:awizoSetFromMsgQueueSendRequest"/>
+  <output message="tns:awizoSetFromMsgQueueSendResponse"/>
+ </operation>
+ <operation name="clearCache">
+  <documentation>Service definition of function ns__clearCache</documentation>
+  <input message="tns:clearCacheRequest"/>
+  <output message="tns:clearCacheResponse"/>
+ </operation>
+ <operation name="clearMailQueue">
+  <documentation>Service definition of function ns__clearMailQueue</documentation>
+  <input message="tns:clearMailQueueRequest"/>
+  <output message="tns:clearMailQueueResponse"/>
+ </operation>
+ <operation name="countMailFromQueue">
+  <documentation>Service definition of function ns__countMailFromQueue</documentation>
+  <input message="tns:countMailFromQueueRequest"/>
+  <output message="tns:countMailFromQueueResponse"/>
+ </operation>
+ <operation name="stopSendingProcess">
+  <documentation>Service definition of function ns__stopSendingProcess</documentation>
+  <input message="tns:stopSendingProcessRequest"/>
+  <output message="tns:stopSendingProcessResponse"/>
+ </operation>
+ <operation name="changeConfiguration">
+  <documentation>Service definition of function ns__changeConfiguration</documentation>
+  <input message="tns:changeConfigurationRequest"/>
+  <output message="tns:changeConfigurationResponse"/>
+ </operation>
+ <operation name="awizoSendSMS">
+  <documentation>Service definition of function ns__awizoSendSMS</documentation>
+  <input message="tns:awizoSendSMSRequest"/>
+  <output message="tns:awizoSendSMSResponse"/>
+ </operation>
+ <operation name="addAdviceDispatchSetting">
+  <documentation>Service definition of function ns__addAdviceDispatchSetting</documentation>
+  <input message="tns:addAdviceDispatchSettingRequest"/>
+  <output message="tns:addAdviceDispatchSettingResponse"/>
+ </operation>
+ <operation name="changeAdviceDispatchSetting">
+  <documentation>Service definition of function ns__changeAdviceDispatchSetting</documentation>
+  <input message="tns:changeAdviceDispatchSettingRequest"/>
+  <output message="tns:changeAdviceDispatchSettingResponse"/>
+ </operation>
+ <operation name="removeAdviceDispatchSetting">
+  <documentation>Service definition of function ns__removeAdviceDispatchSetting</documentation>
+  <input message="tns:removeAdviceDispatchSettingRequest"/>
+  <output message="tns:removeAdviceDispatchSettingResponse"/>
+ </operation>
+</portType>
+
+<binding name="Service" type="tns:ServicePortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="awizoGetSendersList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoInsertTemplate">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoDeleteTemplate">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoDownloadTemplate">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoChangeTemplateInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoInsertAttachment">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoDeleteAttachment">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoDownloadAttachment">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoChangeAttachmentInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoInsertSender">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoDeleteSender">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoGetSenderInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoChangeSenderInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoSend">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoSetFromMsgQueueSend">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="clearCache">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="clearMailQueue">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="countMailFromQueue">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="stopSendingProcess">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="changeConfiguration">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="awizoSendSMS">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="addAdviceDispatchSetting">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="changeAdviceDispatchSetting">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="removeAdviceDispatchSetting">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="Service">
+ <documentation>gSOAP 2.7.9f generated service definition</documentation>
+ <port name="Service" binding="tns:Service">
+  <SOAP:address location="http://127.0.0.1:9999"/>
+ </port>
+</service>
+
+</definitions>

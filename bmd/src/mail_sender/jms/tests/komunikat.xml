@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AWIZO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Bill_layout_P4_V01.xsd">
+    <DOCUMENT DocType="1">
+	<SINSEQ>f/00822301/02/09</SINSEQ>
+	<STATEDATE>22/02/2009</STATEDATE>
+	<TOTINVDUE>0.00</TOTINVDUE>
+	<TITLE>Awizo</TITLE>
+	<SENDER>5</SENDER>
+	<RECEIVER>tomasz.klimek@unizeto.pl</RECEIVER>
+	<TEMPLATEID>25</TEMPLATEID>
+	<TEMPLATENAME>Play</TEMPLATENAME>
+	<RECEIVERTYPE>Indywidualny</RECEIVERTYPE>
+	<LANGUAGE>PL</LANGUAGE>
+    </DOCUMENT>
+</AWIZO>

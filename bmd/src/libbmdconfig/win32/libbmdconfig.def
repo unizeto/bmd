@@ -1,0 +1,11 @@
+LIBRARY "libbmdconfig"
+DESCRIPTION "New conf file library"
+EXPORTS
+	bmdconf_init
+	bmdconf_destroy
+	bmdconf_load_file
+	bmdconf_add_section2dict
+	bmdconf_get_value
+	bmdconf_get_value_static
+	bmdconf_get_value_int
+	bmdconf_load_memory

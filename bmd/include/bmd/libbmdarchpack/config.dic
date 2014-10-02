@@ -1,0 +1,22 @@
+/* Słownik ustawień konfiguracyjnych */
+
+const char* config_dic[] = {
+"IDENTYFIKATOR 1 \"^[0-9.]+$\"",
+"TWORCA 1 \"^[0-9.]+$\"",
+"TYTUL 1 \"^[0-9.]+$\"",
+"DATA 1 \"^[0-9.]+$\"",
+"TYP 1 \"^[0-9.]+$\"",
+"FORMAT 1 \"^[0-9.]+$\"",
+"DOSTEP 1 \"^[0-9.]+$\"",
+"#ODBIORCA 1 \"^[0-9.]+$\"",
+"#RELACJA 1 \"^[0-9.]+$\"",
+"#GRUPOWANIE 1 \"^[0-9.]+$\"",
+"#KWALIFIKACJA 1 \"^[0-9.]+$\"",
+"#JEZYK 1 \"^[0-9.]+$\"",
+"#OPIS 1 \"^[0-9.]+$\"",
+"#UPRAWNIENIA 1 \"^[0-9.]+$\"",
+"REPOSITORY 0",
+"TMP_DIR 0",
+""
+};
+

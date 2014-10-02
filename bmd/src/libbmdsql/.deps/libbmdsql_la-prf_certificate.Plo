@@ -1,0 +1,3 @@
+libbmdsql_la-prf_certificate.lo: prf_certificate.c ../../src/config.h
+
+../../src/config.h:

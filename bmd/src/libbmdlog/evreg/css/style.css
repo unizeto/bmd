@@ -1,0 +1,83 @@
+body {
+ behavior:url("csshover.htc");
+ margin: 10px;
+}
+
+hi {
+ border: 0px solid #333;
+}
+
+td.default {
+ background-color: #ffffff;
+ cursor: default;
+}
+
+td.hiLabel1 {
+ background-color: #f6f6e6;
+}
+
+td.hiLabel2 {
+ background-color: #f6f6e6;
+}
+
+th {
+ background-color: #ddf3ff;
+ font-family: verdena, sans-serif;
+ font-size: 13px;
+}
+
+table.hi tr:hover {
+ background-color: #ffd69f;
+ cursor: pointer;
+}
+
+table.hi tr {
+ background-color: #ffffdf;
+}
+
+table.hi td {
+ border: 0px solid #222;
+ font-family: verdena, sans-serif;
+ font-size: 12px;
+}
+
+
+table.menuEvents tr {
+ background-color: #f6f6e6;
+}
+
+table.menuEvents td {
+ border: 0px solid #222;
+ font-family: verdena, sans-serif;
+ font-size: 12px;
+ text-align: left;
+}
+
+table.menuEvents tr:hover {
+ background-color: #f6f6e6;
+ cursor: pointer;
+}
+
+
+table.menuAdditional tr {
+ background-color: #f6f6e6;
+}
+
+table.menuAdditional td {
+ border: 0px solid #222;
+ font-family: verdena, sans-serif;
+ font-size: 12px;
+ text-align: left;
+}
+
+table.menuAdditional tr:hover {
+ background-color: #f6f6e6;
+ cursor: pointer;
+}
+
+h1 {
+ background-color: #f6f6e6;
+ font-family: verdena, sans-serif;
+ font-size: 28px;
+ color : #1996c7;
+}

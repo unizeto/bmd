@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dokument>
+	<nagłówek>
+		<typ rodzaj="formularz">
+			<oid>1.1.5.1</oid>
+		</typ>
+		<tytuł>
+			<oryginalny>Odpowiedź urzędnika</oryginalny>
+		</tytuł>
+		<opis>
+			Niniejszy formularz umożliwia wysłanie informacji zwrotnej do Intersanta. 
+			W polu "opis" należy umieścić opis załączonego dokumentu oraz sprawy,
+			której on dotyczy.
+		</opis>
+		<twórca> 
+			<funkcja>autor</funkcja>
+			<podmiot>
+				<osoba> 
+				   <nazwisko>Karczmarczyk</nazwisko>
+				   <imię numer="1">Artur</imię>
+				   <id typ="pesel"></id>
+				   <kontakt typ="email"></kontakt>
+				   <adres>
+				      <kod>71-146</kod>
+						<poczta>Szczecin</poczta>
+						<miejscowość>Szczecin</miejscowość>
+						<ulica>Brodz.</ulica>
+						<budynek>666</budynek>
+						<lokal>333</lokal>
+						<kraj>Polska</kraj>
+				   </adres>
+				</osoba>
+			</podmiot>
+		</twórca>
+		<adresat> 
+		   <podmiot>
+			<instytucja>
+			   <id typ="numer">AZG5643C</id>
+			   <nazwa>Urząd Miasta w Pacanowie</nazwa>
+			   <kontakt typ="email">urzad@miasto.pl</kontakt>
+			</instytucja>
+		   </podmiot>
+		</adresat>
+		<data typ="stworzony"></data>
+	</nagłówek>
+	<treść>
+		<opis></opis>
+	</treść>
+	<komentarz/>
+	<załączniki/>
+</dokument>

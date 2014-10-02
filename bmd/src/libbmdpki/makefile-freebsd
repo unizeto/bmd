@@ -1,0 +1,39 @@
+# makefile biblioteki libbmdpki.a
+# Autorzy: marua, bozon
+# Data: marzec 2005
+
+CC = gcc
+FLAGS = -Wall
+PROJECTN_STATIC=libbmdpki.a
+OBJECT=libbmdpki.o
+
+OPTIONS=-D__UNIX__
+
+CRYPTLIB_INCLUDE=-I../../inc/cl322
+OPENSSL_INCLUDE=-I/usr/include
+
+PREFIX=../../inc/bmd
+
+PREFIX_PKI=$(PREFIX)/libbmdpki
+PKCS12_INCLUDE=-I$(PREFIX)/libbmdpkcs12
+COMMON_INCLUDE=-I$(PREFIX)/common
+DIALOGS_INCLUDE=-I$(PREFIX)/libbmddialogs
+UTILS_INCLUDE=-I$(PREFIX)/libbmdutils
+PKI_INCLUDE=-I$(PREFIX_PKI)
+ASN1_INCLUDE=-I$(PREFIX)/libbmdasn1_core
+
+INCLUDE=$(CRYPTLIB_INCLUDE) $(PKI_INCLUDE) $(COMMON_INCLUDE) $(PKCS12_INCLUDE) $(UTILS_INCLUDE) $(DIALOGS_INCLUDE) $(ASN1_INCLUDE)
+
+OUTPUT_DIR = ../../libs/freebsd
+
+all: $(OBJECT)
+	ar rcs $(PROJECTN_STATIC) $(OBJECT)
+	
+$(OBJECT): libbmdpki.c
+	$(CC) -c libbmdpki.c $(OPTIONS) $(INCLUDE) $(FLAGS)
+	
+clean:
+	rm -rf *.o $(PROJECTN_STATIC)
+
+install:
+	cp $(PROJECTN_STATIC) $(OUTPUT_DIR)

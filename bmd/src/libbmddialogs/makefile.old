@@ -1,0 +1,31 @@
+# makefile biblioteki libbmdpki.a
+# Autorzy: marua, bozon
+
+CC = g++
+FLAGS = -Wall
+PROJECTN_STATIC=libbmddialogs.a
+SOURCE=libbmddialogs.cpp
+OBJECT=libbmddialogs.o
+
+PREFIX=../../inc/bmd
+PREFIX_DLG=$(PREFIX)/libbmddialogs
+
+WX_INCL=`wx-config --cxxflags`
+COMMON_INCLUDE=-I$(PREFIX)/common
+PKI_INCLUDE=-I$(PREFIX)/libbmdpki
+CRYPTLIB_INCLUDE=-I../../inc/cl322
+INCLUDE=-I$(PREFIX_DLG) $(WX_INCL) $(COMMON_INCLUDE) $(PKI_INCLUDE) $(CRYPTLIB_INCLUDE)
+
+OUTPUT_DIR = ../../libs/linux
+
+all: $(OBJECT)
+	ar rcs $(PROJECTN_STATIC) $(OBJECT)
+	
+$(OBJECT): $(SOURCE) $(PREFIX_DLG)/libbmddialogs.h
+	$(CC) -c $(SOURCE) $(OPTIONS) $(INCLUDE) $(FLAGS)
+	
+clean:
+	rm -rf *.o $(PROJECTN_STATIC)
+
+install:
+	cp $(PROJECTN_STATIC) $(OUTPUT_DIR)

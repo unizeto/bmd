@@ -1,0 +1,30 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: libbmdpki - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\si\USTAWI~1\Temp\RSP1490.tmp" with contents
+[
+cl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libeay32.lib ssleay32.lib libbmdpkcs12.lib libbmdutils.lib libcurld.lib pcre67d.lib libbmderr.lib libbmdts.lib libbmdasn1_core.lib libbmdasn1_common.lib libbmdX509.lib libbmdcms.lib Ws2_32.lib Winmm.lib libbmdpkcs11.lib /nologo /dll /incremental:yes /pdb:"../../../exe_trunk/libbmdpki.pdb" /debug /machine:I386 /def:".\libbmdpki.def" /out:"../../../exe_trunk/libbmdpki.dll" /implib:"../../../exe_trunk/libbmdpki.lib" /pdbtype:sept /libpath:"../../../../../common/win32/libs" /libpath:"../../../exe_trunk" 
+.\Debug\libbmdpki.obj
+\svn\bmd\trunk\exe_trunk\libbmdpkcs12.lib
+\svn\bmd\trunk\exe_trunk\libbmdutils.lib
+\svn\bmd\trunk\exe_trunk\libbmdcms.lib
+\svn\bmd\trunk\exe_trunk\libbmdts.lib
+\svn\bmd\trunk\exe_trunk\libbmdX509.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\si\USTAWI~1\Temp\RSP1490.tmp"
+<h3>Output Window</h3>
+Linking...
+   Creating library ../../../exe_trunk/libbmdpki.lib and object ../../../exe_trunk/libbmdpki.exp
+
+
+
+<h3>Results</h3>
+libbmdpki.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: libbmdpr - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\si\USTAWI~1\Temp\RSP194B.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /ZI /Od /I "../../../include" /I "../../../../../common/win32/include" /I "../../../../../common/win32/include/cl322" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBBMDPR_EXPORTS" /D "INC_CHILD" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\bmd_datagram.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\bmd_datagram_set.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_resp\bmd_resp.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\asn1clib\BMDDatagram.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\asn1clib\BMDDatagramSet.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_ANY.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_BIT_STRING.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\prlib\PR_BMDDatagram.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\prlib\PR_BMDDatagramSet.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_INTEGER.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_resp\prlib\PR_Kontrolka.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_resp\prlib\PR_Kontrolki.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_lib.c"
+"H:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\prlib\PR_MetaData.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_OBJECT_IDENTIFIER.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_OCTET_STRING.c"
+"H:\svn\bmd\trunk\src\libbmdpr\prlib-common\PR_Utils.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\si\USTAWI~1\Temp\RSP194B.tmp" 
+Creating temporary file "C:\DOCUME~1\si\USTAWI~1\Temp\RSP194C.tmp" with contents
+[
+libbmdasn1_core.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libbmdutils.lib libbmdpki.lib libbmderr.lib /nologo /dll /incremental:yes /pdb:"../../../exe_trunk/libbmdpr.pdb" /debug /machine:I386 /def:".\libbmdpr.def" /out:"../../../exe_trunk/libbmdpr.dll" /implib:"../../../exe_trunk/libbmdpr.lib" /pdbtype:sept /libpath:"../../../../../common/win32/libs" /libpath:"../../../exe_trunk" 
+.\Debug\bmd_datagram.obj
+.\Debug\bmd_datagram_set.obj
+.\Debug\bmd_resp.obj
+.\Debug\BMDDatagram.obj
+.\Debug\BMDDatagramSet.obj
+.\Debug\Kontrolka.obj
+.\Debug\Kontrolki.obj
+.\Debug\libbmdpr.obj
+.\Debug\MetaData.obj
+.\Debug\PR_ANY.obj
+.\Debug\PR_BIT_STRING.obj
+.\Debug\PR_BMDDatagram.obj
+.\Debug\PR_BMDDatagramSet.obj
+.\Debug\PR_INTEGER.obj
+.\Debug\PR_Kontrolka.obj
+.\Debug\PR_Kontrolki.obj
+.\Debug\PR_lib.obj
+.\Debug\PR_MetaData.obj
+.\Debug\PR_OBJECT_IDENTIFIER.obj
+.\Debug\PR_OCTET_STRING.obj
+.\Debug\PR_Utils.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\si\USTAWI~1\Temp\RSP194C.tmp"
+<h3>Output Window</h3>
+Compiling...
+bmd_datagram.c
+bmd_datagram_set.c
+bmd_resp.c
+BMDDatagram.c
+h:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\asn1clib\bmddatagram.c(54) : warning C4090: 'function' : different 'const' qualifiers
+h:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\asn1clib\bmddatagram.c(54) : warning C4022: 'function through pointer' : pointer mismatch for actual parameter 4
+h:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\asn1clib\bmddatagram.c(69) : warning C4090: 'function' : different 'const' qualifiers
+h:\svn\bmd\trunk\src\libbmdpr\bmd_datagram\asn1clib\bmddatagram.c(69) : warning C4022: 'function through pointer' : pointer mismatch for actual parameter 5
+BMDDatagramSet.c
+PR_ANY.c
+PR_BIT_STRING.c
+PR_BMDDatagram.c
+PR_BMDDatagramSet.c
+PR_INTEGER.c
+PR_Kontrolka.c
+PR_Kontrolki.c
+PR_lib.c
+PR_MetaData.c
+PR_OBJECT_IDENTIFIER.c
+PR_OCTET_STRING.c
+PR_Utils.c
+Generating Code...
+Linking...
+   Creating library ../../../exe_trunk/libbmdpr.lib and object ../../../exe_trunk/libbmdpr.exp
+LINK : warning LNK4049: locally defined symbol "_asn_DEF_MetaData" imported
+<h3>
+--------------------Configuration: libbmd - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\si\USTAWI~1\Temp\RSP1950.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libbmdutils.lib libbmdnet.lib libeay32.lib ssleay32.lib cl32.lib libbmdpki.lib libbmdpr.lib libbmderr.lib libbmdprotocol.lib libbmdlob.lib /nologo /dll /incremental:yes /pdb:"../../../exe_trunk/libbmd.pdb" /debug /machine:I386 /def:".\libbmd.def" /out:"../../../exe_trunk/libbmd.dll" /implib:"../../../exe_trunk/libbmd.lib" /pdbtype:sept /libpath:"../../../exe_trunk" /libpath:"../../../../../common/win32/libs" 
+.\Debug\libbmd.obj
+.\Debug\libbmd_bmdinfo.obj
+.\Debug\libbmd_datagram.obj
+.\Debug\libbmd_genbuf.obj
+.\Debug\libbmd_internal.obj
+.\Debug\libbmd_login.obj
+.\Debug\libbmd_main.obj
+.\Debug\libbmd_send.obj
+.\Debug\libbmd_userform.obj
+.\Debug\libbmd_utils.obj
+\svn\bmd\trunk\exe_trunk\libbmdprotocol.lib
+\svn\bmd\trunk\exe_trunk\libbmdlob.lib
+\svn\bmd\trunk\exe_trunk\libbmderr.lib
+\svn\bmd\trunk\exe_trunk\libbmdnet.lib
+\svn\bmd\trunk\exe_trunk\libbmdpki.lib
+\svn\bmd\trunk\exe_trunk\libbmdpr.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\si\USTAWI~1\Temp\RSP1950.tmp"
+<h3>Output Window</h3>
+Linking...
+   Creating library ../../../exe_trunk/libbmd.lib and object ../../../exe_trunk/libbmd.exp
+
+
+
+<h3>Results</h3>
+libbmd.dll - 0 error(s), 5 warning(s)
+</pre>
+</body>
+</html>

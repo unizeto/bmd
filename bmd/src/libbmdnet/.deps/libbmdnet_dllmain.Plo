@@ -1,0 +1,3 @@
+libbmdnet_dllmain.lo: libbmdnet_dllmain.c ../../src/config.h
+
+../../src/config.h:

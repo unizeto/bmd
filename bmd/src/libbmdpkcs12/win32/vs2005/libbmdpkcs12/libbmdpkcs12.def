@@ -1,0 +1,6 @@
+LIBRARY "LIBBMDPKCS12"
+EXPORTS
+	bmd_parse_p12_file
+	_bmd_binary_content_to_BIO
+	bmd_check_p12_pass
+	bmd_parse_p12_fileInMem

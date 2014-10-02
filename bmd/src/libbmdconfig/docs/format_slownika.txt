@@ -1,0 +1,78 @@
+
+SŁOWNIKI LIBBMDCONFIG
+
+
+Słownik pozwala na określanie, jakie opcje są dopuszczalne w ramach sekcji, dla której jest on zdefiniowany, oraz
+umożliwia sprawdzenie poprawności wartości opcji konfiguracyjnych. Biblioteka wymaga przygotowania słownika dla każdej
+tworzonej przez użytkownika sekcji konfiguracyjnej.
+
+
+Słownik jest tablicą łańcuchów tekstowych ( char *slownik[] ), gdzie ostatni łańcuch przyjmuje wartość "" (łańcuch
+pusty) i oznacza koniec wpisów słownikowych. Tablica taka stanowi słownik pojedynczej sekcji. Każdy łańcuch, za
+wyjątkiem wspomnianego ostatniego, stanowi wpis słownikowy odpowiadający pojedyńczej opcji.
+
+
+WPIS SŁOWNIKOWY
+
+Wpis słownikowy sporządzony jest według następującego formatu:
+
+%#nazwa_opcji regexp_num #"regexp" #"regexp" #"regexp" ...
+
+1)
+nazwa_opcji to nazwa opcji dopuszczalnej w sekcji, dla której stworzony jest słownik. Należy pamiętać o przestrzeganiu
+wymaganego formatu nazewnictwa opcji tj. pierwszy znak nazwy może być znakiem podkreślenia '_' bądź wielką/małą literą
+( z zakresu podstawowego tj. bez polskich znaków tzw. ogonków ). Każdy następny znak może być dodatkowo cyfrą.
+
+Symbol % jest opcjonalny. Jeśli występuje przed nazwa_opcji, to oznacza, że wartość przypisana do takiej opcji w pliku
+konfiguracyjnym potraktowana będzie jako ścieżka do pliku i sprawdzone zostanie, czy plik o takiej sieżce istniej. W
+wypadku braku znaku % przed nazwa_opcji, wartość przypisana do takiej opcji nie będzie traktowana jako ścieżka do
+pliku ( nie wykonuje się sprawdzania istnienia pliku).
+
+Symbol # jest opcjonalny. Jeśli występuje przed nazwą opcji, to oznacza, że opcja taka nie musi znaleźć się w sekcji,
+dla której stworzony jest słownik. Brak znaku # przed nazwą opcji oznacza, że opcja ta jest wymagana i musi znaleźć
+się w pliku konfiguracyjnym w danej sekcji.
+
+W przypadku użycia obu symboli, istotna jest ich kolejność ( %# ). Tylko taka kolejność jest dopuszczalna.
+
+2)
+regexp_num określa, ile wyrażeń regularnych zdefiniowanych jest dla sprawdzenia poprawności wartości opcji.
+Może być zerem i wtedy żaden regexp dla takiej opcji nie musi być zdefiniowanny. Jeśli wartość regexp_num określona
+jest na mniejszą, niż ilość następujących po niej wzorców, to w sprawdzeniu poprawności wartości pola bierze udział
+pierwszych ilosc_regexp wzorców a ostanie są pominięte. Jeśli regexp_num jest większa niż faktyczna ilość
+następujących po niej wzorców, to jest to błąd.
+
+Po wartości regexp_num powinno występować tyleż wyrażen regularnych ( zgodnych z PCRE ) sprawdzających poprawność
+wartości pola. Wyrażenia regularne muszą być ujmowane w cudzysłów ( "" ). Jeśli przed wyrażeniem regularnym ujętym w
+cudzysłów występuje znak #, wówczas oczekiwany jest BRAK dopasowania wartości opcji do takiego regexp. Brak znaku #
+przed wyrażeniem regularnym ujętym w cudzysłów ozacza, że WYMAGANE jest dopasowanie wartości opcji do tego regexp.
+Zabronione jest używanie znaku cudzysłowia ( " ) do tworzenia wyrażenia regularnego.
+
+Uwaga:
+W języku C, aby używać znak cudzysłowia wewnątrz łańcucha znakowego, należy go wyeskejpować ( \" ).
+
+
+Przykładowy słownik:
+
+char *slownik[]= {
+"opcja1 0",
+"#opcja2 1 \"^YES$\" ",
+"%opcja3 1 #\"^plik.txt$\"  ",
+"%#opcja4 2 #\"^plik.txt$\" #\"^plik.doc$\" ",
+""
+};
+
+Powyższy słownik dopuszcza w sekcji cztery opcje:
+	1) opcja1 - jest wymagana
+	2) opcja2 - nie jest wymagana i może przyjmować tylko wartość YES
+	3) opcja3 - wartość tej opcji potraktowana zostanie jako ścieżka do pliku; opcja nie może
+			przyjąć wartości plik.txt
+	4) opcja4 - nie jest wymagana a jej wartość potraktowana zostanie jako ścieżka do pliku;
+			opcja nie może przyjąć wartości plik.txt oraz plik.doc
+
+Tak przygotowany słownik oraz nazwa sekcji, dla której został on zdefiniowany, podawane są bezpośrednio jako argumenty
+funkcji bmdconf_add_section2dict(). Należy pamiętać o przestrzeganiu wymaganego formatu nazewnictwa sekcji tj.
+pierwszy znak nazwy może być znakiem podkreślenia '_' bądź wielką/małą literą ( z zakresu podstawowego tj. bez
+polskich znaków tzw. ogonków ). Każdy następny znak może być dodatkowo cyfrą.
+
+
+

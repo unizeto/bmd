@@ -1,0 +1,14 @@
+LIBRARY "libbmdnet"
+DESCRIPTION "BMD network abstraction library"
+EXPORTS
+	bmdnet_init
+	bmdnet_destroy
+	bmdnet_create
+	bmdnet_close
+	bmdnet_connect
+	bmdnet_send
+	bmdnet_set_option
+	bmdnet_recv
+	bmdnet_recv_min
+	bmdnet_server
+	bmdnet_register_method

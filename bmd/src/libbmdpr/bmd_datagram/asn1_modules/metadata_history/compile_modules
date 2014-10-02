@@ -1,0 +1,5 @@
+#!/bin/sh
+
+#this compiles asn1 modules using asn1c compiler
+#ASN1_OPTIONS=-Werror -Wdebug-lexer
+asn1c -Werror -fcompound-names metadata_history.asn1

@@ -1,0 +1,93 @@
+-- extracted by WSZ from rfc 3126 - ASN1 module :
+--      ETS-ElectronicSignatureFormats-88syntax { iso(1) member-body(2)
+--      us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-mod(0) 5}
+
+
+SigPolicyID { iso(1)
+    member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+    smime(16) id-aa(2) 15 }
+
+DEFINITIONS ::=
+
+BEGIN
+
+-- Signature Policy Identifier
+
+    id-aa-ets-sigPolicyId OBJECT IDENTIFIER ::= { iso(1)
+    member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+    smime(16) id-aa(2) 15 }
+
+-- !!! modified by WSZ: poprawiony babol = brak przed CHOICE "::="
+-- !!! nazwy pol zaczynaly sie od wielkich liter,czego parser nie toleruje
+SignaturePolicyIdentifier ::= CHOICE {
+         signaturePolicyId SignaturePolicyId,
+         signaturePolicyImplied     SignaturePolicyImplied
+}
+
+SignaturePolicyId ::= SEQUENCE {
+        sigPolicyIdentifier   SigPolicyId,
+        sigPolicyHash         SigPolicyHash,
+        sigPolicyQualifiers   SEQUENCE SIZE (1..MAX) OF
+                              SigPolicyQualifierInfo OPTIONAL
+}
+
+SignaturePolicyImplied ::= NULL
+
+SigPolicyId ::= OBJECT IDENTIFIER
+
+SigPolicyHash ::= OtherHashAlgAndValue
+
+OtherHashAlgAndValue ::= SEQUENCE {
+  hashAlgorithm    AlgorithmIdentifier,
+  hashValue        OtherHashValue
+}
+
+OtherHashValue ::= OCTET STRING
+
+AlgorithmIdentifier  ::=  SEQUENCE  {
+     algorithm               OBJECT IDENTIFIER,
+     parameters              ANY DEFINED BY algorithm OPTIONAL  }
+                                -- contains a value of the type
+                                -- registered for use with the
+                                -- algorithm object identifier value
+
+
+SigPolicyQualifierInfo ::= SEQUENCE {
+        sigPolicyQualifierId  SigPolicyQualifierId,
+        sigQualifier          ANY DEFINED BY sigPolicyQualifierId
+}
+
+SigPolicyQualifierId ::=
+        OBJECT IDENTIFIER
+
+    id-spq-ets-uri OBJECT IDENTIFIER ::= { iso(1)
+    member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+    smime(16) id-spq(5) 1 }
+
+   SPuri ::= IA5String
+
+    id-spq-ets-unotice OBJECT IDENTIFIER ::= { iso(1)
+    member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+    smime(16) id-spq(5) 2 }
+
+   SPUserNotice ::= SEQUENCE {
+
+
+
+        noticeRef        NoticeReference   OPTIONAL,
+        explicitText     DisplayText       OPTIONAL
+}
+
+NoticeReference ::= SEQUENCE {
+       organization     DisplayText,
+       noticeNumbers    SEQUENCE OF INTEGER
+}
+
+DisplayText ::= CHOICE {
+       visibleString    VisibleString  (SIZE (1..200)),
+       bmpString        BMPString      (SIZE (1..200)),
+       utf8String       UTF8String     (SIZE (1..200))
+}
+
+
+END

@@ -1,0 +1,50 @@
+
+
+
+Odtwarzanie zerwanego po³¹czenia z baz¹ danych w awizosender
+
+
+
+Aplikacja awizosender utrzymuje dwa po³¹czenia z baz¹ danych.
+Jedno po³¹czenie jest przeznaczone dla procesu nas³uchujacego i tworz¹cego
+procesy obs³ugi nadchodz¹cych ¿¹dañ. Po³¹czenie jest wykorzystywane tak¿e 
+przez potomne procesy obs³ugi ¿¹dañ.
+Drugie po³¹czenie bazodanowe jest utrzymywane przez proces
+odopwiedzialny za wysy³kê wiadomoœci z kolejki.
+
+Rozwi¹zanie odtwarzania po³¹czenia z baz¹ danych opiera siê na wykorzystaniu
+mechanizmu callback biblioteki libbmddb (bmd_db_set_lost_connection_callback())
+w przypadku stwierdzenia zerwanego po³¹czenia na etapie próby wykonania komendy/zapytania bazodanowego.
+
+
+1) Odtwarzanie po³¹czenia bazodanowego dla procesów obs³ugi ¿¹dañ
+
+W przypadku stwierdzenia zerwania po³¹czenia callback ustawia zmienn¹ globaln¹
+na wartoœæ, która wskazuje koniecznoœæ odnowienia po³¹czenia. Tu¿ przed swoim
+zakoñczeniem, ka¿dy proces obs³ugi ¿¹dania sprawdza wartoœæ zmiennej globalnej
+i jeœli stwierdzona jest koniecznoœæ odnowienia po³¹czenia bazodanowego, to 
+zamiast exit(0), proces koñczy siê z odpowiednio ustawionym statusem.
+Proces g³ówny (nas³uchuj¹cy) w przypadku otrzymania sygna³u zakoñczenia procesu
+potomnego sprawdza status zakoñczenia procesu potomnego i jeœli analizowany
+status wskazuje na koniecznoœæ odnowienia po³¹czenia, ustwiana jest odpowiednia wartoœæ
+zmiennej globalnej dla g³ównego procesu. Wartoœæ tej zmiennej globalnej jest
+sprawdzana tu¿ po ka¿dym zaakceptowaniu nowego po³¹czenia przychodz¹cego.
+Jeœli konieczne jest odnowienie po³¹czenia, proces nas³uchuj¹cy wstrzyma
+akceptowanie przychodz¹cych po³¹czeñ i bêdzie próbowa³ odtworzyæ po³¹czenie
+co 5 sekund a¿ do skutku. Po odtworzeniu po³¹czenia bazodanowego, g³ówny proces
+poczeka jeszcze, a¿ zakoñcz¹ siê rozpoczête do tego momentu procesy potomne,
+(aby nie sugerowaæ siê ju¿ nieaktualnym stwierdzeniem o zerwanym po³¹czeniu
+bazodanowym), zeruje zmienn¹ globaln¹ wskazuj¹c¹ koniecznoœæ odnowienia po³¹czenia,
+a nastêpnie wznawia akceptacjê po³¹czeñ przychodz¹cych.
+
+Uwaga!
+¯¹dania, których obs³uga rozpoczê³a siê przed wykryciem zerwania po³¹czenia
+bazodanowego, zakoñcz¹ siê b³êdem. Dopiero ¿¹dania zaakcetpowane po odtworzeniu
+po³¹czenia bazodanowego bêd¹ mia³y szanse prawid³owego obs³u¿enia.
+
+
+2) Odtwarzanie po³¹czenia bazodanowego dla procesu wysy³ki z kolejki
+
+W przypadku stwierdzenia zerwania po³¹czenia callback natychmiast próbuje odtworzyæ
+po³¹czenie bazodanowe co 5 sekund a¿ do skutku. Operacja wysy³ki nie powiedzie siê
+dla wiadomoœci, na której wykryto zerwanie po³¹czenia.

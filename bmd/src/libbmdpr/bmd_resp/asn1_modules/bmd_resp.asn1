@@ -1,0 +1,90 @@
+BMDResponse {iso(1) member-body(2) pl(616) unizeto(113527)
+	bmd(4) response(2)}
+
+	DEFINITIONS IMPLICIT TAGS ::=
+
+	BEGIN
+		-- EXPORTS ALL --
+
+		Kontrolki ::= SEQUENCE OF Kontrolka
+
+		Kontrolka ::= SEQUENCE {
+			label [1] OCTET STRING, 	-- etykieta kontrolki static text opisujace kontrolke
+			wxType [2]	ENUMERATED {	-- typ kontrolki z typow wxWindows
+				typeUserChoosableEditable (10),
+				typeUserChoosableOnly     (11),
+				typeUserEditableShort 	  (12),
+				typeUserEditableLong      (13)
+			},
+			visibility [3] ENUMERATED {			-- widocznosc - widoczna/niewidoczna
+				unvisible (0),
+				visible (1)
+			},
+			targetForm [4] ENUMERATED {			-- lokalizacja na ktorym formularzu
+				sendForm (1),
+				searchForm (2),
+				gridForm (3),
+				sendSearchForm (4),
+				searchGridForm (5),
+				allForm (6)
+			},
+
+			seqNumber [5] INTEGER,			-- numer kolejny na formularzu
+			valuesList [6] SEQUENCE OF OCTET STRING,	-- lista wartosci
+			priorityList [7] SEQUENCE OF INTEGER,	-- lista priorytetow
+			sizeX [8] INTEGER,				-- rozmiar kontrolki na OX
+			sizeY [9] INTEGER,				-- rozmiar kontrolki na OY
+			oid [10] OBJECT IDENTIFIER,			-- oid kontrolki
+			contentType [11] ENUMERATED {		-- typ zawartosci
+				textContent (1),
+				numberContent (2),
+				timeContent (3)
+			},
+			regexp [12] OCTET STRING,			-- wyrazenie walidujace zawartosci
+			superiorControl [13] INTEGER,		-- kontrolka nadrzedna
+			inferiorControl [14] INTEGER,		-- kontrolka podrzedna
+			connectType [15] ENUMERATED {		-- typ powiazania
+				onlyChoose (0),
+				chooseChoose (1),
+				absent (2)
+			},
+
+			valueSource [16] ENUMERATED { 		-- zrodlo wartosci
+				fromControlValue (0),
+				fromControlAssocData (1)
+
+			},
+			tooltip [17] OCTET STRING OPTIONAL,			-- podpowiedz do kontrolki
+			depValueList [18] OCTET STRING OPTIONAL,	-- lista wartosci zaleznych
+			inheritancePresent [19] ENUMERATED {		-- przechodniosc obecna
+				absent (0),
+				present (1)
+			},
+
+			controlName [20] OCTET STRING,		-- nazwa okna w wxWindow
+			splitToWords ENUMERATED {		-- czy wartosc tekstowa z pola ma byc dzielona na slowa
+			    splitToWordsFALSE (0),
+			    splitToWordsTRUE  (1)
+			},
+
+			rangeEnabled [21] ENUMERATED {		-- czy kontrolka ma umozliwiac szukanie po zakresie dat
+			    rangeEnabledFALSE (0),
+			    rangeEnabledTRUE  (1)
+			},
+
+			mandatory [22] ENUMERATED {		-- czy wypelnienie kontrolki jest obowiazkowe
+			    nonMandatory (0),
+			    mandatory (1)
+			},
+
+			isUpdateEnabled [23] ENUMERATED { -- czy kontrolka moze byc updatowana
+				nonUpdateEnabled (0),
+				updateEnabled (1)
+			},
+
+			isHistoryEnabled [23] ENUMERATED { -- czy kontrolka moze byc historyczowalna
+				nonhistoryEnabled (0),
+				historyEnabled (1)
+			}
+		}
+	END

@@ -1,0 +1,220 @@
+
+/**/
+
+	/**/ IDENTYFIKATOR POLITYKI PODPISU /**/
+
+/**/
+
+
+
+int SPId_SPIdentifier_Create(char* SP_oid, char* hashalg_oid, ANY_t* params,
+					OtherHashValue_t* ohv, SignaturePolicyIdentifier_t** SPId);
+
+Funckja SPId_SPIdentifier_Create() alokuje pamięć i inicjuje identyfikator polityki podpisu.
+
+@ARG SP_oid to łańcuch znakowy z OID polityki podpisu, którą identyfikator ma wskazywać (OID w formacie
+	liczb porozdzielanych kropkami)
+@ARG hashalg_oid to łańcuch znakowy z OID funkcji skrótu użytej do wyliczenia skrótu z polityki podpisu wskazywanej
+	przez tworzony indentyfikator
+@ARG params to przygotowana struktura ANY_t, która zawiera parametry dla funkjcji skrótu. Jeśli wykorzystywana funkcja
+	skrótu nie potrzebuje parametrów, podaje się NULL
+@ARG ohv to struktura zawierająca skrót z polityki podisu wyliczony funkcją o OID hashalg_oid z parametrami params
+@ARG SPId to adres wskaznika na alokowany i inicjowany identyfikator polityki podpisu
+
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku udanego tworzenia identyfikatora polityki podpisu
+	-1 w przypadku niepowodzenia oparacji (*SPId = NULL)
+/*----------------------------------------------------------------------------*/
+
+
+
+int SPId_Uri_Add(char *uri, SignaturePolicyIdentifier_t *dest);
+
+Funkcja SPId_Uri_Add() dodaje do identyfikatora polityki podpisu URI określający/lokalizujący
+docelową politykę podpisu. Dodanie URI może być wykonane tylko po inicjacji identyfikatora
+polityki podpisu funkcją SPId_SPIdentifier_Create(). Do jednego identyfikatora dodanych może być wiele URI.
+
+@ARG uri to łańcuch tekstowy z URI lokalizującym politykę podpisu
+@AGR dest to identyfikator polityki podpisu, w którym należy ustawić lokalizację polityki podpisu
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku udanego ustawienia uri w identyfikatorze polityki podpisu
+	-1 w przypadku niepowodzenia operacji
+/*----------------------------------------------------------------------------*/
+
+
+
+int SPId_UserNotice_Add(char* text, char* organization, long int* noticeNums, int N, SignaturePolicyIdentifier_t* dest);
+
+Funkcja SPId_NoticeRef_Add() dodaje do identyfikatora polityki podpisu wiadomość tekstową, która powinna być
+wyświetlana podczas weryfikacji podpisu. Dodanie wiadomości może być wykonane tylko po inicjacji identyfikatora
+polityki podpisu funkcją SPId_SPIdentifier_Create(). Do jednego identyfikatora dodanych może być wiele wiadomości.
+
+@ARG text to komunikat, który ma być wyświetlany podczas weryfikacji podpisu (można podać NULL)
+@ARG organization to nazwa wystawcy polityki podpisu (nie musi być podawana - NULL )
+@ARG noticeNums to tablica liczb, które określają grupę komunikatów tekstowych przygotowanych przez wystawcę polityki
+	podpisu i zawartych w pliku z komunikatami (nie musi być podawana - NULL)
+@ARG N to liczba komórek w tablicy noticeNums
+@ARG dest to wskaźnik do identyfikatora polityki podpisu, do którego ma być dodany kwalifikator UserNotice
+
+@RETURN:
+Funkcja zwraca:
+	 0 jeśli dodawanie komunikatu do identyfikatora polityki podpisu zakończyło się powodzeniem
+	-1 jeśli dodawanie komunikatu do identyfikatora polityki podpisu nie powiodło się
+
+Uwagi:
+1) Jeśli N>0, to tablica noticeNums musi być podana
+2) Jeśli organization jest podane jako NULL, to noticeNums jest ignorowane
+/*----------------------------------------------------------------------------*/
+
+
+
+void SPId_SPIdentifier_Destroy(SignaturePolicyIdentifier_t **SP);
+
+Funkcja SPId_SPIdentifier_Destroy() zwalnia pamięć po identyfikatorze polityki podpisu. Funkcję wywołuje się po utworzeniu atrybutu z identyfikatora polityki podpisu za pomocą funkcji SPId_SPIdentifier_CreateAttribute().
+
+@ARG SP to adres wskaznika na identyfikator polityki podpisu, który ma zostać zwolniony
+
+@RETURN
+Funkcja nie zwraca wartości.
+/*----------------------------------------------------------------------------*/
+
+
+
+int SPId_SPIdentifier_CreateAttribute(SignaturePolicyIdentifier_t *sigPol, Attribute_t **attribute);
+
+Funkcja SPId_SPIdentifier_CreateAttribute() opakowuje przygotowany identyfikator polityki podpisu w atrybut.
+
+@ARG sigPol to wskaznik na przygotowany identyfikator polityki podpisu
+@ARG attribute to adres wskaznika na atrybut, który zostanie utworzony na podstawie identyfikatora polityki podpisu
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli tworzenie atrybutu z identyfikatora polityki podpisu przebiegło poprawnie
+	-1 jeśli nie można było zaalokować pamięci na tworzony atrybut (*attribute = NULL)
+	-2 jeśli kodowanie do DER identyfikatora polityki podpisu zakończyło się niepowodzeniem (*attribute = NULL)
+/*----------------------------------------------------------------------------*/
+
+
+
+int SPId_GetSPIdentifierfromAttribute(Attribute_t *attr, SignaturePolicyIdentifier_t** SPId);
+
+Funkcja SPId_GetSPIdentifierfromAttribute() wydobywa z atrybutu attr identyfikator polityki podpisu. Wydobywanie wykonane zostanie tylko dla atrybutu z OID prawidłowym dla identyfikatora polityki podisu.
+
+@ARG attr to atrybut z którego wydobywany będzie identyfikator polityki podpisu
+@ARG SPId to adres wskaznika na wydobyty identyfikator polityki podpisu
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli wydobywanie identyfikatora polityki podisu przebiegło poprawnie
+	-1 jeśli atrybut nie przechowuje identyfikatora polityki podisu (*SPId = NULL)
+	-2 jeśli dekodowanie z DER identyfikatora polityki podpisu nie przebiegło poprawnie (*SPId = NULL)
+	-3 jeśli nie można zaalokować pamięci na wydobywany identyfikator polityki podisu (*SPId = NULL)
+/*----------------------------------------------------------------------------*/
+
+
+
+int SPId_GetSPIdentifierfromSignedAttributes(SignedAttributes_t* sigattr, SignaturePolicyIdentifier_t **SPId);
+
+Funkcja SPId_GetSPIdentifierfromSignedAttributes() wydobywa identyfikator polityki podpisu z atrybutów podpisanych.
+
+@ARG sigattr to wskaźnik do atrybutów podpisanych, z których ma być wydobyty identyfikator polityki podpisu
+@ARG SPId to adres wskaźnika do wydobytego identyfikatora polityki podpisu
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli powiodło się wydobycie identyfikatora polityki podisu
+	-1 jeśli nie ma identyfikatora polityki podpisu wśród atrybutów podpisanych (*SPId = NULL)
+	
+/*----------------------------------------------------------------------------*/
+
+
+
+int SPId_SPIdentifierAttribute_Destroy(Attribute_t **attr);
+
+Funkcja SPId_SPIdentifierAttribute_Destroy() zwalnia pamięć zaalokowaną na atrybut przechowujący identyfikator polityki podpisu. Jeśli atrybut nie przechowuje identyfikatora polityki podpisu, nie zostanie zniszczony.
+
+@ARG attr to adres wskaźnika na niszczony atrybut
+
+@RETURN
+Funkcja zwraca:
+	 0 jeśli niszczenie atrybutu przebiegło poprawnie
+	-1 jeśli atrybut nie przechowuje identyfikatora polityki podpisu
+/*----------------------------------------------------------------------------*/
+
+/**/
+
+	/**/ POLITYKA PODPISU /**/
+
+/**/
+
+
+int Decode_spol(GenBuf_t *src_der, SignaturePolicy_t **SP);
+
+Funkcja Decode_spol() dekoduje politykę podpisu w DER do struktury SignaturePolicy_t. Polityka podpisu przeznaczona do dekodowania musi być wcześniej wczytana do GenBuf_t. Rezultat dekodowania jest alokowany dynamicznie.
+
+@ARG src_der to wskaznik do bufora GenBuf_t zawierającego zaDERowaną politykę podpisu
+@ARG SP to adres wskaźnika na zdekodowaną politykę podpisu
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku pomyślnego zdekodowania polityki podpisu
+	-1 jeśli dekodowanie nie powiodło się (*SP = NULL)
+/*----------------------------------------------------------------------------*/
+
+
+
+void Destroy_spol(SignaturePolicy_t **SP);
+
+Funkcja Destroy_spol() zwalnia strukturę z polityką podpisu.
+
+@ARG SP do adres wskaźnika na zwalnianą sktrukturę z polityką podpisu
+
+@RETURN
+Funkcja nie zwraca wartości.
+/*----------------------------------------------------------------------------*/
+
+
+
+/**/
+
+/*  inne implementacje  */
+
+/**/
+int Create_SigningTimeAttribute(TimeStampToken_t *SigTSToken, Attribute_t **attribute);
+
+Funkcja Create_SigningTimeAttribute() tworzy atrybut na podstawie otrzymanego timestampa.
+
+@ARG SigTSToken to odebrany znacznik czasu (czas podpisu)
+@ARG attribute to adres wskaźnika na tworzony atrybut
+
+@RETURN:
+Funkcja zwraca:
+	 0 w przypadku utworzenia atrybutu
+	-1 w przypadku niepowodzenia operacji (*attribute = NULL)
+/*----------------------------------------------------------------------------*/
+
+
+
+int Add_Attribute2Attrs(SignerInfo_t *signer, Attribute_t *attribute, int flag);
+
+Funkcja Add_Attribute2Attrs() dodaje atrybut do atrybutów podpisanych bądź niepodpisanych. Atrybuty podpisane i niepodpisane znajdują się w strukturze typu SignerInfo_t (zgodnie ze strukturą CMS).
+
+Uwaga!!
+Funkcja dokonuje jedynie powiązania wskaźników. Nie klonuje atrybutu.
+
+@ARG signer to wskaźnik na strukturę typu SignerInfo_t z atrybutami podpisanymi i niepodpisanymi
+@ARG attribute to dodawany atrybut
+@ARG flag to flaga określająca rodzaj atrybutu: Zdefiniowane są następujące flagi:
+	- BMDCMS_SIGNED_ATTRIBUTE dla atrybutu podpisanego
+	- BMDCMS_UNSIGNED_ATTRIBUTE dla atrybutu niepodpisanego
+
+@RETURN
+Funkcja zwraca:
+	 0 w przypadku powodzenia 
+	-1, gdy operacja nie powiodła się
+/*----------------------------------------------------------------------------*/
+

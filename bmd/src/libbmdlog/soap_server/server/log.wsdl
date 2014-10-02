@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Service"
+ targetNamespace="log.xsd"
+ xmlns:tns="log.xsd"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:log="log.xsd"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="log.xsd"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:log="log.xsd"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="logDatagram">
+   <sequence>
+     <element name="remoteHost" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="remotePort" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="srcFile" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="srcLine" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="srcFunction" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logOwner" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="service" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="operationType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logLevel" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="dateTimeBegin" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logString" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logSolution" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="documentSize" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="documentFilename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logReferto" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="eventCode" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logOwnerEventVisible" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="logRefertoEventVisible" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="logServerSend">
+   <complexType>
+    <sequence>
+     <element name="logDatagram" type="log:logDatagram" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="logServerSendResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyLog">
+   <complexType>
+    <sequence>
+     <element name="logNode" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyLogResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyTree">
+   <complexType>
+    <sequence>
+     <element name="signNode" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyTreeResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="logServerSendRequest">
+ <part name="parameters" element="log:logServerSend"/>
+</message>
+
+<message name="logServerSendResponse">
+ <part name="parameters" element="log:logServerSendResponse"/>
+</message>
+
+<message name="verifyLogRequest">
+ <part name="parameters" element="log:verifyLog"/>
+</message>
+
+<message name="verifyLogResponse">
+ <part name="parameters" element="log:verifyLogResponse"/>
+</message>
+
+<message name="verifyTreeRequest">
+ <part name="parameters" element="log:verifyTree"/>
+</message>
+
+<message name="verifyTreeResponse">
+ <part name="parameters" element="log:verifyTreeResponse"/>
+</message>
+
+<portType name="ServicePortType">
+ <operation name="logServerSend">
+  <documentation>Service definition of function log__logServerSend</documentation>
+  <input message="tns:logServerSendRequest"/>
+  <output message="tns:logServerSendResponse"/>
+ </operation>
+ <operation name="verifyLog">
+  <documentation>Service definition of function log__verifyLog</documentation>
+  <input message="tns:verifyLogRequest"/>
+  <output message="tns:verifyLogResponse"/>
+ </operation>
+ <operation name="verifyTree">
+  <documentation>Service definition of function log__verifyTree</documentation>
+  <input message="tns:verifyTreeRequest"/>
+  <output message="tns:verifyTreeResponse"/>
+ </operation>
+</portType>
+
+<binding name="Service" type="tns:ServicePortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="logServerSend">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyLog">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyTree">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="Service">
+ <documentation>gSOAP 2.7.17 generated service definition</documentation>
+ <port name="Service" binding="tns:Service">
+  <SOAP:address location="http://127.0.0.1:9999"/>
+ </port>
+</service>
+
+</definitions>

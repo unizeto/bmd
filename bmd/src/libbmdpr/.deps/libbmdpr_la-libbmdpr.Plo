@@ -1,0 +1,3 @@
+libbmdpr_la-libbmdpr.lo: libbmdpr.c ../../src/config.h
+
+../../src/config.h:

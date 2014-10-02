@@ -1,0 +1,48 @@
+# makefile biblioteki libbmdutils.a
+# Autorzy: marua, bozon
+# Data: marzec 2005
+
+CC = gcc
+FLAGS = -Wall
+PROJECTN_STATIC=libbmdutils.a
+
+OPTIONS=-D__UNIX__ -D_DEBUG_UNIX_
+
+OBJECTS=libbmdutils.o asn1_utils.o cert_utils.o mem_utils.o net_utils.o kontrolki_utils.o aa_conf_utils.o option_utils.o errors_utils.o oid_utils.o
+
+CRYPTLIB_INCLUDE=-I../../inc/cl322
+
+OUTPUT_DIR = ../../libs/freebsd
+
+PREFIX=../../inc/bmd
+PREFIX_UTILS=$(PREFIX)/libbmdutils
+COMMON_INCLUDED=-I$(PREFIX)/common
+
+PREFIX_AA=$(PREFIX)/libbmdaa
+
+PREFIX_ASN1=$(PREFIX)/libbmdasn1_core
+
+AA_INCLUDE=-I$(PREFIX_AA)/asn1 -I$(PREFIX_AA)/wrappers -I$(PREFIX_AA)/config_reader -I$(PREFIX_AA)/db
+ASN1_INCLUDE=-I$(PREFIX_ASN1)
+
+PREFIX_PR=$(PREFIX)/libbmdpr
+PR_INCL_REQ = -I$(PREFIX_PR)/bmd_req -I$(PREFIX_PR)/bmd_req/asn1clib -I$(PREFIX_PR)/bmd_req/prlib
+PR_INCL_RESP = -I$(PREFIX_PR)/bmd_resp -I$(PREFIX_PR)/bmd_resp/asn1clib -I$(PREFIX_PR)/bmd_resp/prlib -I$(PREFIX_PR)/bmd_resp/file_parser
+PR_INCL_DATAGRAM = -I$(PREFIX_PR)/bmd_datagram -I$(PREFIX_PR)/bmd_datagram/asn1clib -I$(PREFIX_PR)/bmd_datagram/prlib
+PR_INCL_COMMON = -I$(PREFIX_PR)/prlib-common
+
+PR_INCL=$(PR_INCL_REQ) $(PR_INCL_RESP) $(PR_INCL_COMMON) $(PR_INCL_DATAGRAM)
+
+INCLUDE=-I$(PREFIX_UTILS) $(COMMON_INCLUDED) $(AA_INCLUDE) $(ASN1_INCLUDE) $(CRYPTLIB_INCLUDE) $(PRLIB_INCLUDE) $(PR_INCL)
+
+
+all: $(OBJECTS)
+	ar rcs $(PROJECTN_STATIC) $(OBJECTS)
+	
+.c.o:
+	$(CC) -c $< $(OPTIONS) $(INCLUDE) $(FLAGS)
+clean:
+	rm -f $(OBJECTS) $(PROJECTN_STATIC)
+
+install:
+	cp $(PROJECTN_STATIC) $(OUTPUT_DIR)

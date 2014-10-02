@@ -1,0 +1,3 @@
+#!/bin/sh
+
+asn1c -fcompound-names ac1.asn1

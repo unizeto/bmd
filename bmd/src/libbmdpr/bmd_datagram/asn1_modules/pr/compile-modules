@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#asn1c -fcompound-names bmd_datagram.asn1
+
+#or
+
+asn1c -fcompound-names bmd_datagram.asn1 -S ../../../../libbmdasn1_core

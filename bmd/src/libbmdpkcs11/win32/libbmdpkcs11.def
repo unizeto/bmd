@@ -1,0 +1,9 @@
+LIBRARY "libbmdpkcs11"
+DESCRIPTION "BMD PKCS#11 Library"
+EXPORTS
+	bmd_pkcs11_finalize
+	bmd_pkcs11_get_all_certs
+	bmd_pkcs11_get_privkey
+	bmd_pkcs11_sign
+	bmd_pkcs11_init
+	bmd_pkcs11_decrypt

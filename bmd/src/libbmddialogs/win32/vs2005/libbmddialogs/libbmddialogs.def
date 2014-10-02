@@ -1,0 +1,15 @@
+LIBRARY "LIBBMDDIALOGS"
+EXPORTS
+	bmd_get_password_dialog
+	bmd_get_pin_dialog
+	bmd_error_dialog
+	bmd_correct_send_dialog
+	bmd_correct_save_dialog
+	bmd_delete_dialog
+	bmd_login_err_dialog
+	bmd_session_err_dialog
+	IsClassicWindowsStyle
+	IsClassicWindowsTheme
+	uni_show_cms_object
+	uni_show_ts_object
+		

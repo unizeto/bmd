@@ -1,0 +1,86 @@
+
+
+FORMAT PLIKU KONFIGURACYJNEGO LIBBMDCONFIG
+
+
+Plik konfiguracyjny jest plikiem tekstowym zawierającym opcje konfiguracyjne, które dla wygody i porządku podzielone
+są na sekcje.
+
+
+1) Sekcje:
+
+a) Sekcje deklarowane są nazwami ujętymi w nawiasach kwadratowych np. [section_name].
+b) Nazewnictwo sekcji:
+	Pierwszy znak nazwy może być znakiem podkreślenia '_' bądź wielką/małą literą ( z zakresu podstawowego tj. bez
+	polskich znaków tzw. ogonków ). Każdy następny znak może być dodatkowo cyfrą. Między nawiasami kwadratowymi []
+	niedopuszczalne są żadne inne znaki.
+c) Linia, w której zachodzi deklaracja sekcji, musi zaczynać się od razu '[' . To trochę sztuczne wymaganie ma zapobiec
+   bałaganieniu w pliku konfiguracyjnym ( np. rozpoczynanie deklaracji sekcji na 80 znaku lini itp.)
+d) W lini zawierającej deklarację sekcji niedopuszczalna jest inna deklaracja sekcji czy przypisanie wartości do
+   opcji. Możliwe jest zamieszczenie odpowiedniego komentarza.
+e) Należy zwrócić uwagę na wielkość liter w nazwie sekcji (wymagana zgodność ze słownikiem).
+f) Dana sekcja może wystąpić jednokrotnie w pliku konfiguracyjnym.
+g) W pliku konfiguracyjnym mogą występować sekcje puste ( pozbawione przypisań wartośći do opcji ). Jest to
+   dopuszczalne, jednak gdy deklaracja takiej sekcji powtórzy się w pliku konfiguracyjnym, wówczas zostanie zgłoszony
+   odpowedni błąd.
+
+
+2) Opcje - przypisywanie opcjom wartości:
+
+a) Przypisanie wartości do opcji realizuje się za pomocą zapisu w następującym formacie:
+
+nazwa_opcji = "wartosc opcji"
+
+b) Nazewnictwo opcji:
+	Pierwszy znak nazwy może być znakiem podkreślenia '_' bądź wielką/małą literą ( z zakresu podstawowego tj. bez
+	polskich znaków tzw. ogonków ). Każdy następny znak może być dodatkowo cyfrą.
+c) Wartość opcji ujęta jest zawsze w cudzysłów ( "" ). Tym samym znak cudzysłowia staje się znakiem specjalnym i
+   nie może występować wewnątrz wartości opcji.
+d) Znak przypisania '=' może być odseparowany od nazwy opcji oraz wartości opcji znakami białymi.
+e) Linia, w której zachodzi przypisanie wartości do opcji, musi zaczynać się od razu nazwą opcji. Przed nazwą opcji
+   nie mogą znajdować się żadne znaki, także znaki białe. To trochę sztuczne wymaganie ma zapobiec bałaganieniu
+   w pliku konfiguracyjnym.
+f) W lini zawierającej przypisanie wartości do opcji, niedopuszczalne jest inne przypisanie czy deklaracja sekcji.
+   Możliwe jest zamieszczenie odpowiedniego komentarza.
+g) Należy zwrócić uwagę na wielkość liter w nazwach opcji (wymagana zgodność ze słownikiem).
+h) Dana opcja może wystąpić jednokrotnie w sekcji.
+
+
+3) Komentarze:
+
+Komentarzem jest tekst występujący pomiędzy znakiem '#' a końcem lini. Komentarze mogą występować w jednej lini z
+deklaracją sekcji bądź przypisaniem wartości do opcji. Mogą być zamieszczone również w odrębnej lini.
+
+
+4) Linie separacyjne:
+
+Dla poprawienia czytelności pliku konfiguracyjnego można zamieszczac linie puste bądź wypełnione znakami białymi.
+
+
+Przykład pliku konfiguracyjnego:
+
+[Sekcja_nr_1] #deklaracja sekcji o nazwie Sekcja_nr_1
+opcja1 ="yes" #opcji opcja1 przypisana zostaje wartość yes
+opcja2="123456"
+     #poniżej kolejna sekcja o nazwie Nastepna
+[Nastepna]
+
+nastepna_opcja = "wartość opcji o nazwie nastepna_opcja"
+
+[I_jeszcze_jedna]
+
+#Koniec przykładu
+
+----------------------------
+
+
+UWAGI DO KONFIGURACJI PRZECHOWYWANEJ W BAZIE DANYCH
+
+
+1) Pamiętać należy, że TYLKO w pliku konfiguracyjnym nazwy sekcji ujęte są w nawiasy kwadratowe. W przypadku
+   konfiguracji w bazie danych przekazywane są same nazwy sekcji zgodnie z wymaganym nazewnictwem tj. pierwszy znak
+   nazwy może być znakiem podkreślenia '_' bądź wielką/małą literą ( z zakresu podstawowego tj. bez polskich znaków
+   tzw. ogonków ).
+2) Pamiętać należy, że TYLKO w pliku konfiguracyjnym, format przypisania wartości do opcji wymaga ujęcie przypisywanej
+   wartości w cudzysłów. W przypadku konfiguracji w bazie danych przekazywane są same wartości bez cudzysłowia.
+

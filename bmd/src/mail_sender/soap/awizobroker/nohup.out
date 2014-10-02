@@ -1,0 +1,67 @@
+[L02] Thu Sep 11 12:37:24 2014 728168    [awizo_soap_broker.c:312:main][16871]	Server:	Loading configuration settings
+[L05] Thu Sep 11 12:37:24 2014 728279    [bmdconfig.c:35:bmdconf_init][16871]	BMDCONFIGINF Initializing bmd configuration
+[L05] Thu Sep 11 12:37:24 2014 728303    [mem_list.c:6:bmdconf_init_list][16871]	BMDCONFIGINF Initializing configuration list
+[L05] Thu Sep 11 12:37:24 2014 728311    [bmdconfig.c:265:bmdconf_set_mode][16871]	BMDCONFIGINF Setting bmd configuration mode
+[L05] Thu Sep 11 12:37:24 2014 728325    [bmdconfig.c:143:bmdconf_add_section2dict][16871]	BMDCONFIGINF Adding section soap to bmd configuration
+[L02] Thu Sep 11 12:37:24 2014 728520    [awizo_soap_broker.c:325:main][16871]	server:	Loading configuration from file ../config/awizo_soap_broker.conf
+[L05] Thu Sep 11 12:37:24 2014 728531    [bmdconfig.c:79:bmdconf_load_file][16871]	BMDCONFIGINF Loading bmd configuration file ../config/awizo_soap_broker.conf
+[L05] Thu Sep 11 12:37:24 2014 728549    [mem_list.c:6:bmdconf_init_list][16871]	BMDCONFIGINF Initializing configuration list
+[L05] Thu Sep 11 12:37:24 2014 728662    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: send_timeout; value: 180
+[L05] Thu Sep 11 12:37:24 2014 728682    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: recv_timeout; value: 180
+[L05] Thu Sep 11 12:37:24 2014 728709    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: max_connections; value: 100
+[L05] Thu Sep 11 12:37:24 2014 728723    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: host; value: 0.0.0.0
+[L05] Thu Sep 11 12:37:24 2014 728736    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: port; value: 2050
+[L05] Thu Sep 11 12:37:24 2014 728752    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: db_host; value: 127.0.0.1
+[L05] Thu Sep 11 12:37:24 2014 728766    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: db_port; value: 5432
+[L05] Thu Sep 11 12:37:24 2014 728780    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: db_name; value: awizo
+[L05] Thu Sep 11 12:37:24 2014 728811    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: db_library; value: /usr/bmd/bmd/lib/libbmddb_db2-1.3.so
+[L05] Thu Sep 11 12:37:24 2014 728863    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: db_user; value: db2inst1
+[L05] Thu Sep 11 12:37:24 2014 728892    [mem_list.c:14:bmdconf_add_list_item][16871]	BMDCONFIGINF Adding item to configuration list (section: soap; option: db_passwd; value: 12345678
+[L05] Thu Sep 11 12:37:24 2014 728986    [bmdconfig.c:244:bmdconf_get_value_int][16871]	BMDCONFIGINF Getting bmd configuration long value of option max_connections
+[L11] Thu Sep 11 12:37:24 2014 729001    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value max_connections in section soap
+[L05] Thu Sep 11 12:37:24 2014 729009    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value max_connections in section soap
+[L05] Thu Sep 11 12:37:24 2014 729016    [bmdconfig.c:244:bmdconf_get_value_int][16871]	BMDCONFIGINF Getting bmd configuration long value of option send_timeout
+[L11] Thu Sep 11 12:37:24 2014 729023    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value send_timeout in section soap
+[L05] Thu Sep 11 12:37:24 2014 729028    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value send_timeout in section soap
+[L05] Thu Sep 11 12:37:24 2014 729034    [bmdconfig.c:244:bmdconf_get_value_int][16871]	BMDCONFIGINF Getting bmd configuration long value of option recv_timeout
+[L11] Thu Sep 11 12:37:24 2014 729055    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value recv_timeout in section soap
+[L05] Thu Sep 11 12:37:24 2014 729061    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value recv_timeout in section soap
+[L05] Thu Sep 11 12:37:24 2014 729069    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option host
+[L11] Thu Sep 11 12:37:24 2014 729075    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value host in section soap
+[L05] Thu Sep 11 12:37:24 2014 729080    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value host in section soap
+[L05] Thu Sep 11 12:37:24 2014 729086    [bmdconfig.c:244:bmdconf_get_value_int][16871]	BMDCONFIGINF Getting bmd configuration long value of option port
+[L11] Thu Sep 11 12:37:24 2014 729091    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value port in section soap
+[L05] Thu Sep 11 12:37:24 2014 729097    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value port in section soap
+[L05] Thu Sep 11 12:37:24 2014 729106    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option db_host
+[L11] Thu Sep 11 12:37:24 2014 729112    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value db_host in section soap
+[L05] Thu Sep 11 12:37:24 2014 729117    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value db_host in section soap
+[L05] Thu Sep 11 12:37:24 2014 729123    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option db_port
+[L11] Thu Sep 11 12:37:24 2014 729132    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value db_port in section soap
+[L05] Thu Sep 11 12:37:24 2014 729140    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value db_port in section soap
+[L05] Thu Sep 11 12:37:24 2014 729151    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option db_name
+[L11] Thu Sep 11 12:37:24 2014 729160    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value db_name in section soap
+[L05] Thu Sep 11 12:37:24 2014 729169    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value db_name in section soap
+[L05] Thu Sep 11 12:37:24 2014 729178    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option db_user
+[L11] Thu Sep 11 12:37:24 2014 729186    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value db_user in section soap
+[L05] Thu Sep 11 12:37:24 2014 729195    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value db_user in section soap
+[L05] Thu Sep 11 12:37:24 2014 729204    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option db_passwd
+[L11] Thu Sep 11 12:37:24 2014 729213    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value db_passwd in section soap
+[L05] Thu Sep 11 12:37:24 2014 729219    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value db_passwd in section soap
+[L05] Thu Sep 11 12:37:24 2014 729230    [bmdconfig.c:168:bmdconf_get_value][16871]	BMDCONFIGINF Getting bmd configuration value of option db_library
+[L11] Thu Sep 11 12:37:24 2014 729235    [do_config.c:225:bmdconf_get_value_config][16871]	BMDCONFIGINF Getting configuration value db_library in section soap
+[L05] Thu Sep 11 12:37:24 2014 729241    [mem_list.c:77:bmdconf_find_list_item][16871]	BMDCONFIGINF Getting configuration value db_library in section soap
+[L05] Thu Sep 11 12:37:24 2014 745936    [db_db2_connect.c:103:db2_bmd_db_connect2][16871]	 Runned by process:  16871
+[L05] Thu Sep 11 12:37:24 2014 899959    [db_db2_sql.c:19:db2_bmd_db_execute_sql][16871]	SQL query: SELECT host,port FROM awizo_servers; ; Runned by process:  16871
+[L03] Thu Sep 11 12:37:24 2014 901133    [db_db2_utils.c:158:print_error][16871]	SQLFetch[L03] Thu Sep 11 12:37:24 2014 901166    [db_db2_utils.c:159:print_error][16871]	, SQL_NO_DATA_FOUND
+[L05] Thu Sep 11 12:37:24 2014 901192    [db_db2_connect.c:203:db2_bmd_db_disconnect][16871]	Function: db2_bmd_db_disconnect
+[L05] Thu Sep 11 12:37:24 2014 902074    [bmdconfig.c:51:bmdconf_destroy][16871]	BMDCONFIGINF Destroying bmd configuration
+[L05] Thu Sep 11 12:37:24 2014 902100    [mem_list.c:50:bmdconf_delete_list][16871]	BMDCONFIGINF Deleting configuration list
+[L03] Thu Sep 11 12:37:24 2014 902292    [awizo_soap_broker.c:405:main][16871]	Server:	socket binding successful
+[L03] Thu Sep 11 12:37:24 2014 902313    [awizo_soap_broker.c:406:main][16871]	Server:	server started
+
+
+[L05] Thu Sep 11 13:00:38 2014 88341    [awizo_soap_broker.c:82:master_proc_sig][16871]	AWIZOSOAPSERVERINF Finishing soap awizoserver program work... 15
+[L06] Thu Sep 11 13:00:38 2014 88667    [awizo_soap_broker.c:88:master_proc_sig][16871]	AWIZOSOAPSERVERNOTICE Waiting for all children to die 1
+[L04] Thu Sep 11 13:00:39 2014 91076    [awizo_soap_broker.c:92:master_proc_sig][16871]	AWIZOSOAPSERVERWARNING Ignoring children number
+[L06] Thu Sep 11 13:00:39 2014 91127    [awizo_soap_broker.c:96:master_proc_sig][16871]	AWIZOSOAPSERVERNOTICE All children died
+[L02] Thu Sep 11 13:00:39 2014 91140    [awizo_soap_broker.c:97:master_proc_sig][16871]	AWIZOSOAPSERVERLOG Shutting down soap server

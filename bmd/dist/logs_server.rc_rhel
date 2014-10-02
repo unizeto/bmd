@@ -1,0 +1,455 @@
+#!/bin/bash
+
+# chkconfig: 35 80 15
+# Provides:          bmd
+# X-UnitedLinux-Should-Start: $network 
+# X-UnitedLinux-Should-Stop: $network
+# Required-Start: $network postgresql
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Short-Description: System rejestrowania zdarzeń w BMD.
+# Description:       Uruchamia serwery logów w BMD.
+
+. /etc/init.d/functions
+
+#####################USTAWIENIA##########################
+if [ -z $BMD_DOMAINS_DIR ];
+then
+#katalog z plikami konfiguracyjnymi domen
+BMD_DOMAINS_DIR=/etc/sysconfig/logs.d
+fi
+
+#ścieżka bezwzględna do serwerów logów ( roota i serwerów liści )
+ROOT_SERVER_BIN="/usr/bin/root_server_2.3"
+LOGS_SERVER_BIN="/usr/bin/bmdlogserver_2.3"
+ONLY_BIN_ROOT="root_server_2.3"
+ONLY_BIN_LOGS="bmdlogserver_2.3"
+DOMAIN_VERSION="DOMAIN VERSION: 2.3"
+
+#########################################################
+
+
+if ! [ -e $BMD_DOMAINS_DIR ]
+then
+	echo "Cannot find $BMD_DOMAINS_DIR directory. Try exporting variable"
+	echo "     export BMD_DOMAINS_DIR=/path/to/bmd.d"
+	echo "By default the directory is /etc/sysconfig/logs.d"
+	exit -1
+fi
+
+#uruchom jedną instancję systemu rejestrowania zdarzeń w BMD
+start() {
+	BMD_DOMAIN_NAME=$1	#nazwa domeny
+	
+	BMD_DOMAIN_CONF_FILE="${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf"
+	
+	#sprawdzamy, czy podano istniejącą domenę	
+	if ! [ -e "${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME is not configured."
+		return -1
+	fi
+
+
+        if ! grep -q "$DOMAIN_VERSION" ${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf; then
+		echo "Domain $BMD_DOMAIN_NAME has not $DOMAIN_VERSION in configuration"
+                return -1
+        fi
+
+
+	if [ -z "`cat $BMD_DOMAIN_CONF_FILE | grep -v '#' | egrep --regexp='\<'${BMD_DOMAIN_NAME}'\>'`" ]
+	then
+
+		echo "Domain $BMD_DOMAIN_NAME not found in file $BMD_DOMAIN_CONF_FILE!"
+		return -1
+	fi
+
+	#pobieramy info o danej domenie
+	BMD_DOMAIN_NAME=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $1 }'`
+	BMD_USER=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $2 }'`
+	ROOT_CONF=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $3 }'`
+	BLOG_CONF=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $4 }'`
+	BMD_ARGS=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $5 $6 $7 $8 $9 }'`
+
+	if [ -z "$BMD_ARGS" ] ; then
+		BMD_ARGS=""
+	fi
+
+	PROG_ROOT="${ONLY_BIN_ROOT}_${BMD_DOMAIN_NAME}"
+	LOCK_ROOT="/var/lock/subsys/$PROG_ROOT"
+	PID_ROOT="/var/run/$PROG_ROOT.pid"
+
+	SKIP_FLAG=0
+	PID_FROM_FILE=""
+	#sprawdzamy, czy domena jest uruchomiona
+	if [ -e $PID_ROOT ]; then
+		PID_FROM_FILE=`head -n 1 $PID_ROOT`
+	fi
+
+	PID_FROM_PS=""
+	if [ $PID_FROM_FILE ]; then
+		PID_FROM_PS=`ps -C $ONLY_BIN_ROOT -o pid | grep $PID_FROM_FILE`
+	else
+		if [ -e $LOCK_ROOT ]; then
+			echo "Not running but lock $LOCK_ROOT is set! Please remove it manualy!"
+			SKIP_FLAG=1
+		else
+			#OK not running
+			PID_FROM_FILE=""
+		fi
+	fi
+
+	if [ $PID_FROM_PS ]; then
+		if [ -e $LOCK_ROOT ]; then
+			echo "Domain $BMD_DOMAIN_NAME is already being executed."
+		else
+			echo "Domain $BMD_DOMAIN_NAME is already being executed but no lock $LOCK_ROOT set!"
+		fi
+		SKIP_FLAG=1
+	else
+		if [ -e $LOCK_ROOT ]; then
+			echo "Not running but lock $LOCK_ROOT is set! Please remove it manualy!"
+			SKIP_FLAG=1
+		fi
+	fi
+
+	if [ $SKIP_FLAG -eq 0 ]; then
+	
+		echo -n "Starting rootserver for domain $BMD_DOMAIN_NAME...	"
+
+		cd /tmp
+		daemon --user $BMD_USER $ROOT_SERVER_BIN -c $ROOT_CONF |logger -t "root_$BMD_DOMAIN_NAME" &
+
+		sleep 2
+		if ! [ -z "`ps -f -C $ONLY_BIN_ROOT | grep $ROOT_CONF`" ]; then
+			echo "[started]"
+			touch $LOCK_ROOT
+			echo "`ps -f -C $ONLY_BIN_ROOT | grep $ROOT_CONF | awk '{ print $2 }'`" > $PID_ROOT
+		else
+			echo "[failed]"
+			echo "See /var/log/messages for more information"
+			return -1
+		fi
+	fi
+
+	PROG_BLOG="${ONLY_BIN_LOGS}_${BMD_DOMAIN_NAME}"
+	LOCK_BLOG="/var/lock/subsys/$PROG_BLOG"
+	PID_BLOG="/var/run/$PROG_BLOG.pid"
+
+	SKIP_FLAG=0
+	PID_FROM_FILE=""
+	#sprawdzamy, czy domena jest uruchomiona
+	if [ -e $PID_BLOG ]; then
+		PID_FROM_FILE=`head -n 1 $PID_BLOG`
+	fi
+
+	PID_FROM_PS=""
+	if [ $PID_FROM_FILE ]; then
+		PID_FROM_PS=`ps -C $ONLY_BIN_LOGS -o pid | grep $PID_FROM_FILE`
+	else
+		if [ -e $LOCK_BLOG ]; then
+			echo "Not running but lock $LOCK_BLOG is set! Please remove it manualy!"
+			SKIP_FLAG=1
+		else
+			#OK not running
+			PID_FROM_FILE=""
+		fi
+	fi
+
+	if [ $PID_FROM_PS ]; then
+		if [ -e $LOCK_BLOG ]; then
+			echo "Domain $BMD_DOMAIN_NAME is already being executed."
+		else
+			echo "Domain $BMD_DOMAIN_NAME is already being executed but no lock $LOCK_BLOG set!"
+		fi
+		SKIP_FLAG=1
+	else
+		if [ -e $LOCK_BLOG ]; then
+			echo "Not running but lock $LOCK_BLOG is set! Please remove it manualy!"
+			SKIP_FLAG=1
+		fi
+	fi
+
+
+	if [ $SKIP_FLAG -eq 0 ]; then
+
+		echo -n "Starting logserver for domain $BMD_DOMAIN_NAME...	"
+
+		cd /tmp
+		daemon --user $BMD_USER $LOGS_SERVER_BIN -c $BLOG_CONF |logger -t "${ONLY_BIN_LOGS}_${BMD_DOMAIN_NAME}" &
+
+		sleep 2
+		if ! [ -z "`ps -f -C $ONLY_BIN_LOGS | grep $BLOG_CONF`" ]; then
+			echo "[started]"
+			touch $LOCK_BLOG
+			echo "`ps -Hfl -C $ONLY_BIN_LOGS | grep $BLOG_CONF | awk '{ print $4 }'`" > $PID_BLOG
+		else
+			echo "[failed]"
+			echo "See /var/log/messages for more information"
+			return -1
+		fi
+	fi
+
+	return 0
+}
+
+#zatrzymaj jedną instancję serwera logów
+stop()
+{
+	BMD_DOMAIN_NAME=$1	#nazwa domeny
+	
+	BMD_DOMAIN_CONF_FILE="$BMD_DOMAINS_DIR/$BMD_DOMAIN_NAME.conf"
+	
+	#sprawdzamy, czy podano istniejącą domenę
+	if ! [ -e "$BMD_DOMAINS_DIR/$BMD_DOMAIN_NAME.conf" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME is not configured."
+		return -1
+	fi
+
+
+        if ! grep -q "$DOMAIN_VERSION" ${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf; then
+		echo "Domain $BMD_DOMAIN_NAME has not $DOMAIN_VERSION in configuration"
+                return -1
+        fi
+
+	
+	if [ -z "`cat $BMD_DOMAIN_CONF_FILE | grep -v '#' | egrep --regexp='\<'$BMD_DOMAIN_NAME'\>'`" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME not found in file $BMD_DOMAIN_CONF_FILE!"
+		return -1
+	fi
+
+	#pobieramy info o danej domenie
+
+	BMD_DOMAIN_NAME=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $1 }'`
+
+	PROG_ROOT="${ONLY_BIN_ROOT}_${BMD_DOMAIN_NAME}"
+	LOCK_ROOT="/var/lock/subsys/$PROG_ROOT"
+	PID_ROOT="/var/run/$PROG_ROOT.pid"
+
+	PROG_BLOG="${ONLY_BIN_LOGS}_${BMD_DOMAIN_NAME}"
+	LOCK_BLOG="/var/lock/subsys/$PROG_BLOG"
+	PID_BLOG="/var/run/$PROG_BLOG.pid"
+
+	SKIP_FLAG=0;
+	PID_FROM_FILE=""
+	#sprawdzamy, czy domena jest uruchomiona
+        if [ -e $PID_ROOT ]; then
+		PID_FROM_FILE=`head -n 1 $PID_ROOT`
+	fi
+
+	PID_FROM_PS=""
+	if [ $PID_FROM_FILE ]; then
+		PID_FROM_PS=`ps -C $ONLY_BIN_ROOT -o pid | grep $PID_FROM_FILE`
+	else
+		if [ -e $LOCK_ROOT ]; then
+			echo "Not running but lock $LOCK_ROOT is set! Please remove it manualy!"
+		else
+			#OK not running
+			echo "Root server process isn't being executed"
+		fi
+		SKIP_FLAG=1
+	fi
+
+	if [ $SKIP_FLAG -eq 0 ]; then
+		if [ $PID_FROM_PS ]; then
+			if [ -e $LOCK_ROOT ]; then
+				echo "Stopping domain $BMD_DOMAIN_NAME..."
+				echo "Stoping root server"
+				kill `cat $PID_ROOT`
+				rm -rf $PID_ROOT
+				rm -rf $LOCK_ROOT
+			else
+				echo "No lock $LOCK_ROOT set!"
+				echo "Stopping domain $BMD_DOMAIN_NAME..."
+				echo "Stoping root server"
+				kill `cat $PID_ROOT`
+				rm -rf $PID_ROOT
+			fi
+		else
+			if [ -e $LOCK_ROOT ]; then
+				echo "Not running but lock $LOCK_ROOT is set! Please remove it manualy!"
+			else
+				echo "Not running but pidfile $PID_ROOT is set! Please remove it manualy!"
+			fi
+		fi
+	fi
+	
+
+	SKIP_FLAG=0;
+	PID_FROM_FILE=""
+	#sprawdzamy, czy domena jest uruchomiona
+	if [ -e $PID_BLOG ]; then
+		PID_FROM_FILE=`head -n 1 $PID_BLOG`
+	fi
+
+	PID_FROM_PS=""
+	if [ $PID_FROM_FILE ]; then
+		PID_FROM_PS=`ps -C $ONLY_BIN_LOGS -o pid | grep $PID_FROM_FILE`
+	else
+		if [ -e $LOCK_BLOG ]; then
+			echo "Not running but lock $LOCK_BLOG is set! Please remove it manualy!"
+		else
+			#OK not running
+			echo "BMD log server process isn't being executed"
+		fi
+		SKIP_FLAG=1
+	fi
+
+
+	if [ $SKIP_FLAG -eq 0 ]; then
+		if [ $PID_FROM_PS ]; then
+			if [ -e $LOCK_BLOG ]; then
+				echo "Stopping domain $BMD_DOMAIN_NAME..."
+				echo "Stoping BMD log server"
+				kill `cat $PID_BLOG`
+				rm -rf $PID_BLOG
+				rm -rf $LOCK_BLOG
+			else
+				echo "No lock $LOCK_BLOG set!"
+				echo "Stopping domain $BMD_DOMAIN_NAME..."
+				echo "Stoping root server"
+				kill `cat $PID_BLOG`
+				rm -rf $PID_BLOG
+			fi
+		else
+			if [ -e $LOCK_BLOG ]; then
+				echo "Not running but lock $LOCK_BLOG is set! Please remove it manualy!"
+			else
+				echo "Not running but pidfile $PID_BLOG is set! Please remove it manualy!"
+			fi
+		fi
+	fi
+
+	return 0
+}
+
+#informacje o stanie danej jako parametr domeny
+status()
+{
+	BMD_DOMAIN_NAME=$1
+	BMD_DOMAIN_CONF_FILE="$BMD_DOMAINS_DIR/$BMD_DOMAIN_NAME.conf"
+	
+	#sprawdzamy, czy podano istniejącą domenę
+	if ! [ -e "$BMD_DOMAINS_DIR/$BMD_DOMAIN_NAME.conf" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME is not configured."
+		return -1
+	fi
+	
+
+        if ! grep -q "$DOMAIN_VERSION" ${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf; then
+		echo "Domain $BMD_DOMAIN_NAME has not $DOMAIN_VERSION in configuration"
+                return -1
+        fi
+
+
+	if [ -z "`cat $BMD_DOMAIN_CONF_FILE | grep -v '#' | egrep --regexp='\<'$BMD_DOMAIN_NAME'\>'`" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME not found in file $BMD_DOMAIN_CONF_FILE!"
+		return -1
+	fi
+
+	#pobieramy info o danej domenie
+	BMD_DOMAIN_NAME=`cat $BMD_DOMAIN_CONF_FILE | grep -v "#" | grep $BMD_DOMAIN_NAME | awk '{ print $1 }'`
+
+	PROG_ROOT="${ONLY_BIN_ROOT}_${BMD_DOMAIN_NAME}"
+	LOCK_ROOT="/var/lock/subsys/$PROG_ROOT"
+	PID_ROOT="/var/run/$PROG_ROOT.pid"
+
+	PROG_BLOG="${ONLY_BIN_LOGS}_${BMD_DOMAIN_NAME}"
+	LOCK_BLOG="/var/lock/subsys/$PROG_BLOG"
+	PID_BLOG="/var/run/$PROG_BLOG.pid"
+
+	PID_FROM_FILE=""
+	#sprawdzamy, czy domena jest uruchomiona
+	if [ -e $PID_ROOT ]; then
+		PID_FROM_FILE=`head -n 1 $PID_ROOT`
+	fi
+
+	PID_FROM_PS=""
+	if [ $PID_FROM_FILE ]; then
+		PID_FROM_PS=`ps -C $ONLY_BIN_ROOT -o pid | grep $PID_FROM_FILE`
+	else
+		if [ -e $LOCK_ROOT ]; then
+			echo "Not running but lock $LOCK_ROOT is set! Please remove it manualy!"
+		else
+			#OK not running
+			echo "Not running"
+		fi
+		return 0
+	fi
+
+
+	if [ $PID_FROM_PS ]; then
+		if [ -e $LOCK_ROOT ]; then
+			echo "Running (`head -n 1 $PID_ROOT`)"
+		else
+			echo "No lock $LOCK_ROOT set!"
+		fi
+	else
+		if [ -e $LOCK_ROOT ]; then
+			echo "Not running but lock $LOCK_ROOT is set! Please remove it manualy!"
+		else
+			echo "Not running but pidfile $PID_ROOT is set! Please remove it manualy!"
+		fi
+	fi
+	return 0;
+
+
+	
+	if [ -e $LOCK_BLOG ];then
+		pids=`cat $PID_BLOG`
+
+		if [ -n $pids ]; then
+			"$ONLY_BIN_LOGS not running but lock $LOCK_BLOG set! Please remove it manualy!"
+		else
+
+			for pid in $pids; do
+				PID_FROM_PS=`ps -C $ONLY_BIN_LOGS -o pid | grep $pid`
+				if [ $PID_FROM_PS ]; then
+					echo "Running $ONLY_BIN_LOGS pid: $pid"
+				echo
+					echo "$ONLY_BIN_LOGS not running - still pid $pid in $PID_BLOG!"
+				fi
+			done
+		fi
+	else
+		echo "$ONLY_BIN_LOGS not running"
+	fi
+	return 0;
+	
+}
+
+case "$1" in
+        start)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			start $2
+		fi
+		;;
+	stop)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			stop $2
+		fi
+		;;
+	status)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			status $2
+		fi
+		;;
+	restart)
+		stop $2
+		start $2
+		;;
+	*)
+		echo -n "Usage: start | stop | restart | status"
+		echo ""
+		;;
+esac 

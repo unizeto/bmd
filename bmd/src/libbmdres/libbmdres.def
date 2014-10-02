@@ -1,0 +1,6 @@
+LIBRARY	"libbmdres"
+EXPORTS
+libbmdres_init
+libbmdres_get_wxIcon
+libbmdres_get_wxBitmap
+libbmdres_destroy

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<upo>
+	<instytucja>
+		<nazwa></nazwa>
+		<adres>
+			<ulica></ulica>
+			<budynek></budynek>
+			<lokal></lokal>
+			<kodpocztowy></kodpocztowy>
+			<miejscowosc></miejscowosc>
+		</adres>
+	</instytucja>
+	<dokument>
+		<tytul></tytul>
+		<czas typ="dostarczenie"></czas>
+		<czas typ="upo"></czas>
+		<skrot></skrot>
+		<pobieranie></pobieranie>
+	</dokument>
+	<interesant>
+			<imie></imie>
+			<nazwisko></nazwisko>
+			<pesel></pesel>
+			<adres>
+				<ulica></ulica>
+				<budynek></budynek>
+				<lokal></lokal>
+				<kodpocztowy></kodpocztowy>
+				<miejscowosc></miejscowosc>
+			</adres>
+			<certyfikat>
+				<SN></SN>
+				<CN></CN>
+				<weryfikacja></weryfikacja>
+			</certyfikat>
+	</interesant>
+</upo>

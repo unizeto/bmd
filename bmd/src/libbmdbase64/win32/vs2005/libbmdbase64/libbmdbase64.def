@@ -1,0 +1,9 @@
+LIBRARY "libbmdbase64"
+EXPORTS
+	base64_init_decodestate
+	base64_decode_value
+	base64_decode_block
+	base64_init_encodestate
+	base64_encode_value
+	base64_encode_block
+	base64_encode_blockend

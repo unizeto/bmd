@@ -1,0 +1,36 @@
+LIBRARY "libbmdX509"
+DESCRIPTION "X509 library for BMD"
+EXPORTS
+	X509CertGetAttr
+	GetVersionFromX509Certificate
+	GetSerialNumberFromX509Certificate
+	GetSubjectDNFromX509Certificate
+	GetSubjectSurnameFromX509Certificate
+	GetSubjectGivenNameFromX509Certificate
+	GetSubjectCommonNameFromX509Certificate
+	GetIssuerCommonNameFromX509Certificate
+	GetIssuerDNFromX509Certificate
+	GetAlgorithmOIDFromX509Certificate
+	GetValidityNBFromX509Certificate
+	GetValidityNAFromX509Certificate
+	GetCRLDistPointsFromX509Certificate
+	GetCertificateStructFromX509Certificate
+	GetVersionFromCertificate
+	GetSerialNumberFromCertificate
+	GetSubjectDNFromCertificate
+	GetSubjectSurnameFromCertificate
+	GetSubjectGivenNameFromCertificate
+	GetSubjectCommonNameFromCertificate
+	GetIssuerCommonNameFromCertificate
+	GetIssuerDNFromCertificate
+	GetValidityNAFromCertificate
+	GetValidityNBFromCertificate
+	GetAlgorithmOIDFromCertificate
+	GetExtCRLDistPointsFromCertificate
+	GetExtensionsFromCertificate
+	GetCertificateExtension
+	GetCRLDistPointsFromCRLExtension
+	GetCertExtType
+	ExtensionCRLDistPoints2string
+	GetCrlDistributionPoints
+	GetPubKeyFromCert

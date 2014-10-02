@@ -1,0 +1,32 @@
+LIBRARY "libbmdcms"
+DESCRIPTION "CMS library for BMD"
+EXPORTS
+	get_x509cert_from_cms_signature
+	get_first_certificate_from_SignedData
+	GetX509CertListFromCMSSignature
+	GetX509CertListFromSignedData
+	get_CMScontent_from_GenBuf
+	get_SignedData_from_CMScontent
+	der_encode_SignedData
+	SignedData_set_CMSVersion
+	SignedData_add_DigestAlgorithm
+	ContentInfo_set_SignedData
+	der_encode_ContentInfo
+	SignedData_add_Certificate
+	Certificate_from_Crypt
+	AlgorithmIdentifier_set_OID
+	SignedData_set_Content
+	SignedData_set_ContentType
+	SignedData_set_Data
+	AlgorithmIdentifier_set_OID
+	SignerInfo_generate_Signature
+	SignedData_add_SignerInfo
+	CMSSignData
+	CMSSignDataAddCryptCert
+	CMSSignDataAddCert
+	CMSSignDataAddSignature
+	Certificate_from_Crypt
+	CMSEnvelopedData
+	CMSSignObject
+	SignedData_count_Version
+

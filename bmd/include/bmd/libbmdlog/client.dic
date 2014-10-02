@@ -1,0 +1,4 @@
+const char* client_dic[] = {
+			    "LOG_SERVERS 1 \"^(([a-zA-Z0-9_])+(:[a-zA-Z0-9_]+)*)*$\"",
+		            ""
+		           };

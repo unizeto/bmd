@@ -1,0 +1,12 @@
+LIBRARY "libbmdlob"
+DESCRIPTION "Library for handling LOB"
+EXPORTS
+	new_lob_transport
+	free_lob_transport
+	set_lob_size
+	get_lob_timestamp
+	get_lob_max_size
+	get_lob_in_size
+	get_lob_out_size
+	send_lob_chunk
+	recv_lob_chunk

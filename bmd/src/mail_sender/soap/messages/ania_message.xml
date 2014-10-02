@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AWIZO>
+	<DOCUMENT>
+		<SENDER>system</SENDER>
+		<TITLE>Temat testowy 2</TITLE>
+		<RECIPIENT_EMAIL>pawel.maciejewski@spmtdbd03</RECIPIENT_EMAIL>
+		<TEMPLATENAME>Elektroniczne awizo zbiorcze</TEMPLATENAME>
+		<TEMPLATEVERSION>1.0</TEMPLATEVERSION>
+		<LANGUAGE>PL</LANGUAGE>
+		<METADATA source_type="inline">YzJSbWMyUm1jMlJtYzJSbQ==</METADATA>
+	</DOCUMENT>
+</AWIZO>

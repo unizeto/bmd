@@ -1,0 +1,28 @@
+LIBRARY "libbmdts"
+DESCRIPTION "TS library for BMD"
+EXPORTS
+	TSGetAttr
+	TimestampGenBuf
+	GetGenerationTimeFromTimestamp
+	GetVersionFromTimestamp
+	GetPolicyOIDFromTimestamp
+	GetSerialNumberFromTimestamp
+	GetTsaDnFromTimestamp
+	GetTsaCertificateSnFromTimestamp
+	GetTsaCertificateValidityNAFromTimestamp
+	GetTSTInfoFromTimestamp
+	GetSetOfCertificatesFromTimestamp
+	FreeSetOfCertificatesFromTimestamp
+	GetTimeFromTSTInfo
+	GetVersionFromTSTInfo
+	GetPolicyOIDFromTSTInfo
+	GetSerialNumberFromTSTInfo
+	GetTimeStampResp_from_GenBuf
+	GetTimeStampToken_from_GenBuf
+	CheckIfCmsIsSignature
+	CheckIfSignatureIsTimestamp
+	GetTSTInfo_from_SignedData
+	GetCertificatesFromSignedData
+	CompareTimestampTSADNWithTSACertificateDN
+	GetTsaCertificateFromTimestamp
+	CreateTsRequest

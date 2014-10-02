@@ -1,0 +1,57 @@
+ShmDictionaries DEFINITIONS ::=
+
+BEGIN
+		id-dl-dict OBJECT IDENTIFIER ::= { (1) (2) (1) }
+		id-groups-dict OBJECT IDENTIFIER ::= { (1) (2) (2) }
+		id-roles-dict OBJECT IDENTIFIER ::= { (1) (2) (3) }
+
+		-- opis pojedynczej roli ze slownika rol
+		ShmRoleNodeDescr ::= SEQUENCE {
+			roleId OCTET STRING,
+			roleName OCTET STRING,
+			roleActions SEQUENCE OF OCTET STRING,
+			actionsCount INTEGER
+		}
+
+		-- slownik rol
+		ShmRolesDict ::= SEQUENCE {
+			rolesDescr SEQUENCE OF ShmRoleNodeDescr,
+			rolesCount INTEGER -- ilosc elementow w rolesDescr, tylko dla zgodnosci ze struktura w C
+		}
+
+		-- pojedyczny opis grupy ze slownika grup
+		ShmGroupDescr ::= SEQUENCE {
+			mainGroup OCTET STRING,
+			depGroups SEQUENCE OF OCTET STRING OPTIONAL
+		}
+
+		-- slownik grup
+		ShmGroupsDict ::= SEQUENCE OF ShmGroupDescr
+
+		-- pojedynczy element slownika oparty na liscie bmdstd_dl, odpowiednik struktury oid_desc
+		ShmDlNode ::= SEQUENCE {
+			i OCTET STRING,
+			localizationId OCTET STRING,
+			oidName OCTET STRING,
+			sqlCastString OCTET STRING
+		}
+
+		-- lista wezlow opisanych przez ShmDlNode
+		ShmDl ::= SEQUENCE OF ShmDlNode
+		
+		-- slownik oparty na liscie
+		ShmDlDict ::= SEQUENCE {
+			dictName OCTET STRING, -- nazwa slownika
+			nodes ShmDl -- jego zawartosc
+		}
+
+		-- ogolny slownik, w dictContent zawartosc DER(ShmDlDict) || DER(ShmGroupsDict) || DER(ShmRolesDict)
+		ShmDict ::= SEQUENCE {
+			dictType OBJECT IDENTIFIER,
+			dictContent ANY DEFINED BY dictType
+		}
+		
+		-- wszystkie slowniki - to bedzie zapisane w pamieci dzielonej
+		ShmDicts ::= SEQUENCE OF ShmDict 
+		
+END

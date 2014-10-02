@@ -1,0 +1,3 @@
+for_db.lo: for_db.c ../../src/config.h
+
+../../src/config.h:

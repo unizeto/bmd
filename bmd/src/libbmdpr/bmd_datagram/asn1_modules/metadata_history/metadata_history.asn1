@@ -1,0 +1,12 @@
+BMDDatagram { iso(1) member-body(2) pl(616) unizeto(113527) bmd(4) metadatahistory(3) }
+
+	DEFINITIONS IMPLICIT TAGS ::=
+
+	BEGIN
+		-- EXPORTS ALL --
+		-- tutaj definicje OID
+		MetaDataWithTime ::= SEQUENCE {
+			metaData   [0] OCTET STRING,	-- wlasciwy OCTET_STRING
+			lastUpdate [1] OCTET STRING	-- string z data ostatniej zmiany
+		}
+	END

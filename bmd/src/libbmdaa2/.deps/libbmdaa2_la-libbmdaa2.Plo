@@ -1,0 +1,3 @@
+libbmdaa2_la-libbmdaa2.lo: libbmdaa2.c ../../src/config.h
+
+../../src/config.h:

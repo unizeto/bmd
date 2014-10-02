@@ -1,0 +1,773 @@
+
+/**/
+/*------*/     LIBBMDCONFIG API (ANSI C)      /*------*/
+/**     AUTOR: Włodzimierz Szczygieł     **/
+/**/
+
+Biblioteka do obsługi plików konfiguracyjnych oraz konfiguracji przechowywanej w bazie danych PostgreSQL
+
+Współpracuje z bibliotekami:
+1) PCRE ( Perl Compatible Regular Expresions )
+2) libpq ( współpraca z bazami danych PostgreSQL )
+
+
+/*================================================================================================================*/
+
+/**/   TYP bmd_conf I KORZYSTANIE Z BIBLIOTEKI LIBBMDCONFIG   /**/
+
+
+Struktura typu bmd_conf umożliwia obsługę konfiguracji niezależnie od tego, czy wpisy konfiguracyjne przechowywane są
+w pliku, czy też w bazie danych. Procedura obsługi konfiguracji rozpoczyna się zawsze od inicjacji struktury typu
+bmd_conf funkcją bmdconf_init(). Po zainicjowaniu struktury należy załadować wszystkie potrzebne słowniki
+wykorzystując w tym celu funkcję bmdconf_add_section2dict(). Po załadowaniu słowników można przystąpić do ładowania
+konfiguracji. Podczas ładowania konfiguracji automatycznie wykonywane jest jej parsowanie i walidcja. Przed
+ładowaniem konfiguracji istnieje możliwość ustawienia niestandardowego sposobu walidacji za pomocą funkcji
+bmdconf_set_mode(). W zależności od sposobu przechowywania konfiguracji, można ją załadować w następujący sposób:
+1) za pomocą funkcji bmdconf_load_file() w przypadku pliku konfiguracyjnego,
+2) za pomocą funkcji bmdconf_load_db() w przypadku konfiguracji przechowywanej w bazie danych,
+3) za pomocą funkcji bmdconf_load_memory(), jeśli zawartość pliku konfiguracyjnego została zrzucona wcześniej do
+   pamięci.
+Dla poprawnie załadowanej konfiguracji można pobierać wartości opcji konfiguracyjnych za pomocą jednej z funkcji:
+bmdconf_get_value(), bmdconf_get_value_int(), bmdconf_get_value_static(). Można dokonywać zmiany wartości opcji w
+konfiguracji przetrzymywanej w strukturze typu bmd_conf, wykorzystyjąc do tego funkcję bmdconf_update_option_value().
+Wprowadzone w strukturze zmiany można zapisać do źródłowego pliku konfiguracyjnego za pomocą funkcji
+bmdconf_save_configuration(). Procedurę kończy wywołanie funkcji bmdconf_destroy(), która zwalnia wszelką zaalokowaną
+pamięć na strukturę typu bmd_conf.
+Api udostępnia kilka funkcji niezależnych od struktury typu bmd_conf. Funkcje te służą do manipulowania konfiguracją
+przechowywaną w bazie danych i określane są jako funkcje "administratorskie". Zaliczają się do nich
+bmdconf_insert_option_db(), bmdconf_set_value_db(), bmdconf_delete_option_db(), bmdconf_delete_section_db(),
+bmdconf_clean_db(), bmdconf_db2file(), bmdconf_file2db().
+
+
+
+/**/     FUNKCJE     /**/
+
+
+
+int bmdconf_init(bmd_conf **struktura);
+
+Funkcja bmdconf_init() alokuje pamięć na strukturę struktura i przygotowuje ją do załadowania słowników oraz
+konfiguracji. Wywołanie tej funkcji wymagane jest niezależnie od źródła konfiguracji (plik, pamięć, baza danych).
+
+@ARG struktura to adres wskaźnika na strukturę typu bmd_conf
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli inicjalizacja struktury zakończyła się powodzeniem (*struktura wskazuje zaalokowaną strukturę)
+
+
+Przykład:
+
+bmd_conf *configuration=NULL;
+bmdconf_init(&configuration);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_destroy(bmd_conf **struktura);
+
+Funkcja bmdconf_destroy() niszczy przechowywane słowniki, konfigurację i zwalnia pamięć zaalokowaną na strukturę.
+
+@ARG struktura to adres wskaźnika na strukturę typu bmd_conf przeznaczoną do zniszczenia
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli niszczenie struktury zakończyło się powodzeniem (*struktura ma wartość NULL)
+
+
+Przykład:
+
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_destroy(&configuration);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_add_section2dict(bmd_conf *struktura, const char *section_name, const char **registers, int czy_wymagana);
+
+Funkcja bmdconf_add_section2dict() ładuje do struktury struktura słownik dla podanej sekcji section_name. Słownik
+pozwala skontrolować, czy zapisy w danej sekcji w źródle przechowującym konfigurację są poprawne. Jednokroktne
+wywołanie tej funkcji odpowiada załadowaniu słownika dla jednej konkretnej sekcji. Do sktruktury typu bmd_conf można
+załadować dowolną ilość słowników poprzez wielokrotne wywołanie opisywanej funkcji.
+
+@ARG struktura to wskaznik do struktury typu bmd_conf, przechowującej konfigurację
+@ARG section_name to łańcuch znakowy z nazwą sekcji, dla której ładowany jest słownik
+@ARG registers to tablica łańcuchów znakowych zawierających wpisy słownikowe dla sekcji section_name
+@ARG czy_wymagana to flaga określająca, czy dana sekcja będzie wymagana we wczytywanej później konfiguracji.
+	Dopuszczalne są dwie flagi:
+	1) BMDCONF_SECTION_REQ - dla oznaczenia sekcji wymaganej
+	2) BMDCONF_SECTION_OPTIONAL - dla oznaczenia sekcji opcjonalnej
+
+Jeśli sekcja jest zadeklarowana jako wymagana, to podczas ładowania konfiguracji brak takiej sekcji spowoduje
+zgłoszenie odpowiedniego błędu. Brak w konfiguracji sekcji zadeklarowanej jako opcjonalna nie skutkuje zgłoszeniem
+błędu.
+
+@RETURN
+Funkcja zwraca:
+	 0, w przypadku poprawnego załadowania słownika
+	 ASSERTION FAILED - w przypadku niepoprawnego słownika wyrzuca assercje (programista ma obowiązek zadbać o
+	 		    poprawność słowników)
+
+Uwagi:
+1) Ładowanie słowników może być wykonane tylko dla przygotowanej struktury funkcją bmdconf_init().
+2) Ładowanie słowników MUSI poprzedzać wywołanie funkcji ładującej konfigurację.
+3) Należy pamiętać o przestrzeganiu wymaganego formatu nazewnictwa sekcji tj. pierwszy znak nazwy może być znakiem
+   podkreślenia '_' bądź wielką/małą literą ( z zakresu podstawowego tj. bez polskich znaków tzw. ogonków ). Każdy
+   następny znak może być dodatkowo cyfrą.
+4) Nie wolno ładować wielokrotnie tego samego słownika dla tej samej sekcji do jednej struktury typu bmd_conf.
+   Jeśli wykryta zostanie próba dodania wpisu słownikowego do strukturki typu bmd_conf, w której wpis taki już
+   istnieje, zostanie wyrzucona asercja.
+
+
+Przykład:
+
+const char* slownik[]= {
+	"opcja1 0",
+	"#opcja2 1 \"^YES$\" ",
+	""
+};
+
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_add_section2dict(configuration, "Nazwa_sekcji", slownik, BMDCONF_SECTION_REQ);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_set_mode(bmd_conf* struktura, int flag);
+
+Funkcja bmdconf_set_mode() ustawia sposób walidacji zapisów konfiguracyjnych. Wyróżnia się dwa tryby pracy:
+	1) RESTRYKCYJNY
+	2) TOLERANYJNY
+
+Charakterystyka trybów:
+
+1) W trybie RESTRYKCYJNYM, jeśli w konfiguracji pojawi się sekcja, której słownik nie został załadowany (za pomocą
+	funkcji bmdconf_add_section2dict() ), wówczas zgłaszany będzie błąd i konfiguracja uznana zostanie za
+	nieprawidłową (bład nierozpoznanego pola).
+2) W trybie TOLERANYJNYM, jeśli w konfiguracji pojawi się sekcja, której słownik nie został załadowany (za pomocą
+	funkcji bmdconf_add_section2dict() ), sekcja ta jest ignorowana, a konfiguracja nie jest uznana za błedną z
+	tego powodu. W tym trybie nie będzie możliwe pobieranie wartości dla pól w sekcjach, których słowniki nie
+	zostały załadowane. Zakłada się bowiem, że jeśli nie ma słownika, to sekcje takie nie mogą być sprawdzane pod
+	kątem semantyki, a więc mogą być błędne.
+
+@ARG struktura to wskaznik do struktury typu bmd_conf, do której wczytywana będzie konfiguracja oraz słowniki
+@ARG flag to flaga wymuszający konkretny tryb pracy. Dopuszczalne są dwie flagi:
+	1) BMDCONF_RESTRICT - dla wymuszenia trybu restrykcyjnego (dodane dla porządku)
+	2) BMDCONF_TOLERANT - dla wymuszenia trybu tolerancyjnego
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli ustawienie trybu zakończyło się powodzeniem
+
+Uwagi:
+1) DOMYŚLNIE WŁĄCZONY jest tryb RESTRYKCYJNY. Ustawia go funkcja inicjująca bmdconf_init().
+2) Ustawienie trybu za pomocą opisywanej funkcji można wykonać tylko dla struktury przygotowanej funkcją
+	bmdconf_init()
+3) Ustawienie trybu za pomocą opisywanej funkcji należy wykonać przed ładowaniem konfiguracji do struktury typu
+	bmd_conf.
+4) Ustawienie trybu obowiazuję oddzielnie dla każdej zainicjowanej struktury typu bmd_conf.
+
+
+Przykład:
+
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_set_mode(configuration, BMDCONF_TOLERANT);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_load_file(const char *file_path, bmd_conf *struktura, char **error_string);
+
+Funkcja bmdconf_load_file() wczytuje do struktury struktura konfigurację zawartą w pliku konfiguracyjnym o ścieżce 
+file_path.
+
+@ARG file_path to łańcuch znakowy ze ścieżka do pliku konfiguracyjnego
+@ARG struktura to wskaźnik do struktury typu bmd_conf, do której ma zostać załadowana konfiguracja
+@ARG error_string to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funkcja zwraca:
+	-1, gdy nie można otworzyć pliku konfiguracyjnego o podanej ścieżce (*error_string przyjmuje wartość NULL)
+	-2, w przypadku błędu podczas parsowania konfiguracji. W tej sytuacji *error_string wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+	-3, w przypadku błędu podczas walidowania konfiguracji w oparciu o słownik(i). W tej sytuacji *error_string
+		wskazuje na komunikat błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy
+		go zwolnić).
+	-4, w przypadku problemu z zamknięciem wczytanego pliku konfiguracyjnego (dodane dla porządku). Błąd ten
+		wystepuje inforamcyjnie a w struktura znajduje się poprawnie wczytana konfiguracja. (*error_string
+		przyjmuje wartość NULL)
+
+Uwagi:
+1) Funkcja działa na strukturze typu bmd_conf, która wcześniej musi zostać zainijowana funkcją bmdconf_init().
+2) Przed wywołaniem tej funkcji należy załadować potrzebne słowniki za pomocą funkcji bmdconf_add_section2dict().
+3) Nawet jeśli plik konfiguracyjny jest poprawnie parsowany, niepowodzenie walidacji (zwracana wartość -3) powoduje
+   brak dostępu do konfiguracji, bowiem z założenia nie można dopuscić do operowania na nieprawidłowych wpisach
+   konfiguracyjnych.
+
+
+Przykład:
+
+char *load_error=NULL;
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_load_file("test_file.conf", configuration, &load_error);
+.
+free(load_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_load_memory(unsigned char *buf, int length, bmd_conf *struktura, char **error_string);
+
+Funkcja bmdconf_load_memory() wczytuje do struktury struktura konfigurację przechowywaną z pamięci. Konfiguracja w
+pamięci jest wczytana do pamięci zawartością pliku konfiiguracyjnego. Wczytaną konfigurację funkcja parsuje i
+waliduje.
+
+@ARG buf jest wskaznikiem do obszaru pamieci, do którego wczytano konfigurację zgodną z formatem plików
+	konfiguracyjnych wymaganym przez bibliotekę.
+@ARG length określa długość bufora buf
+@ARG struktura to wskaznik do struktury typu bmd_conf, do której ma zostać załadowana konfiguracja
+@ARG error_string to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funkcja zwraca:
+	 0, w przypadku gdy konfiguracja jest załadowana do struktury struktura oraz poprawnie sparsowana i
+		zwalidowana (*error_string ma wartość NULL)
+	-2, w przypadku błędu podczas parsowania konfiguracji. W tej sutuacji *error_string wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+	-3, w przypadku błędu podczas walidowania konfiguracji w oparciu o słownik(i). W tej sutuacji *error_string
+		wskazuje na komunikat błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy
+		go zwolnić).
+
+Uwagi:
+1) Funkcja działa na strukturze typu bmd_conf, która wcześniej powinna zostać zainijowana funkcją bmdconf_init().
+2) Przed wywołaniem tej funkcji należy załadować potrzebne słowniki za pomocą funkcji bmdconf_add_section2dict().
+3) Nawet jeśli konfiguracja jest poprawnie parsowana, niepowodzenie walidacji (zwracana wartość -3) powoduje brak
+	dostępu do konfiguracji, bowiem z założenia nie można dopuscić do operowania na nieprawidłowych wpisach
+	konfiguracyjnych.
+
+Przykład - patrz test_config.c
+
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_get_value(bmd_conf *struktura, const char *section_name, const char *option_name, char **result);
+
+Funkcja bmdconf_get_value() umożliwia pobranie wartości opcji option_name w sekcji section_name. Odnaleziona wartość
+jest dynamicznie alokowaną kopią łańcucha znakowego w strukturze struktura. Po wykorzystaniu wartości należy zwolnić
+pamięć.
+
+@ARG struktura to wskaznik do struktury typu bmd_conf, przechowującej konfigurację
+@ARG section_name to łańcuch znakowy z nazwą przeszukiwanej sekcji
+@ARG option_name to łańcuch znakowy z nazwą opcji, dla której ma być pobrana wartość
+@ARG result to adres wskaznika, do którego przypisany zostanie łańcuch znakowy z kopią odnalezionej wartości
+
+@RETURN
+Funkcja zwraca:
+	 0, w przypadku odnalezienia pożądanej wartości (*result wskazuje na łańcuch znakowy z kopią wartości)
+	-1, w przypadku, gdy pobieranie wartości zakończone niepowodzeniem (*result przyjmuje wartość NULL)
+
+
+Przykład:
+
+char* result=NULL;
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_get_value(configuration, "Nazwa_sekcji", "opcja1", &result);
+.
+free(result);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+const char * bmdconf_get_value_static(bmd_conf *struktura, const char *section_name, const char *option_name);
+
+Funkcja bmdconf_get_value_static() umożliwia pobranie wartości opcji option_name w sekcji section_name. W tym
+przypadku odnalezionej wartości nie zwalnia się, bowiem funkcja dokonuje jedynie powiązania z łańcuchem tekstowym
+przechowywanym w strukturze struktura.
+
+@ARG struktura to wskaznik do struktury typu bmd_conf, przechowującej konfigurację
+@ARG section_name to łańcuch znakowy z nazwą przeszukiwanej sekcji
+@ARG option_name to łańcuch znakowy z nazwą opcji, dla której ma być pobrana wartość
+
+@RETURN
+Funkcja zwraca:
+	w przypadku sukcesu wskaznik do łańcucha tekstowego z odnalezioną wartością opcji
+	NULL, w przypadku niepowodzenia (gdy brak podanej opcji w konfiguracji) 
+
+
+Przykład:
+
+const char* result=NULL;
+bmd_conf *configuration=NULL;
+.
+.
+result=bmdconf_get_value_static(configuration, "Nazwa_sekcji", "opcja1");
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_get_value_int(bmd_conf *struktura,const char *section_name,const char *option_name, long int *result);
+
+Funkcja bmdconf_get_value_int() umożliwia pobranie wartości opcji option_name w sekcji section_name, która jest
+automatycznie konwertowana do long int. 
+
+@ARG struktura to wskaznik do struktury typu bmd_conf, przechowującej konfigurację
+@ARG section_name to łańcuch znakowy z nazwą przeszukiwanej sekcji
+@ARG option_name to łańcuch znakowy z nazwą opcji, dla której ma być pobrana wartość
+@ARG result to adres zmiennej, której ma zostac przypisana pożądana wartość
+
+@RETURN
+Funkcja zwraca:
+	 0, w przypadku odnalezienia pożądanej wartości (*result zawiera pożądaną wartośc)
+	-1, w przypadku, gdy pobieranie wartości zakończone niepowodzeniem (wartość *result nie zmienia się)
+
+Uwagi:
+Opisywana funkcja nie sprawdza, czy łancuch znakowy można skonwertować to long int. Dopasowanie do formatu long int
+można zapewnić definiując dla opcji odpowiednie wyrażenie regularne w słowniku sekcji, wewnątrz której opcja
+występuje.
+
+
+Przykład:
+
+long int value;
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_get_value_int(configuration, "Nazwa_sekcji", "opcja1", &value);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_update_option_value(bmd_conf *struktura, char *section, char *option, char *new_value);
+
+Funkcja bmdconf_update_option_value() zmienia wartosc opcji o nazwie option w sekcji o nazwie section na nową wartość
+new_value. Zmiana naniesiona jest na konfiguracji przechowywanej w strukturze struktura (funkcja nie powoduje zmian w
+pliku konfiguracyjnym, z którego zczytana była konfiguracja).
+
+@ARG struktura to wskaznik do struktury typu bmd_conf przechowującej konfigurację
+@ARG section to lancuch znakowy z nazwa sekcji, w której ma byc zmiana
+@ARG option to lanuch znakowy z nazwa opcji, w której wartosc ma byc zmieniona
+@ARG new_value to lanuch z nowa wartascią opcji
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli zmiana zakonczyla sie powodzeniem.
+	-1, jeśli wystąpił błąd ( brak w konfiguracji opcji dla podanej sekcji bądź znak cudzysłowia w new_value )
+
+
+Przykład:
+
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_update_option_value(configuration, "Nazwa_sekcji", "opcja1", "nowa wartość");
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_save_configuration(bmd_conf *struktura, char **error);
+
+Funkcja bmdconf_save_configuration() zapisuje w pliku konfiguracyjnym (z którego wczytana została konfiguracja za
+pomocą bmdconf_load_file() ) zmiany dokonane funkcją bmdconf_update_option_value().
+
+@ARG struktura to wskaznik do struktury typu bmd_conf przechowujacej konfigurację
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli zapis zmian w pliku konfiguracyjnym zakonczyl sie powodzeniem (*error ma wartosc NULL)
+	-1, jesli nie udalo sie nanieść zmian w pliku konfiguracyjnym. W tej sutuacji *error_string wskazuje na
+		komunikat błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char *load_error=NULL;
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_save_configuration(configuration, &load_error);
+.
+free(load_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+/*Funkcje przeznaczone do obsługi konfiguracji przechowywanej w bazie danych (PostgreSQL)*/
+
+int bmdconf_load_db(char *db_params, bmd_conf *struktura, char **error_string);
+
+Funkcja bmdconf_load_db() wczytuje do struktury struktura konifgurację przechowywaną w bazie danych. Struktura bazy
+danych do przechowywania konfiguracji jest zdefiniowana specjalnie na potrzeby tej biblioteki. Wczytywana konfiguracja
+jest parsowana i walidowana.
+
+@ARG db_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest identyczny
+	z łańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG struktura to wskaznik do struktury typu bmd_conf, do której ma zostać załadowana konfiguracja
+@ARG error_string to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funkcja zwraca:
+	 0, w przypadku gdy konfiguracja jest załadowana do struktury struktura oraz poprawnie sparsowana i
+		zwalidowana (*error_string ma wartosc NULL)
+	-1, w przypadku błędu podczas parsowania konfiguracji. W tej sutuacji *error_string wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+	-2, w przypadku błędu podczas walidowania konfiguracji w oparciu o słownik(i). W tej sutuacji *error_string
+		wskazuje na komunikat błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy
+		go zwolnić).
+
+Uwagi:
+1) Funkcja działa na strukturze typu bmd_conf, która wcześniej musi zostać zainijowana funkcją bmdconf_init().
+2) Przed wywołaniem tej funkcji należy załadować potrzebne słowniki za pomocą funkcji bmdconf_add_section2dict().
+
+Przykład:
+
+char *load_error=NULL;
+bmd_conf *configuration=NULL;
+.
+.
+bmdconf_load_db("dbname=testowa hostaddr=127.0.0.1 ", configuration, &load_error);
+.
+free(load_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+/*Funkcje "administratorskie" w ramach funkcji przeznaczonych do obsługi konfiguracji przechowywanej w bazie danych*/
+
+
+
+int bmdconf_insert_option_db(char* conn_params, char *section, char *option, char *value, char **error);
+
+Funkcja bmdconf_insert_option_db() wstawia do bazy danych opcję option w sekcji konfiguracyjnej section i przypisuje
+jej wartosc value. Jeśli nie ma jeszcze w bazie podanej sekcji, to zostanie ona stworzona. Baza danych określona jest
+łańcuchem znakowym conn_params. Jeśli dana opcja konfiguracyjna jest już w bazie z konfiguracją, bądź nazwa
+sekcji/pola jest niezgodna z wymaganym formatem, zostanie zgłoszony błąd odpowiednim komunikatem przypisanym do
+*error.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z łańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG section to łańcuch znakowy z nazwą docelowej sekcji
+@ARG option to łańcuch znakowy z nazwą wstawianej opcji
+@ARG value to łańcuch znakowy z wartością wstawianej opcji
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli wstawianie opcji do bazy z konfiguracją przebiegło pomyślnie (*error ma wartość NULL)
+	-1, w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* insert_error=NULL;
+.
+.
+bmdconf_insert_option_db("dbname=testowa hostaddr=127.0.0.1 ", "Nazwa_sekcji", "opcja1", "wartość", &insert_error);
+.
+free(insert_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_set_value_db(char* conn_params, char *section, char *option, char *value, char **error);
+
+Funkcja bmdconf_set_value_db() zmienia w bazie danych wartosc opcji option w sekcji section na wartość value. Baza
+danych określona jest łańcuchem znakowym conn_params. Jeśli opcja w danej sekcji nie istnieje w bazie z konfiguracją,
+wówczas zgłoszony zostaje odpowiednie błąd.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z lańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG section to łańcuch znakowy z nazwą docelowej sekcji
+@ARG option to łańcuch znakowy z nazwą opcji, której wartość ma zostać zmieniona
+@ARG value to łańcuch znakowy z nową wartością opcji
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funkcja zwraca:
+	 0, jeśli zmiana wartości opcji w bazie z konfiguracją przebiegło pomyślnie (*error ma wartość NULL)
+	-1, w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* set_error=NULL;
+.
+.
+bmdconf_set_value_db("dbname=testowa hostaddr=127.0.0.1 ", "Nazwa_sekcji", "opcja1", "nowa wartość", &set_error);
+.
+free(set_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_delete_option_db(char* conn_params, char *section, char *option, char **error);
+
+Funkcja bmdconf_delete_option_db() usuwa z bazy danych opcję option w sekcji section. Baza danych określona jest
+łańcuchem znakowym conn_params. Jeśli usuwana opcja jest jedyną ujęta w sekcji section, to usunięta również zostanie
+ta sekcja. Jeśli w bazie nie znajduje się opcja przeznaczona do usuniecia, zgłoszony jest odpowiedni błąd.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z lańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG section to łańcuch znakowy z nazwą docelowej sekcji
+@ARG option to łańcuch znakowy z nazwą opcji, która ma zostać usunięta
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN:
+Funkcja zwraca:
+	 0, jeśli usuwanie opcji z bazy przechowującej konfigurację przebiegło pomyślnie (*error ma wartość NULL)
+	-1, w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* delete_error=NULL;
+.
+.
+bmdconf_delete_option_db("dbname=testowa hostaddr=127.0.0.1 ", "Nazwa_sekcji", "opcja1", &delete_error);
+.
+free(delete_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_delete_section_db(char* conn_params, char *section, char **error);
+
+Funkcja bmdconf_delete_section_db() usuwa z bazy danych sekcję section ze wszystkimi jej opcjami. Baza danych
+określona jest łańcuchem znakowym conn_params. Jeśli w bazie z konfiguracją nie znajduje się podana sekcja, zgłoszony
+jest odpowiedni błąd.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z lańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG section to łańcuch znakowy z nazwą sekcji, która w całości ma zostac usunięta
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN:
+Funkcja zwraca:
+	 0, jeśli usuwanie sekcji z bazy przechowującej konfigurację przebiegło pomyślnie (*error ma wartość NULL)
+	-1, w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* delete_error=NULL;
+.
+.
+bmdconf_delete_section_db("dbname=testowa hostaddr=127.0.0.1 ", "Nazwa_sekcji", &delete_error);
+.
+free(delete_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_clean_db(char* conn_params, char **error);
+
+Funkcja bmdconf_clean_db() czyści z wpisów konfiguracyjnych bazę danych wskazywaną parametrami conn_params. Funkcja
+pozostawia strukturę bazy gotową do załadowania nowej konfiguracji.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z łańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funckja zwraca:
+	 0 jeśli czyszczenie bazy z konfiguracją przebiegło poprawnie
+	-1 w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* clean_error=NULL;
+.
+.
+bmdconf_clean_db("dbname=testowa hostaddr=127.0.0.1 ", &clean_error);
+.
+free(clean_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_db2file(char *conn_params, char* file_name, char** error);
+
+Funkcja bmdconf_db2file() zrzuca konfigurację zawartą w bazie danych definiowanej parametrami conn_params do pliku
+o nazwie file_name zgodnym z formatem wymaganym przez bibliotekę. Nawet jeśli wpisy konfiguracyjne zawarte w bazie
+nie są poprawne (np. w wartości opcji znajduje się zastrzeżony znak cudzysowia ( " ), bądź nazwy sekcji/opcji nie są
+zgodne z wymaganym formatem), zrzucanie konfiguracji do pliku nie zostanie przerwane.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z łańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG file_name to łańcuch znaków z nazwą pliku, do którego ma być zrzucona konfiguracja
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN
+Funckja zwraca:
+	 0, jeśli zrzucanie konfiguracji zakończyło się sukcesem (*error ma wartość NULL)
+	-1, w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* dump_error=NULL;
+.
+.
+bmdconf_db2file("dbname=testowa hostaddr=127.0.0.1 ", "dump.conf", &dump_error);
+.
+free(dump_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+
+int bmdconf_file2db(char *file_name, char* conn_params, char** error);
+
+Funkcja bmdconf_file2db() wrzuca do bazy danych zdefiniowanej parametrami conn_params, konfigurację zawartą w pliku
+konfiguracyjnym o nazwie file_name. Docelowa baza o strukturze wymaganej przez bibliotekę musi zostać uprzednio
+założona.
+
+@ARG conn_params to łańcuch znakowy z parametrami potrzebnymi do połączenia z bazą. Format tego łańcucha jest
+	identyczny z łańcuchem znakowym podawanym jako argument funkcji PQconnectdb z libpq (biblioteka PostgreSQL).
+	Rozpoznawane są następujące parametry:
+		host - oznacza nazwę hosta, z którym ma być nawiązane połączenie
+		hostaddr - adres IP hosta, z którym ma być nawiązane połączenie
+		port - numer portu, na którym ma być nawiązane połączenie
+		dbname - określa nazwę bazy, z kórą ma być nawiązane połączenie
+		user - nazwa użytkownika, na którego ma być wykonane połączenie
+		password - hasło, jeśli serwer bazodanowy wymaga uwierzytelnienia
+	Poza wyżej wymienionymi parametrami jest jeszcze kilka innych. Wszystkie w pełni opisane są w dokumentacji
+	libpq na stronach PostgreSQL (patrz: funkcja PQconnectdb).
+@ARG file_name to łańcuch znaków z nazwą pliku, z którego ma zostać odczytana konfiguracja (plik zgodny z formatem
+	wymaganym przez bibliotekę).
+@ARG error to adres wskaźnika na łańcuch zawierający odpowiedni komunikat w przypadku wystąpienia błędu
+
+@RETURN:
+Funkcja zwraca:
+	 0 jeśli wrzucanie konfiguracji do bazy przebiegło poprawnie
+	-1 w przypadku niepowodzenia operacji. W tej sutuacji *error wskazuje na komunikat
+		błędu (łańcuch ten jest dynamicznie alokowany, więc po wykorzystaniu należy go zwolnić).
+
+
+Przykład:
+
+char* dump_error=NULL;
+.
+.
+bmdconf_file2db("dump.conf", "dbname=testowa hostaddr=127.0.0.1 ", &dump_error);
+.
+free(dump_error);
+.
+.
+/*-----------------------------------------------------------------------------*/
+
+
+

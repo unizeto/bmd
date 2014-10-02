@@ -1,0 +1,176 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: libbmdaa - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdaa.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdaa - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdaa.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdasn1_core - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdasn1_core.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdasn1_core - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdasn1_core.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdcms - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdcms.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdcms - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdcms.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmddvcs - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmddvcs.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmddvcs - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmddvcs.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdpr - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdpr.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdpr - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdpr.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdutils - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdutils.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: libbmdutils - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+libbmdutils.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: testproj - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\USTAWI~1\Temp\RSPF7.tmp" with contents
+[
+libbmdasn1_core.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libbmdcms.lib libbmdaa.lib cl32.lib libeay32.lib libbmddvcs.lib /nologo /subsystem:console /incremental:no /pdb:"Release/testproj.pdb" /machine:I386 /out:"../../libs/win/Release/testproj.exe" /libpath:"../../libs/win/Release" 
+.\Release\maindevresp.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\USTAWI~1\Temp\RSPF7.tmp"
+<h3>Output Window</h3>
+Linking...
+
+
+
+<h3>Results</h3>
+testproj.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: testproj - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+testproj.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: testx - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\USTAWI~1\Temp\RSPF9.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Release/testx.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\BMD\bmd\testx\main.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\USTAWI~1\Temp\RSPF9.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\USTAWI~1\Temp\RSPFA.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/testx.pdb" /machine:I386 /out:"Release/testx.exe" 
+.\Release\main.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\USTAWI~1\Temp\RSPFA.tmp"
+<h3>Output Window</h3>
+Compiling...
+main.c
+D:\BMD\bmd\testx\main.c(1) : fatal error C1083: Cannot open include file: 'libbmdcms.h': No such file or directory
+Error executing cl.exe.
+
+
+
+<h3>Results</h3>
+testx.exe - 1 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: testx - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+testx.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

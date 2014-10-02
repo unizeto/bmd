@@ -1,0 +1,62 @@
+LIBRARY "LIBBMDASN1_CORE"
+DESCRIPTION "Core ASN1 Structure Library FROM ASN1C"
+EXPORTS
+	_asn_i_log_error
+	ANY_encode_xer
+	asn_DEF_ANY					DATA
+	asn_DEF_BMPString			DATA
+	asn_DEF_BOOLEAN				DATA
+	asn_DEF_ENUMERATED			DATA
+	asn_DEF_OCTET_STRING		DATA
+	asn_DEF_BIT_STRING			DATA
+	asn_DEF_GeneralizedTime		DATA
+	asn_DEF_IA5String			DATA
+	asn_DEF_INTEGER				DATA
+	asn_DEF_OBJECT_IDENTIFIER	DATA
+	asn_DEF_PrintableString		DATA
+	asn_DEF_TeletexString		DATA
+	asn_DEF_UniversalString		DATA
+	asn_DEF_UTF8String			DATA
+	asn_GT2time
+	asn_INTEGER2long
+	asn_long2INTEGER
+	asn_set_add
+	asn_set_del
+	asn_set_empty
+	asn_time2GT
+	ber_decode
+	CHOICE_free
+	CHOICE_print
+	CHOICE_constraint
+	CHOICE_decode_ber
+	CHOICE_encode_der
+	CHOICE_decode_xer
+	CHOICE_encode_xer
+	CHOICE_outmost_tag
+	der_encode
+	GeneralizedTime_constraint
+	GeneralizedTime_encode_der
+	GeneralizedTime_encode_xer
+	GeneralizedTime_print
+	OBJECT_IDENTIFIER_get_arcs
+	OBJECT_IDENTIFIER_set_arcs
+	OCTET_STRING_fromBuf
+	OCTET_STRING_new_fromBuf
+	SEQUENCE_free
+	SEQUENCE_print
+	SEQUENCE_constraint
+	SEQUENCE_decode_ber
+	SEQUENCE_encode_der
+	SEQUENCE_decode_xer
+	SEQUENCE_encode_xer
+	SEQUENCE_OF_encode_der
+	SEQUENCE_OF_encode_xer
+	SET_OF_free
+	SET_OF_print
+	SET_OF_constraint
+	SET_OF_decode_ber
+	SET_OF_encode_der
+	SET_OF_decode_xer
+	SET_OF_encode_xer
+	UTF8String_length
+	

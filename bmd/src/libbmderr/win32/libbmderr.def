@@ -1,0 +1,10 @@
+LIBRARY "libbmderr"
+DESCRIPTION "Errors utils for BMD code"
+EXPORTS 
+	bmd_new
+	bmd_err2str
+	bmd_str2int
+	bmd_perror
+	PRINT_ERROR
+	PRINT_DEBUG
+	PRINT_VDEBUG

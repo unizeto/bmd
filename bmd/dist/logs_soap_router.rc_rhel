@@ -1,0 +1,212 @@
+#!/bin/bash
+
+# chkconfig: 35 80 15
+# Provides:          logsoap_server
+# X-UnitedLinux-Should-Start: $network 
+# X-UnitedLinux-Should-Stop: $network
+# Required-Start: $network postgresql
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Main start script for Logs SOAP Server.
+# Description:       Main start script for Logs SOAP Server. Runs other scripts related with version of Logs SOAP Server.
+
+. /etc/init.d/functions
+
+#####################USTAWIENIA##########################
+if [ -z $BMD_DOMAINS_DIR ];
+then
+#katalog z plikami konfiguracyjnymi domen
+BMD_DOMAINS_DIR=/etc/sysconfig/logs_soap.d
+fi
+
+DOMAIN_VERSION="DOMAIN VERSION: "
+BMD_START_SCRIPTS_DIR="/etc/bmd/logs_soap.d/"
+BMD_START_SCRIPT_PREFIX="logsoap_server_"
+BMD_DEFAULT_START_SCRIPT_POSTFIX="default"
+#########################################################
+
+
+if ! [ -e $BMD_DOMAINS_DIR ]
+then
+	echo "Cannot find $BMD_DOMAINS_DIR directory. Try exporting variable"
+	echo "     export BMD_DOMAINS_DIR=/path/to/logs_soap.d"
+	echo "By default the directory is /etc/sysconfig/logs_soap.d"
+	exit -1
+fi
+
+#uruchom jedną instancję logsoap_server
+startone()
+{
+	BMD_DOMAIN_NAME=$1
+	BMD_DOMAIN_CONF_FILE="${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf"
+
+	#sprawdzamy, czy podano istniejącą domenę
+	if ! [ -e "${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME is not configured."
+		return -1
+	fi
+
+	START_SCRIPT_POSTFIX=`grep -o -e "\(${DOMAIN_VERSION}[0-9\.]\+\)\|\(${DOMAIN_VERSION}trunk\)" ${BMD_DOMAIN_CONF_FILE} | grep -o -e "\([0-9\.]\+\)\|\(trunk\)"`
+	echo -n "$1...          "
+
+	if [ $START_SCRIPT_POSTFIX ]; then
+		if [ -e "${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX}" ]; then
+			${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX} startone $1
+		else
+		echo "No script ${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX} for ${DOMAIN_VERSION}${START_SCRIPT_POSTFIX} in ${BMD_START_SCRIPTS_DIR}"
+		fi
+	else
+		if [ -e "${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX}" ]; then
+			${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX} startone $1
+		else
+			echo "No script ${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX} in ${BMD_START_SCRIPTS_DIR}"
+		fi
+	fi
+
+	return 0
+}
+
+#zatrzymaj jedną instancję logsoap_server
+stopone()
+{
+	BMD_DOMAIN_NAME=$1
+	BMD_DOMAIN_CONF_FILE="${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf"
+
+	#sprawdzamy, czy podano istniejącą domenę
+	if ! [ -e "${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME is not configured."
+		return -1
+	fi
+
+	START_SCRIPT_POSTFIX=`grep -o -e "\(${DOMAIN_VERSION}[0-9\.]\+\)\|\(${DOMAIN_VERSION}trunk\)" ${BMD_DOMAIN_CONF_FILE} | grep -o -e "\([0-9\.]\+\)\|\(trunk\)"`
+	echo -n "$1...          "
+
+	if [ $START_SCRIPT_POSTFIX ]; then
+		if [ -e "${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX}" ]; then
+			${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX} stopone $1
+		else
+		echo "No script ${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX} for ${DOMAIN_VERSION}${START_SCRIPT_POSTFIX} in ${BMD_START_SCRIPTS_DIR}"
+		fi
+	else
+		if [ -e "${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX}" ]; then
+			${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX} stopone $1
+		else
+			echo "No script ${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX} in ${BMD_START_SCRIPTS_DIR}"
+		fi
+	fi
+
+	return 0
+}
+
+#uruchom wszystkie domeny z pliku konfiguracyjnego
+start()
+{
+	for x in `ls -ABl $BMD_DOMAINS_DIR | egrep "conf$" | awk '{ print $9 }' | sed s/.conf//`
+	do
+		startone $x
+	done
+	return 0
+}
+
+#zatrzymaj wszystkie domeny z pliku konfiguracyjnego
+stop() {
+	for x in `ls -ABl $BMD_DOMAINS_DIR | egrep "conf$" |  awk '{ print $9 }' | sed s/.conf//`
+	do
+		stopone $x
+	done
+	return 0
+}
+
+#informacje o stanie danej jako parametr domeny
+stateone()
+{
+	BMD_DOMAIN_NAME=$1
+	BMD_DOMAIN_CONF_FILE="${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf"
+	
+	#sprawdzamy, czy podano istniejącą domenę
+	if ! [ -e "${BMD_DOMAINS_DIR}/${BMD_DOMAIN_NAME}.conf" ]
+	then
+		echo "Domain $BMD_DOMAIN_NAME is not configured."
+		return -1
+	fi
+
+	START_SCRIPT_POSTFIX=`grep -o -e "\(${DOMAIN_VERSION}[0-9\.]\+\)\|\(${DOMAIN_VERSION}trunk\)" ${BMD_DOMAIN_CONF_FILE} | grep -o -e "\([0-9\.]\+\)\|\(trunk\)"`
+	echo -n "$1...          "
+
+	if [ $START_SCRIPT_POSTFIX ]; then
+		if [ -e "${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX}" ]; then
+			${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX} statusone $1
+		else
+			echo "No script ${BMD_START_SCRIPT_PREFIX}${START_SCRIPT_POSTFIX} for ${DOMAIN_VERSION}${START_SCRIPT_POSTFIX} in ${BMD_START_SCRIPTS_DIR}"
+		fi
+	else
+		if [ -e "${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX}" ]; then
+			${BMD_START_SCRIPTS_DIR}${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX} statusone $1
+		else
+			echo "No script ${BMD_START_SCRIPT_PREFIX}${BMD_DEFAULT_START_SCRIPT_POSTFIX} in ${BMD_START_SCRIPTS_DIR}"
+		fi
+	fi
+
+	return 0
+}
+
+#sprawdzamy stan wszystkich domen z pliku konfiguracyjnego
+state()
+{
+	for x in `ls -ABl $BMD_DOMAINS_DIR | egrep "conf$" | awk '{ print $9 }' | sed s/.conf//`
+	do
+		stateone $x
+	done
+	return 0
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	status)
+		state
+		;;
+	statusone)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			stateone $2
+		fi
+		;;
+	startone)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			startone $2
+		fi
+		;;
+	stopone)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			stopone $2
+		fi
+		;;
+	restart)
+		stop
+		start
+		;;
+	restartone)
+		if [ "$#" -lt 2 ]; then
+			echo "No domain specified!"
+		else
+			stopone $2
+			startone $2
+		fi
+		;;
+	*)
+		echo -n "Usage: start | stop | restart | restartone domain_name | status |statusone domain_name |"
+		echo " startone domain_name | stopone domain_name"
+		;;
+esac 

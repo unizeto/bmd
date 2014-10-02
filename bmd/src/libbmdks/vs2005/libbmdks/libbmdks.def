@@ -1,0 +1,7 @@
+LIBRARY	"libbmdks"
+EXPORTS
+	svc_encode_request
+	svc_decode_response
+	svc_serialize_request
+	svc_tcp_sendall
+	svc_tcp_recvall

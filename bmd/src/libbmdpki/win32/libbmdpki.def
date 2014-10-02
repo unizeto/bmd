@@ -1,0 +1,36 @@
+LIBRARY "LIBBMDPKI"
+DESCRIPTION "Public Key Innfrastructure Functions Implementation Library"
+EXPORTS
+	verify_cert_chain
+	bmd_hash_data
+	bmd_timestamp_data
+	bmd_decrypt_data
+	bmd_encrypt_data
+	bmd_symmetric_decrypt
+	bmd_symmetric_encrypt
+	bmd_sign_data
+	bmd_sign_file
+	bmd_get_cert_and_content_from_signature
+	bmd_create_ctx
+	bmd_ctx_destroy
+	bmd_gen_sym_ctx_with_pass
+	bmd_set_ctx_file
+	bmd_verify_sig_integrity
+	bmd_decode_bmdKeyIV
+	bmd_set_ctx_cert
+	bmd_set_ctx_hash
+	bmd_generate_number
+	bmd_compute_ki_mod_n
+	bmd_compare_bn
+	bmd_set_ctx_sym
+	bmd_create_der_bmdKeyIV
+	bmd_set_ctx_pkcs11
+	bmd_set_ctx_pkcs11_privkey
+	bmd_create_signature_params
+	bmd_set_signature_params_flag
+	bmd_set_signature_params_policy
+	bmd_verify_cert_path
+	bmd_set_signature_params_cert_store
+	bmd_verify_cert_with_crl
+	bmd_destroy_signature_params
+

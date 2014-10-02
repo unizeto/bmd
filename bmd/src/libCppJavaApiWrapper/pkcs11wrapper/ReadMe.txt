@@ -1,0 +1,1 @@
+WSz : dodalem z otrzymanego dist'a, ale to raczej nie jest potrzebne

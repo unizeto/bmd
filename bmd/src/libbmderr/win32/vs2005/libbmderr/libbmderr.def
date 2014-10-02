@@ -1,0 +1,9 @@
+LIBRARY "libbmderr"
+EXPORTS
+	bmd_str2int
+	GetErrorMsg
+	GetErrorWinNum
+	asprintf
+	bmd_err_set_win32_global_log_file
+	bmd_err_win32_log_enabled
+	bmd_err_win32_get_log_file

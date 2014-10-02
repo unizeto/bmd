@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#this compiles asn1 modules using asn1c compiler
+#ASN1_OPTIONS=-Werror -Wdebug-lexer
+asn1c -Werror -fcompound-names rfc3852-CryptographicMessageSyntax2004.asn1 rfc3280-PKIX1Explicit88.asn1 rfc3280-PKIX1Implicit88.asn1
+
+#rfc3852-AttributeCertificateVersion1.asn1 rfc3281-PKIXAttributeCertificate.asn1 

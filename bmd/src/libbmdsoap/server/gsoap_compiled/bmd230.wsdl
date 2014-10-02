@@ -1,0 +1,3919 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Service"
+ targetNamespace="bmd230.xsd"
+ xmlns:tns="bmd230.xsd"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:c14n="http://www.w3.org/2001/10/xml-exc-c14n#"
+ xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+ xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+ xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+ xmlns:bmd230="bmd230.xsd"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="bmd230.xsd"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:c14n="http://www.w3.org/2001/10/xml-exc-c14n#"
+  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+  xmlns:bmd230="bmd230.xsd"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <simpleType name="grantingType-e">
+   <restriction base="xsd:string">
+    <enumeration value="GRANTING-FORBIDDEN"/><!-- enum const = 0 -->
+    <enumeration value="GRANTING-ALLOWED"/><!-- enum const = 1 -->
+   </restriction>
+  </simpleType>
+  <simpleType name="visibilityType-t">
+   <restriction base="xsd:string">
+    <enumeration value="VISIBLE"/><!-- enum const = 1 -->
+    <enumeration value="INVISIBLE"/><!-- enum const = 2 -->
+    <enumeration value="ALL"/><!-- enum const = 4 -->
+   </restriction>
+  </simpleType>
+  <simpleType name="trans-t">
+   <restriction base="xsd:string">
+    <enumeration value="nostream"/><!-- enum const = 0 -->
+    <enumeration value="stream"/><!-- enum const = 1 -->
+   </restriction>
+  </simpleType>
+  <simpleType name="chunkCntr-t">
+   <restriction base="xsd:string">
+    <enumeration value="start"/><!-- enum const = 0 -->
+    <enumeration value="iter"/><!-- enum const = 1 -->
+   </restriction>
+  </simpleType>
+  <simpleType name="groupAuthorizationType-e">
+   <restriction base="xsd:string">
+    <enumeration value="WITH-DEPENDENT-GROUPS"/><!-- enum const = 0 -->
+    <enumeration value="ONLY-LOGIN-GROUP"/><!-- enum const = 1 -->
+   </restriction>
+  </simpleType>
+  <complexType name="myBinaryDataType">
+   <simpleContent>
+    <extension base="xsd:base64Binary">
+     <attribute name="href" type="xsd:anyURI" use="optional"/>
+    </extension>
+   </simpleContent>
+  </complexType>
+  <complexType name="LongNumbersList">
+   <sequence>
+    <element name="item" type="xsd:long" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="TimestampSingle">
+   <sequence>
+     <element name="value" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="DVCSSingle">
+   <sequence>
+     <element name="value" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="timestamp" type="bmd230:TimestampList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="SignatureSingle">
+   <sequence>
+     <element name="value" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="timestamp" type="bmd230:TimestampList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="dvcs" type="bmd230:DVCSList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="TimestampList">
+   <sequence>
+     <element name="item" type="bmd230:TimestampSingle" minOccurs="0" maxOccurs="unbounded"/>
+   </sequence>
+  </complexType>
+  <complexType name="DVCSList">
+   <sequence>
+     <element name="item" type="bmd230:DVCSSingle" minOccurs="0" maxOccurs="unbounded"/>
+   </sequence>
+  </complexType>
+  <complexType name="SignatureList">
+   <sequence>
+     <element name="item" type="bmd230:SignatureSingle" minOccurs="0" maxOccurs="unbounded"/>
+   </sequence>
+  </complexType>
+  <complexType name="PkiFileInfo">
+   <sequence>
+     <element name="filename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="timestamp" type="bmd230:TimestampList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="signature" type="bmd230:SignatureList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="fileInfo">
+   <sequence>
+     <element name="file" type="bmd230:myBinaryDataType" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="filename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="fileInfoList">
+   <sequence>
+    <element name="item" type="bmd230:fileInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="mtdSingleValue">
+   <sequence>
+     <element name="mtdOid" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdValue" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdDesc" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="mtdsValues">
+   <sequence>
+    <element name="item" type="bmd230:mtdSingleValue" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="fileComplex">
+   <sequence>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="file" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="fileComplexList">
+   <sequence>
+    <element name="item" type="bmd230:fileComplex" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="idList">
+   <sequence>
+    <element name="item" type="xsd:int" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="searchSortInfo">
+   <sequence>
+     <element name="sortOid" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sortOrder" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="searchSortInfoList">
+   <sequence>
+    <element name="item" type="bmd230:searchSortInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="mtdSingleInfo">
+   <sequence>
+     <element name="mtdOid" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdDesc" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="mtdsInfo">
+   <sequence>
+    <element name="item" type="bmd230:mtdSingleInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="searchSingleResult">
+   <sequence>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="filename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="searchResults">
+   <sequence>
+    <element name="item" type="bmd230:searchSingleResult" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="historySingleResult">
+   <sequence>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="updateDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="updateOwner" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="updateReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="historyResults">
+   <sequence>
+    <element name="item" type="bmd230:historySingleResult" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="bmdTimestamp">
+   <sequence>
+     <element name="timestamp" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="genTime" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="mtdSearchSingleValue">
+   <sequence>
+     <element name="mtdOid" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdValue" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdDesc" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdLogicalOperator" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="noOfOpenBrackets" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="noOfCloseBrackets" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="mtdAdjustment" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtdStatement" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="mtdsSearchValues">
+   <sequence>
+    <element name="item" type="bmd230:mtdSearchSingleValue" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="stringList">
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="userNewGroupInfo">
+   <sequence>
+     <element name="userNewGroupName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userNewGroupParentIds" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userNewGroupChildIds" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleUserInfo">
+   <sequence>
+     <element name="userId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userCertIssuer" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userCertSerial" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentity" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userAccepted" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleIdList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleNameList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupIdList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupNameList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassIdList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassNameList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userSecurityNameList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userDefaultRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userDefaultRoleName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userDefaultGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userDefaultGroupName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userDefaultClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userDefaultClassName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userNewGroupInfo" type="bmd230:userNewGroupInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="userListInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleUserInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="userRegistrationResult">
+   <sequence>
+     <element name="userIdentityId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="userCertificateId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="loginResponse">
+   <sequence>
+     <element name="userInfo" type="bmd230:singleUserInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formSearch" type="bmd230:mtdsInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formSend" type="bmd230:mtdsInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formHistory" type="bmd230:mtdsInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formUpdate" type="bmd230:mtdsInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleRoleInfo">
+   <sequence>
+     <element name="roleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleActionList" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleRightsOids" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleRightsCodes" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="userRoleInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleRoleInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleGroupInfo">
+   <sequence>
+     <element name="groupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupParentNames" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupParentIds" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupChildNames" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupChildIds" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="groupInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleGroupInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleClassInfo">
+   <sequence>
+     <element name="classId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="className" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="classInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleClassInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleSecCategoryInfo">
+   <sequence>
+     <element name="secCategoryName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secCategoryId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secCategoryParentNames" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secCategoryChildNames" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="secCategoryInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleSecCategoryInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleSecLevelInfo">
+   <sequence>
+     <element name="secLevelName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secLevelId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secLevelPriority" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="secLevelInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleSecLevelInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="securityInfo">
+   <sequence>
+     <element name="secCategoryInfo" type="bmd230:secCategoryInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secLevelInfo" type="bmd230:secLevelInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleLinkInfo">
+   <sequence>
+     <element name="pointingId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerIdentityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerCertificateId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="linkName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="linkDescription" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="granting" type="bmd230:grantingType-e" minOccurs="1" maxOccurs="1"/>
+     <element name="expirationDate" type="bmd230:DateTime" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="linksInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleLinkInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="singleCascadeLinkInfo">
+   <sequence>
+     <element name="linkInfo" type="bmd230:singleLinkInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="correspondingFilesMaxLevel" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="visible" type="bmd230:visibilityType-t" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="cascadeLinksInfo">
+   <sequence>
+    <element name="item" type="bmd230:singleCascadeLinkInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="manyCascadeLinksElement">
+   <sequence>
+     <element name="idsList" type="bmd230:idList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="errorCode" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="manyCascadeLinksResult">
+   <sequence>
+    <element name="item" type="bmd230:manyCascadeLinksElement" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="deleteCascadeLinksElement">
+   <sequence>
+     <element name="fileId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerIdentityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerCertificateId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="correspondingFilesMaxLevel" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="visible" type="bmd230:visibilityType-t" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="deleteCascadeLinksList">
+   <sequence>
+    <element name="item" type="bmd230:deleteCascadeLinksElement" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="archPackOut">
+   <sequence>
+     <element name="file" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="filename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="tmpLocation" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pathDestZip" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="currDir" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="pos" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="accessObject">
+   <sequence>
+     <element name="id" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="fileType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerIdentityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="creatorIdentityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="accessObjectList">
+   <sequence>
+    <element name="item" type="bmd230:accessObject" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="DateTime">
+   <sequence>
+     <element name="year" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="month" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="day" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="hour" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="minute" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="second" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="FileVersionInfo">
+   <sequence>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="insertDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="FileVersionInfoList">
+   <sequence>
+    <element name="item" type="bmd230:FileVersionInfo" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="GetVersionsHistoryResult">
+   <sequence>
+     <element name="versionsInfoList" type="bmd230:FileVersionInfoList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="errorCode" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+   </sequence>
+  </complexType>
+  <complexType name="GetVersionsHistoryResultList">
+   <sequence>
+    <element name="item" type="bmd230:GetVersionsHistoryResult" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="ActionsHistoryElement">
+   <sequence>
+     <element name="objectId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="objectType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="executorIdentityName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="executorClassName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="actionName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="actionDate" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="actionStatus" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="actionStatusMessage" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="ActionsHistoryList">
+   <sequence>
+    <element name="item" type="bmd230:ActionsHistoryElement" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="testConnection">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="testConnectionResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdInsertFile">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="input" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdInsertFileResponse">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdInsertSignedFile">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="input" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="binarySignature" type="bmd230:myBinaryDataType" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="signatureType" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdInsertSignedFileResponse">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdInsertFileList">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="input" type="bmd230:fileComplexList" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdInsertFileListResponse">
+   <complexType>
+    <sequence>
+     <element name="ids" type="bmd230:idList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateFileVersion">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="fileId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="input" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateFileVersionResponse">
+   <complexType>
+    <sequence>
+     <element name="updatedFileId" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteFileByID">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteFileByIDResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteDirByID">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteDirByIDResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateMetadata">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="updateReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateMetadataResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateSystemMetadata">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateSystemMetadataResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateDefaultMetadataValue">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateDefaultMetadataValueResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdAddSignature">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="signatureInput" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="destFileId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdAddSignatureResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdLogin">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdLoginResponse">
+   <complexType>
+    <sequence>
+     <element name="loginResponse" type="bmd230:loginResponse" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdSearchFiles">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formMtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="offset" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="limit" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="logical" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="oper" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="range" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerRange" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sortInfo" type="bmd230:searchSortInfoList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdSearchFilesResponse">
+   <complexType>
+    <sequence>
+     <element name="searchResults" type="bmd230:searchResults" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdSearchFilesCSV">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formMtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="offset" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="limit" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="logical" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="oper" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerRange" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sortInfo" type="bmd230:searchSortInfoList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdSearchFilesCSVResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdAdvancedSearchFiles">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsSearchValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formMtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="offset" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="limit" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="range" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerRange" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sortInfo" type="bmd230:searchSortInfoList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdAdvancedSearchFilesResponse">
+   <complexType>
+    <sequence>
+     <element name="searchResults" type="bmd230:searchResults" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdAdvancedCountFiles">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsSearchValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ownerRange" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdAdvancedCountFilesResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdHistory">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdHistoryResponse">
+   <complexType>
+    <sequence>
+     <element name="historyResults" type="bmd230:historyResults" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdSearchUnreceived">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="offset" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="limit" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="mtds" type="bmd230:mtdsSearchValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="formMtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="sortInfo" type="bmd230:searchSortInfoList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdSearchUnreceivedResponse">
+   <complexType>
+    <sequence>
+     <element name="searchResults" type="bmd230:searchResults" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdRegisterNewUser">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userAttributes" type="bmd230:singleUserInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdRegisterNewUserResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:userRegistrationResult" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdAddCertificateToIdentity">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="identityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userAttributes" type="bmd230:singleUserInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdAddCertificateToIdentityResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateUserRights">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userAttributes" type="bmd230:singleUserInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateUserRightsResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetUsersList">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetUsersListResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:userListInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteUser">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteUserResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDisableUser">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="enable" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDisableUserResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDisableIdentity">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="identityId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="disable" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDisableIdentityResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdRegisterNewRole">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleInfo" type="bmd230:singleRoleInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdRegisterNewRoleResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateRole">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleInfo" type="bmd230:singleRoleInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateRoleResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetRolesList">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetRolesListResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:userRoleInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteRole">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteRoleResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdRegisterNewGroup">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupInfo" type="bmd230:singleGroupInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdRegisterNewGroupResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateGroup">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupInfo" type="bmd230:singleGroupInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateGroupResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetGroupsList">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetGroupsListResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:groupInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteGroup">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteGroupResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdRegisterNewClass">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ClassInfo" type="bmd230:singleClassInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdRegisterNewClassResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdUpdateClass">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="classId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="ClassInfo" type="bmd230:singleClassInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdUpdateClassResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetClassList">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="classId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetClassListResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:classInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteClass">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="classId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteClassResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdRegisterNewSecurityCategory">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="secCategoryInfo" type="bmd230:singleSecCategoryInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdRegisterNewSecurityCategoryResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetSecurityList">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetSecurityListResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:securityInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFileById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+     <element name="parameter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFileByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetArchiveFileVersion">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="currentVersionFileId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="archiveVersionFileId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetArchiveFileVersionResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFileByHash">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="hash" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFileByHashResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFileByIdInZipPack">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFileByIdInZipPackResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFilePropByID">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="property" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFilePropByIDResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFilePKIById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFilePKIByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:PkiFileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetTimeStamp">
+   <complexType>
+    <sequence>
+     <element name="input" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetTimeStampResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:bmdTimestamp" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetArchPack">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetArchPackResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetAccessObjects">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="bmdId" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="visible" type="bmd230:visibilityType-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetAccessObjectsResponse">
+   <complexType>
+    <sequence>
+     <element name="accessObjects" type="bmd230:accessObjectList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetVersionsHistory">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="fileIds" type="bmd230:LongNumbersList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetVersionsHistoryResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:GetVersionsHistoryResultList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetActionsHistoryById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetActionsHistoryByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:ActionsHistoryList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getInvoicePackById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="getInvoicePackByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getHTMLImageById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="getHTMLImageByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyInvoiceById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="forceVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="completeVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyInvoiceByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:stringList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyInvoiceWithDetailsById">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="forceVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="completeVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyInvoiceWithDetailsByIdResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfoList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="SendAdvice">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="bmdID" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SendAdviceResponse">
+   <complexType>
+    <sequence>
+     <element name="returnCode" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="SendAdviceWithParameters">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="bmdID" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="adviceTemplateName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="adviceTitle" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SendAdviceWithParametersResponse">
+   <complexType>
+    <sequence>
+     <element name="returnCode" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getInvoicePack">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="getReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+     <element name="parameter" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="getInvoicePackResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getHTMLImage">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="getReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="getHTMLImageResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyInvoice">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="forceVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyInvoiceResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyInvoiceSimplified">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="forceVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyInvoiceSimplifiedResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="verifyInvoiceWithDetails">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="forceVerification" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="verifyInvoiceWithDetailsResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="countInvoice">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="countInvoiceResponse">
+   <complexType>
+    <sequence>
+     <element name="count" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getFile">
+   <complexType>
+    <sequence>
+     <element name="accountId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="invoiceId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userIdentifier" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="getReason" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="type" type="bmd230:trans-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="getFileResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdInsertFileChunkStart">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="finalfilename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="totalfilesize" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdInsertFileChunkStartResponse">
+   <complexType>
+    <sequence>
+     <element name="tmpfilename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdInsertFileChunkIter">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="input" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="tmpfilename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="count" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdInsertFileChunkIterResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFileChunkStart">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFileChunkStartResponse">
+   <complexType>
+    <sequence>
+     <element name="tmpdir" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetFileChunkIter">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="tmpdir" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="count" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetFileChunkIterResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetArchPackInChunk">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="cntrFlag" type="bmd230:chunkCntr-t" minOccurs="1" maxOccurs="1"/>
+     <element name="input" type="bmd230:archPackOut" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetArchPackInChunkResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:archPackOut" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdStartTransaction">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdStartTransactionResponse">
+   <complexType>
+    <sequence>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdStopTransaction">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdStopTransactionResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdCreateDirectory">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="dirName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdCreateDirectoryResponse">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdGetDirectoryDetails">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="id" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdGetDirectoryDetailsResponse">
+   <complexType>
+    <sequence>
+     <element name="output" type="bmd230:fileInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdCreateLink">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="description" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="linkName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="granting" type="bmd230:grantingType-e" minOccurs="1" maxOccurs="1"/>
+     <element name="expirationDate" type="bmd230:DateTime" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdCreateLinkResponse">
+   <complexType>
+    <sequence>
+     <element name="id" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdCreateLinks">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="linksInfo" type="bmd230:linksInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdCreateLinksResponse">
+   <complexType>
+    <sequence>
+     <element name="ids" type="bmd230:idList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdCreateCascadeLinks">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="linkInfo" type="bmd230:singleLinkInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="correspondingFilesMaxLevel" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+     <element name="visible" type="bmd230:visibilityType-t" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdCreateCascadeLinksResponse">
+   <complexType>
+    <sequence>
+     <element name="createdIds" type="bmd230:idList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdCreateManyCascadeLinks">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="cascadeLinksInfo" type="bmd230:cascadeLinksInfo" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="transactionId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdCreateManyCascadeLinksResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:manyCascadeLinksResult" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteCascadeLinks">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="filesList" type="bmd230:deleteCascadeLinksList" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteCascadeLinksResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="bmd230:manyCascadeLinksResult" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdConservateTimestamps">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="roleName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="groupName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="mtds" type="bmd230:mtdsSearchValues" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdConservateTimestampsResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bmdDeleteReplacedLobs">
+   <complexType>
+    <sequence>
+     <element name="cert" type="xsd:base64Binary" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userRoleId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userGroupId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+     <element name="userClassId" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bmdDeleteReplacedLobsResponse">
+   <complexType>
+    <sequence>
+     <element name="deletedLobsCount" type="xsd:long" minOccurs="0" maxOccurs="1" nillable="true"/>
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="testConnectionRequest">
+ <part name="parameters" element="bmd230:testConnection"/>
+</message>
+
+<message name="testConnectionResponse">
+ <part name="parameters" element="bmd230:testConnectionResponse"/>
+</message>
+
+<message name="bmdInsertFileRequest">
+ <part name="parameters" element="bmd230:bmdInsertFile"/>
+</message>
+
+<message name="bmdInsertFileResponse">
+ <part name="parameters" element="bmd230:bmdInsertFileResponse"/>
+</message>
+
+<message name="bmdInsertSignedFileRequest">
+ <part name="parameters" element="bmd230:bmdInsertSignedFile"/>
+</message>
+
+<message name="bmdInsertSignedFileResponse">
+ <part name="parameters" element="bmd230:bmdInsertSignedFileResponse"/>
+</message>
+
+<message name="bmdInsertFileListRequest">
+ <part name="parameters" element="bmd230:bmdInsertFileList"/>
+</message>
+
+<message name="bmdInsertFileListResponse">
+ <part name="parameters" element="bmd230:bmdInsertFileListResponse"/>
+</message>
+
+<message name="bmdUpdateFileVersionRequest">
+ <part name="parameters" element="bmd230:bmdUpdateFileVersion"/>
+</message>
+
+<message name="bmdUpdateFileVersionResponse">
+ <part name="parameters" element="bmd230:bmdUpdateFileVersionResponse"/>
+</message>
+
+<message name="bmdDeleteFileByIDRequest">
+ <part name="parameters" element="bmd230:bmdDeleteFileByID"/>
+</message>
+
+<message name="bmdDeleteFileByIDResponse">
+ <part name="parameters" element="bmd230:bmdDeleteFileByIDResponse"/>
+</message>
+
+<message name="bmdDeleteDirByIDRequest">
+ <part name="parameters" element="bmd230:bmdDeleteDirByID"/>
+</message>
+
+<message name="bmdDeleteDirByIDResponse">
+ <part name="parameters" element="bmd230:bmdDeleteDirByIDResponse"/>
+</message>
+
+<message name="bmdUpdateMetadataRequest">
+ <part name="parameters" element="bmd230:bmdUpdateMetadata"/>
+</message>
+
+<message name="bmdUpdateMetadataResponse">
+ <part name="parameters" element="bmd230:bmdUpdateMetadataResponse"/>
+</message>
+
+<message name="bmdUpdateSystemMetadataRequest">
+ <part name="parameters" element="bmd230:bmdUpdateSystemMetadata"/>
+</message>
+
+<message name="bmdUpdateSystemMetadataResponse">
+ <part name="parameters" element="bmd230:bmdUpdateSystemMetadataResponse"/>
+</message>
+
+<message name="bmdUpdateDefaultMetadataValueRequest">
+ <part name="parameters" element="bmd230:bmdUpdateDefaultMetadataValue"/>
+</message>
+
+<message name="bmdUpdateDefaultMetadataValueResponse">
+ <part name="parameters" element="bmd230:bmdUpdateDefaultMetadataValueResponse"/>
+</message>
+
+<message name="bmdAddSignatureRequest">
+ <part name="parameters" element="bmd230:bmdAddSignature"/>
+</message>
+
+<message name="bmdAddSignatureResponse">
+ <part name="parameters" element="bmd230:bmdAddSignatureResponse"/>
+</message>
+
+<message name="bmdLoginRequest">
+ <part name="parameters" element="bmd230:bmdLogin"/>
+</message>
+
+<message name="bmdLoginResponse">
+ <part name="parameters" element="bmd230:bmdLoginResponse"/>
+</message>
+
+<message name="bmdSearchFilesRequest">
+ <part name="parameters" element="bmd230:bmdSearchFiles"/>
+</message>
+
+<message name="bmdSearchFilesResponse">
+ <part name="parameters" element="bmd230:bmdSearchFilesResponse"/>
+</message>
+
+<message name="bmdSearchFilesCSVRequest">
+ <part name="parameters" element="bmd230:bmdSearchFilesCSV"/>
+</message>
+
+<message name="bmdSearchFilesCSVResponse">
+ <part name="parameters" element="bmd230:bmdSearchFilesCSVResponse"/>
+</message>
+
+<message name="bmdAdvancedSearchFilesRequest">
+ <part name="parameters" element="bmd230:bmdAdvancedSearchFiles"/>
+</message>
+
+<message name="bmdAdvancedSearchFilesResponse">
+ <part name="parameters" element="bmd230:bmdAdvancedSearchFilesResponse"/>
+</message>
+
+<message name="bmdAdvancedCountFilesRequest">
+ <part name="parameters" element="bmd230:bmdAdvancedCountFiles"/>
+</message>
+
+<message name="bmdAdvancedCountFilesResponse">
+ <part name="parameters" element="bmd230:bmdAdvancedCountFilesResponse"/>
+</message>
+
+<message name="bmdHistoryRequest">
+ <part name="parameters" element="bmd230:bmdHistory"/>
+</message>
+
+<message name="bmdHistoryResponse">
+ <part name="parameters" element="bmd230:bmdHistoryResponse"/>
+</message>
+
+<message name="bmdSearchUnreceivedRequest">
+ <part name="parameters" element="bmd230:bmdSearchUnreceived"/>
+</message>
+
+<message name="bmdSearchUnreceivedResponse">
+ <part name="parameters" element="bmd230:bmdSearchUnreceivedResponse"/>
+</message>
+
+<message name="bmdRegisterNewUserRequest">
+ <part name="parameters" element="bmd230:bmdRegisterNewUser"/>
+</message>
+
+<message name="bmdRegisterNewUserResponse">
+ <part name="parameters" element="bmd230:bmdRegisterNewUserResponse"/>
+</message>
+
+<message name="bmdAddCertificateToIdentityRequest">
+ <part name="parameters" element="bmd230:bmdAddCertificateToIdentity"/>
+</message>
+
+<message name="bmdAddCertificateToIdentityResponse">
+ <part name="parameters" element="bmd230:bmdAddCertificateToIdentityResponse"/>
+</message>
+
+<message name="bmdUpdateUserRightsRequest">
+ <part name="parameters" element="bmd230:bmdUpdateUserRights"/>
+</message>
+
+<message name="bmdUpdateUserRightsResponse">
+ <part name="parameters" element="bmd230:bmdUpdateUserRightsResponse"/>
+</message>
+
+<message name="bmdGetUsersListRequest">
+ <part name="parameters" element="bmd230:bmdGetUsersList"/>
+</message>
+
+<message name="bmdGetUsersListResponse">
+ <part name="parameters" element="bmd230:bmdGetUsersListResponse"/>
+</message>
+
+<message name="bmdDeleteUserRequest">
+ <part name="parameters" element="bmd230:bmdDeleteUser"/>
+</message>
+
+<message name="bmdDeleteUserResponse">
+ <part name="parameters" element="bmd230:bmdDeleteUserResponse"/>
+</message>
+
+<message name="bmdDisableUserRequest">
+ <part name="parameters" element="bmd230:bmdDisableUser"/>
+</message>
+
+<message name="bmdDisableUserResponse">
+ <part name="parameters" element="bmd230:bmdDisableUserResponse"/>
+</message>
+
+<message name="bmdDisableIdentityRequest">
+ <part name="parameters" element="bmd230:bmdDisableIdentity"/>
+</message>
+
+<message name="bmdDisableIdentityResponse">
+ <part name="parameters" element="bmd230:bmdDisableIdentityResponse"/>
+</message>
+
+<message name="bmdRegisterNewRoleRequest">
+ <part name="parameters" element="bmd230:bmdRegisterNewRole"/>
+</message>
+
+<message name="bmdRegisterNewRoleResponse">
+ <part name="parameters" element="bmd230:bmdRegisterNewRoleResponse"/>
+</message>
+
+<message name="bmdUpdateRoleRequest">
+ <part name="parameters" element="bmd230:bmdUpdateRole"/>
+</message>
+
+<message name="bmdUpdateRoleResponse">
+ <part name="parameters" element="bmd230:bmdUpdateRoleResponse"/>
+</message>
+
+<message name="bmdGetRolesListRequest">
+ <part name="parameters" element="bmd230:bmdGetRolesList"/>
+</message>
+
+<message name="bmdGetRolesListResponse">
+ <part name="parameters" element="bmd230:bmdGetRolesListResponse"/>
+</message>
+
+<message name="bmdDeleteRoleRequest">
+ <part name="parameters" element="bmd230:bmdDeleteRole"/>
+</message>
+
+<message name="bmdDeleteRoleResponse">
+ <part name="parameters" element="bmd230:bmdDeleteRoleResponse"/>
+</message>
+
+<message name="bmdRegisterNewGroupRequest">
+ <part name="parameters" element="bmd230:bmdRegisterNewGroup"/>
+</message>
+
+<message name="bmdRegisterNewGroupResponse">
+ <part name="parameters" element="bmd230:bmdRegisterNewGroupResponse"/>
+</message>
+
+<message name="bmdUpdateGroupRequest">
+ <part name="parameters" element="bmd230:bmdUpdateGroup"/>
+</message>
+
+<message name="bmdUpdateGroupResponse">
+ <part name="parameters" element="bmd230:bmdUpdateGroupResponse"/>
+</message>
+
+<message name="bmdGetGroupsListRequest">
+ <part name="parameters" element="bmd230:bmdGetGroupsList"/>
+</message>
+
+<message name="bmdGetGroupsListResponse">
+ <part name="parameters" element="bmd230:bmdGetGroupsListResponse"/>
+</message>
+
+<message name="bmdDeleteGroupRequest">
+ <part name="parameters" element="bmd230:bmdDeleteGroup"/>
+</message>
+
+<message name="bmdDeleteGroupResponse">
+ <part name="parameters" element="bmd230:bmdDeleteGroupResponse"/>
+</message>
+
+<message name="bmdRegisterNewClassRequest">
+ <part name="parameters" element="bmd230:bmdRegisterNewClass"/>
+</message>
+
+<message name="bmdRegisterNewClassResponse">
+ <part name="parameters" element="bmd230:bmdRegisterNewClassResponse"/>
+</message>
+
+<message name="bmdUpdateClassRequest">
+ <part name="parameters" element="bmd230:bmdUpdateClass"/>
+</message>
+
+<message name="bmdUpdateClassResponse">
+ <part name="parameters" element="bmd230:bmdUpdateClassResponse"/>
+</message>
+
+<message name="bmdGetClassListRequest">
+ <part name="parameters" element="bmd230:bmdGetClassList"/>
+</message>
+
+<message name="bmdGetClassListResponse">
+ <part name="parameters" element="bmd230:bmdGetClassListResponse"/>
+</message>
+
+<message name="bmdDeleteClassRequest">
+ <part name="parameters" element="bmd230:bmdDeleteClass"/>
+</message>
+
+<message name="bmdDeleteClassResponse">
+ <part name="parameters" element="bmd230:bmdDeleteClassResponse"/>
+</message>
+
+<message name="bmdRegisterNewSecurityCategoryRequest">
+ <part name="parameters" element="bmd230:bmdRegisterNewSecurityCategory"/>
+</message>
+
+<message name="bmdRegisterNewSecurityCategoryResponse">
+ <part name="parameters" element="bmd230:bmdRegisterNewSecurityCategoryResponse"/>
+</message>
+
+<message name="bmdGetSecurityListRequest">
+ <part name="parameters" element="bmd230:bmdGetSecurityList"/>
+</message>
+
+<message name="bmdGetSecurityListResponse">
+ <part name="parameters" element="bmd230:bmdGetSecurityListResponse"/>
+</message>
+
+<message name="bmdGetFileByIdRequest">
+ <part name="parameters" element="bmd230:bmdGetFileById"/>
+</message>
+
+<message name="bmdGetFileByIdResponse">
+ <part name="parameters" element="bmd230:bmdGetFileByIdResponse"/>
+</message>
+
+<message name="bmdGetArchiveFileVersionRequest">
+ <part name="parameters" element="bmd230:bmdGetArchiveFileVersion"/>
+</message>
+
+<message name="bmdGetArchiveFileVersionResponse">
+ <part name="parameters" element="bmd230:bmdGetArchiveFileVersionResponse"/>
+</message>
+
+<message name="bmdGetFileByHashRequest">
+ <part name="parameters" element="bmd230:bmdGetFileByHash"/>
+</message>
+
+<message name="bmdGetFileByHashResponse">
+ <part name="parameters" element="bmd230:bmdGetFileByHashResponse"/>
+</message>
+
+<message name="bmdGetFileByIdInZipPackRequest">
+ <part name="parameters" element="bmd230:bmdGetFileByIdInZipPack"/>
+</message>
+
+<message name="bmdGetFileByIdInZipPackResponse">
+ <part name="parameters" element="bmd230:bmdGetFileByIdInZipPackResponse"/>
+</message>
+
+<message name="bmdGetFilePropByIDRequest">
+ <part name="parameters" element="bmd230:bmdGetFilePropByID"/>
+</message>
+
+<message name="bmdGetFilePropByIDResponse">
+ <part name="parameters" element="bmd230:bmdGetFilePropByIDResponse"/>
+</message>
+
+<message name="bmdGetFilePKIByIdRequest">
+ <part name="parameters" element="bmd230:bmdGetFilePKIById"/>
+</message>
+
+<message name="bmdGetFilePKIByIdResponse">
+ <part name="parameters" element="bmd230:bmdGetFilePKIByIdResponse"/>
+</message>
+
+<message name="bmdGetTimeStampRequest">
+ <part name="parameters" element="bmd230:bmdGetTimeStamp"/>
+</message>
+
+<message name="bmdGetTimeStampResponse">
+ <part name="parameters" element="bmd230:bmdGetTimeStampResponse"/>
+</message>
+
+<message name="bmdGetArchPackRequest">
+ <part name="parameters" element="bmd230:bmdGetArchPack"/>
+</message>
+
+<message name="bmdGetArchPackResponse">
+ <part name="parameters" element="bmd230:bmdGetArchPackResponse"/>
+</message>
+
+<message name="bmdGetAccessObjectsRequest">
+ <part name="parameters" element="bmd230:bmdGetAccessObjects"/>
+</message>
+
+<message name="bmdGetAccessObjectsResponse">
+ <part name="parameters" element="bmd230:bmdGetAccessObjectsResponse"/>
+</message>
+
+<message name="bmdGetVersionsHistoryRequest">
+ <part name="parameters" element="bmd230:bmdGetVersionsHistory"/>
+</message>
+
+<message name="bmdGetVersionsHistoryResponse">
+ <part name="parameters" element="bmd230:bmdGetVersionsHistoryResponse"/>
+</message>
+
+<message name="bmdGetActionsHistoryByIdRequest">
+ <part name="parameters" element="bmd230:bmdGetActionsHistoryById"/>
+</message>
+
+<message name="bmdGetActionsHistoryByIdResponse">
+ <part name="parameters" element="bmd230:bmdGetActionsHistoryByIdResponse"/>
+</message>
+
+<message name="getInvoicePackByIdRequest">
+ <part name="parameters" element="bmd230:getInvoicePackById"/>
+</message>
+
+<message name="getInvoicePackByIdResponse">
+ <part name="parameters" element="bmd230:getInvoicePackByIdResponse"/>
+</message>
+
+<message name="getHTMLImageByIdRequest">
+ <part name="parameters" element="bmd230:getHTMLImageById"/>
+</message>
+
+<message name="getHTMLImageByIdResponse">
+ <part name="parameters" element="bmd230:getHTMLImageByIdResponse"/>
+</message>
+
+<message name="verifyInvoiceByIdRequest">
+ <part name="parameters" element="bmd230:verifyInvoiceById"/>
+</message>
+
+<message name="verifyInvoiceByIdResponse">
+ <part name="parameters" element="bmd230:verifyInvoiceByIdResponse"/>
+</message>
+
+<message name="verifyInvoiceWithDetailsByIdRequest">
+ <part name="parameters" element="bmd230:verifyInvoiceWithDetailsById"/>
+</message>
+
+<message name="verifyInvoiceWithDetailsByIdResponse">
+ <part name="parameters" element="bmd230:verifyInvoiceWithDetailsByIdResponse"/>
+</message>
+
+<message name="SendAdviceRequest">
+ <part name="parameters" element="bmd230:SendAdvice"/>
+</message>
+
+<message name="SendAdviceResponse">
+ <part name="parameters" element="bmd230:SendAdviceResponse"/>
+</message>
+
+<message name="SendAdviceWithParametersRequest">
+ <part name="parameters" element="bmd230:SendAdviceWithParameters"/>
+</message>
+
+<message name="SendAdviceWithParametersResponse">
+ <part name="parameters" element="bmd230:SendAdviceWithParametersResponse"/>
+</message>
+
+<message name="getInvoicePackRequest">
+ <part name="parameters" element="bmd230:getInvoicePack"/>
+</message>
+
+<message name="getInvoicePackResponse">
+ <part name="parameters" element="bmd230:getInvoicePackResponse"/>
+</message>
+
+<message name="getHTMLImageRequest">
+ <part name="parameters" element="bmd230:getHTMLImage"/>
+</message>
+
+<message name="getHTMLImageResponse">
+ <part name="parameters" element="bmd230:getHTMLImageResponse"/>
+</message>
+
+<message name="verifyInvoiceRequest">
+ <part name="parameters" element="bmd230:verifyInvoice"/>
+</message>
+
+<message name="verifyInvoiceResponse">
+ <part name="parameters" element="bmd230:verifyInvoiceResponse"/>
+</message>
+
+<message name="verifyInvoiceSimplifiedRequest">
+ <part name="parameters" element="bmd230:verifyInvoiceSimplified"/>
+</message>
+
+<message name="verifyInvoiceSimplifiedResponse">
+ <part name="parameters" element="bmd230:verifyInvoiceSimplifiedResponse"/>
+</message>
+
+<message name="verifyInvoiceWithDetailsRequest">
+ <part name="parameters" element="bmd230:verifyInvoiceWithDetails"/>
+</message>
+
+<message name="verifyInvoiceWithDetailsResponse">
+ <part name="parameters" element="bmd230:verifyInvoiceWithDetailsResponse"/>
+</message>
+
+<message name="countInvoiceRequest">
+ <part name="parameters" element="bmd230:countInvoice"/>
+</message>
+
+<message name="countInvoiceResponse">
+ <part name="parameters" element="bmd230:countInvoiceResponse"/>
+</message>
+
+<message name="getFileRequest">
+ <part name="parameters" element="bmd230:getFile"/>
+</message>
+
+<message name="getFileResponse">
+ <part name="parameters" element="bmd230:getFileResponse"/>
+</message>
+
+<message name="bmdInsertFileChunkStartRequest">
+ <part name="parameters" element="bmd230:bmdInsertFileChunkStart"/>
+</message>
+
+<message name="bmdInsertFileChunkStartResponse">
+ <part name="parameters" element="bmd230:bmdInsertFileChunkStartResponse"/>
+</message>
+
+<message name="bmdInsertFileChunkIterRequest">
+ <part name="parameters" element="bmd230:bmdInsertFileChunkIter"/>
+</message>
+
+<message name="bmdInsertFileChunkIterResponse">
+ <part name="parameters" element="bmd230:bmdInsertFileChunkIterResponse"/>
+</message>
+
+<message name="bmdGetFileChunkStartRequest">
+ <part name="parameters" element="bmd230:bmdGetFileChunkStart"/>
+</message>
+
+<message name="bmdGetFileChunkStartResponse">
+ <part name="parameters" element="bmd230:bmdGetFileChunkStartResponse"/>
+</message>
+
+<message name="bmdGetFileChunkIterRequest">
+ <part name="parameters" element="bmd230:bmdGetFileChunkIter"/>
+</message>
+
+<message name="bmdGetFileChunkIterResponse">
+ <part name="parameters" element="bmd230:bmdGetFileChunkIterResponse"/>
+</message>
+
+<message name="bmdGetArchPackInChunkRequest">
+ <part name="parameters" element="bmd230:bmdGetArchPackInChunk"/>
+</message>
+
+<message name="bmdGetArchPackInChunkResponse">
+ <part name="parameters" element="bmd230:bmdGetArchPackInChunkResponse"/>
+</message>
+
+<message name="bmdStartTransactionRequest">
+ <part name="parameters" element="bmd230:bmdStartTransaction"/>
+</message>
+
+<message name="bmdStartTransactionResponse">
+ <part name="parameters" element="bmd230:bmdStartTransactionResponse"/>
+</message>
+
+<message name="bmdStopTransactionRequest">
+ <part name="parameters" element="bmd230:bmdStopTransaction"/>
+</message>
+
+<message name="bmdStopTransactionResponse">
+ <part name="parameters" element="bmd230:bmdStopTransactionResponse"/>
+</message>
+
+<message name="bmdCreateDirectoryRequest">
+ <part name="parameters" element="bmd230:bmdCreateDirectory"/>
+</message>
+
+<message name="bmdCreateDirectoryResponse">
+ <part name="parameters" element="bmd230:bmdCreateDirectoryResponse"/>
+</message>
+
+<message name="bmdGetDirectoryDetailsRequest">
+ <part name="parameters" element="bmd230:bmdGetDirectoryDetails"/>
+</message>
+
+<message name="bmdGetDirectoryDetailsResponse">
+ <part name="parameters" element="bmd230:bmdGetDirectoryDetailsResponse"/>
+</message>
+
+<message name="bmdCreateLinkRequest">
+ <part name="parameters" element="bmd230:bmdCreateLink"/>
+</message>
+
+<message name="bmdCreateLinkResponse">
+ <part name="parameters" element="bmd230:bmdCreateLinkResponse"/>
+</message>
+
+<message name="bmdCreateLinksRequest">
+ <part name="parameters" element="bmd230:bmdCreateLinks"/>
+</message>
+
+<message name="bmdCreateLinksResponse">
+ <part name="parameters" element="bmd230:bmdCreateLinksResponse"/>
+</message>
+
+<message name="bmdCreateCascadeLinksRequest">
+ <part name="parameters" element="bmd230:bmdCreateCascadeLinks"/>
+</message>
+
+<message name="bmdCreateCascadeLinksResponse">
+ <part name="parameters" element="bmd230:bmdCreateCascadeLinksResponse"/>
+</message>
+
+<message name="bmdCreateManyCascadeLinksRequest">
+ <part name="parameters" element="bmd230:bmdCreateManyCascadeLinks"/>
+</message>
+
+<message name="bmdCreateManyCascadeLinksResponse">
+ <part name="parameters" element="bmd230:bmdCreateManyCascadeLinksResponse"/>
+</message>
+
+<message name="bmdDeleteCascadeLinksRequest">
+ <part name="parameters" element="bmd230:bmdDeleteCascadeLinks"/>
+</message>
+
+<message name="bmdDeleteCascadeLinksResponse">
+ <part name="parameters" element="bmd230:bmdDeleteCascadeLinksResponse"/>
+</message>
+
+<message name="bmdConservateTimestampsRequest">
+ <part name="parameters" element="bmd230:bmdConservateTimestamps"/>
+</message>
+
+<message name="bmdConservateTimestampsResponse">
+ <part name="parameters" element="bmd230:bmdConservateTimestampsResponse"/>
+</message>
+
+<message name="bmdDeleteReplacedLobsRequest">
+ <part name="parameters" element="bmd230:bmdDeleteReplacedLobs"/>
+</message>
+
+<message name="bmdDeleteReplacedLobsResponse">
+ <part name="parameters" element="bmd230:bmdDeleteReplacedLobsResponse"/>
+</message>
+
+<message name="ServiceHeader">
+ <part name="Security" element="wsse:Security"/>
+</message>
+
+<portType name="ServicePortType">
+ <operation name="testConnection">
+  <documentation>Service definition of function bmd230__testConnection</documentation>
+  <input message="tns:testConnectionRequest"/>
+  <output message="tns:testConnectionResponse"/>
+ </operation>
+ <operation name="bmdInsertFile">
+  <documentation>Service definition of function bmd230__bmdInsertFile</documentation>
+  <input message="tns:bmdInsertFileRequest"/>
+  <output message="tns:bmdInsertFileResponse"/>
+ </operation>
+ <operation name="bmdInsertSignedFile">
+  <documentation>Service definition of function bmd230__bmdInsertSignedFile</documentation>
+  <input message="tns:bmdInsertSignedFileRequest"/>
+  <output message="tns:bmdInsertSignedFileResponse"/>
+ </operation>
+ <operation name="bmdInsertFileList">
+  <documentation>Service definition of function bmd230__bmdInsertFileList</documentation>
+  <input message="tns:bmdInsertFileListRequest"/>
+  <output message="tns:bmdInsertFileListResponse"/>
+ </operation>
+ <operation name="bmdUpdateFileVersion">
+  <documentation>Service definition of function bmd230__bmdUpdateFileVersion</documentation>
+  <input message="tns:bmdUpdateFileVersionRequest"/>
+  <output message="tns:bmdUpdateFileVersionResponse"/>
+ </operation>
+ <operation name="bmdDeleteFileByID">
+  <documentation>Service definition of function bmd230__bmdDeleteFileByID</documentation>
+  <input message="tns:bmdDeleteFileByIDRequest"/>
+  <output message="tns:bmdDeleteFileByIDResponse"/>
+ </operation>
+ <operation name="bmdDeleteDirByID">
+  <documentation>Service definition of function bmd230__bmdDeleteDirByID</documentation>
+  <input message="tns:bmdDeleteDirByIDRequest"/>
+  <output message="tns:bmdDeleteDirByIDResponse"/>
+ </operation>
+ <operation name="bmdUpdateMetadata">
+  <documentation>Service definition of function bmd230__bmdUpdateMetadata</documentation>
+  <input message="tns:bmdUpdateMetadataRequest"/>
+  <output message="tns:bmdUpdateMetadataResponse"/>
+ </operation>
+ <operation name="bmdUpdateSystemMetadata">
+  <documentation>Service definition of function bmd230__bmdUpdateSystemMetadata</documentation>
+  <input message="tns:bmdUpdateSystemMetadataRequest"/>
+  <output message="tns:bmdUpdateSystemMetadataResponse"/>
+ </operation>
+ <operation name="bmdUpdateDefaultMetadataValue">
+  <documentation>Service definition of function bmd230__bmdUpdateDefaultMetadataValue</documentation>
+  <input message="tns:bmdUpdateDefaultMetadataValueRequest"/>
+  <output message="tns:bmdUpdateDefaultMetadataValueResponse"/>
+ </operation>
+ <operation name="bmdAddSignature">
+  <documentation>Service definition of function bmd230__bmdAddSignature</documentation>
+  <input message="tns:bmdAddSignatureRequest"/>
+  <output message="tns:bmdAddSignatureResponse"/>
+ </operation>
+ <operation name="bmdLogin">
+  <documentation>Service definition of function bmd230__bmdLogin</documentation>
+  <input message="tns:bmdLoginRequest"/>
+  <output message="tns:bmdLoginResponse"/>
+ </operation>
+ <operation name="bmdSearchFiles">
+  <documentation>Service definition of function bmd230__bmdSearchFiles</documentation>
+  <input message="tns:bmdSearchFilesRequest"/>
+  <output message="tns:bmdSearchFilesResponse"/>
+ </operation>
+ <operation name="bmdSearchFilesCSV">
+  <documentation>Service definition of function bmd230__bmdSearchFilesCSV</documentation>
+  <input message="tns:bmdSearchFilesCSVRequest"/>
+  <output message="tns:bmdSearchFilesCSVResponse"/>
+ </operation>
+ <operation name="bmdAdvancedSearchFiles">
+  <documentation>Service definition of function bmd230__bmdAdvancedSearchFiles</documentation>
+  <input message="tns:bmdAdvancedSearchFilesRequest"/>
+  <output message="tns:bmdAdvancedSearchFilesResponse"/>
+ </operation>
+ <operation name="bmdAdvancedCountFiles">
+  <documentation>Service definition of function bmd230__bmdAdvancedCountFiles</documentation>
+  <input message="tns:bmdAdvancedCountFilesRequest"/>
+  <output message="tns:bmdAdvancedCountFilesResponse"/>
+ </operation>
+ <operation name="bmdHistory">
+  <documentation>Service definition of function bmd230__bmdHistory</documentation>
+  <input message="tns:bmdHistoryRequest"/>
+  <output message="tns:bmdHistoryResponse"/>
+ </operation>
+ <operation name="bmdSearchUnreceived">
+  <documentation>Service definition of function bmd230__bmdSearchUnreceived</documentation>
+  <input message="tns:bmdSearchUnreceivedRequest"/>
+  <output message="tns:bmdSearchUnreceivedResponse"/>
+ </operation>
+ <operation name="bmdRegisterNewUser">
+  <documentation>Service definition of function bmd230__bmdRegisterNewUser</documentation>
+  <input message="tns:bmdRegisterNewUserRequest"/>
+  <output message="tns:bmdRegisterNewUserResponse"/>
+ </operation>
+ <operation name="bmdAddCertificateToIdentity">
+  <documentation>Service definition of function bmd230__bmdAddCertificateToIdentity</documentation>
+  <input message="tns:bmdAddCertificateToIdentityRequest"/>
+  <output message="tns:bmdAddCertificateToIdentityResponse"/>
+ </operation>
+ <operation name="bmdUpdateUserRights">
+  <documentation>Service definition of function bmd230__bmdUpdateUserRights</documentation>
+  <input message="tns:bmdUpdateUserRightsRequest"/>
+  <output message="tns:bmdUpdateUserRightsResponse"/>
+ </operation>
+ <operation name="bmdGetUsersList">
+  <documentation>Service definition of function bmd230__bmdGetUsersList</documentation>
+  <input message="tns:bmdGetUsersListRequest"/>
+  <output message="tns:bmdGetUsersListResponse"/>
+ </operation>
+ <operation name="bmdDeleteUser">
+  <documentation>Service definition of function bmd230__bmdDeleteUser</documentation>
+  <input message="tns:bmdDeleteUserRequest"/>
+  <output message="tns:bmdDeleteUserResponse"/>
+ </operation>
+ <operation name="bmdDisableUser">
+  <documentation>Service definition of function bmd230__bmdDisableUser</documentation>
+  <input message="tns:bmdDisableUserRequest"/>
+  <output message="tns:bmdDisableUserResponse"/>
+ </operation>
+ <operation name="bmdDisableIdentity">
+  <documentation>Service definition of function bmd230__bmdDisableIdentity</documentation>
+  <input message="tns:bmdDisableIdentityRequest"/>
+  <output message="tns:bmdDisableIdentityResponse"/>
+ </operation>
+ <operation name="bmdRegisterNewRole">
+  <documentation>Service definition of function bmd230__bmdRegisterNewRole</documentation>
+  <input message="tns:bmdRegisterNewRoleRequest"/>
+  <output message="tns:bmdRegisterNewRoleResponse"/>
+ </operation>
+ <operation name="bmdUpdateRole">
+  <documentation>Service definition of function bmd230__bmdUpdateRole</documentation>
+  <input message="tns:bmdUpdateRoleRequest"/>
+  <output message="tns:bmdUpdateRoleResponse"/>
+ </operation>
+ <operation name="bmdGetRolesList">
+  <documentation>Service definition of function bmd230__bmdGetRolesList</documentation>
+  <input message="tns:bmdGetRolesListRequest"/>
+  <output message="tns:bmdGetRolesListResponse"/>
+ </operation>
+ <operation name="bmdDeleteRole">
+  <documentation>Service definition of function bmd230__bmdDeleteRole</documentation>
+  <input message="tns:bmdDeleteRoleRequest"/>
+  <output message="tns:bmdDeleteRoleResponse"/>
+ </operation>
+ <operation name="bmdRegisterNewGroup">
+  <documentation>Service definition of function bmd230__bmdRegisterNewGroup</documentation>
+  <input message="tns:bmdRegisterNewGroupRequest"/>
+  <output message="tns:bmdRegisterNewGroupResponse"/>
+ </operation>
+ <operation name="bmdUpdateGroup">
+  <documentation>Service definition of function bmd230__bmdUpdateGroup</documentation>
+  <input message="tns:bmdUpdateGroupRequest"/>
+  <output message="tns:bmdUpdateGroupResponse"/>
+ </operation>
+ <operation name="bmdGetGroupsList">
+  <documentation>Service definition of function bmd230__bmdGetGroupsList</documentation>
+  <input message="tns:bmdGetGroupsListRequest"/>
+  <output message="tns:bmdGetGroupsListResponse"/>
+ </operation>
+ <operation name="bmdDeleteGroup">
+  <documentation>Service definition of function bmd230__bmdDeleteGroup</documentation>
+  <input message="tns:bmdDeleteGroupRequest"/>
+  <output message="tns:bmdDeleteGroupResponse"/>
+ </operation>
+ <operation name="bmdRegisterNewClass">
+  <documentation>Service definition of function bmd230__bmdRegisterNewClass</documentation>
+  <input message="tns:bmdRegisterNewClassRequest"/>
+  <output message="tns:bmdRegisterNewClassResponse"/>
+ </operation>
+ <operation name="bmdUpdateClass">
+  <documentation>Service definition of function bmd230__bmdUpdateClass</documentation>
+  <input message="tns:bmdUpdateClassRequest"/>
+  <output message="tns:bmdUpdateClassResponse"/>
+ </operation>
+ <operation name="bmdGetClassList">
+  <documentation>Service definition of function bmd230__bmdGetClassList</documentation>
+  <input message="tns:bmdGetClassListRequest"/>
+  <output message="tns:bmdGetClassListResponse"/>
+ </operation>
+ <operation name="bmdDeleteClass">
+  <documentation>Service definition of function bmd230__bmdDeleteClass</documentation>
+  <input message="tns:bmdDeleteClassRequest"/>
+  <output message="tns:bmdDeleteClassResponse"/>
+ </operation>
+ <operation name="bmdRegisterNewSecurityCategory">
+  <documentation>Service definition of function bmd230__bmdRegisterNewSecurityCategory</documentation>
+  <input message="tns:bmdRegisterNewSecurityCategoryRequest"/>
+  <output message="tns:bmdRegisterNewSecurityCategoryResponse"/>
+ </operation>
+ <operation name="bmdGetSecurityList">
+  <documentation>Service definition of function bmd230__bmdGetSecurityList</documentation>
+  <input message="tns:bmdGetSecurityListRequest"/>
+  <output message="tns:bmdGetSecurityListResponse"/>
+ </operation>
+ <operation name="bmdGetFileById">
+  <documentation>Service definition of function bmd230__bmdGetFileById</documentation>
+  <input message="tns:bmdGetFileByIdRequest"/>
+  <output message="tns:bmdGetFileByIdResponse"/>
+ </operation>
+ <operation name="bmdGetArchiveFileVersion">
+  <documentation>Service definition of function bmd230__bmdGetArchiveFileVersion</documentation>
+  <input message="tns:bmdGetArchiveFileVersionRequest"/>
+  <output message="tns:bmdGetArchiveFileVersionResponse"/>
+ </operation>
+ <operation name="bmdGetFileByHash">
+  <documentation>Service definition of function bmd230__bmdGetFileByHash</documentation>
+  <input message="tns:bmdGetFileByHashRequest"/>
+  <output message="tns:bmdGetFileByHashResponse"/>
+ </operation>
+ <operation name="bmdGetFileByIdInZipPack">
+  <documentation>Service definition of function bmd230__bmdGetFileByIdInZipPack</documentation>
+  <input message="tns:bmdGetFileByIdInZipPackRequest"/>
+  <output message="tns:bmdGetFileByIdInZipPackResponse"/>
+ </operation>
+ <operation name="bmdGetFilePropByID">
+  <documentation>Service definition of function bmd230__bmdGetFilePropByID</documentation>
+  <input message="tns:bmdGetFilePropByIDRequest"/>
+  <output message="tns:bmdGetFilePropByIDResponse"/>
+ </operation>
+ <operation name="bmdGetFilePKIById">
+  <documentation>Service definition of function bmd230__bmdGetFilePKIById</documentation>
+  <input message="tns:bmdGetFilePKIByIdRequest"/>
+  <output message="tns:bmdGetFilePKIByIdResponse"/>
+ </operation>
+ <operation name="bmdGetTimeStamp">
+  <documentation>Service definition of function bmd230__bmdGetTimeStamp</documentation>
+  <input message="tns:bmdGetTimeStampRequest"/>
+  <output message="tns:bmdGetTimeStampResponse"/>
+ </operation>
+ <operation name="bmdGetArchPack">
+  <documentation>Service definition of function bmd230__bmdGetArchPack</documentation>
+  <input message="tns:bmdGetArchPackRequest"/>
+  <output message="tns:bmdGetArchPackResponse"/>
+ </operation>
+ <operation name="bmdGetAccessObjects">
+  <documentation>Service definition of function bmd230__bmdGetAccessObjects</documentation>
+  <input message="tns:bmdGetAccessObjectsRequest"/>
+  <output message="tns:bmdGetAccessObjectsResponse"/>
+ </operation>
+ <operation name="bmdGetVersionsHistory">
+  <documentation>Service definition of function bmd230__bmdGetVersionsHistory</documentation>
+  <input message="tns:bmdGetVersionsHistoryRequest"/>
+  <output message="tns:bmdGetVersionsHistoryResponse"/>
+ </operation>
+ <operation name="bmdGetActionsHistoryById">
+  <documentation>Service definition of function bmd230__bmdGetActionsHistoryById</documentation>
+  <input message="tns:bmdGetActionsHistoryByIdRequest"/>
+  <output message="tns:bmdGetActionsHistoryByIdResponse"/>
+ </operation>
+ <operation name="getInvoicePackById">
+  <documentation>Service definition of function bmd230__getInvoicePackById</documentation>
+  <input message="tns:getInvoicePackByIdRequest"/>
+  <output message="tns:getInvoicePackByIdResponse"/>
+ </operation>
+ <operation name="getHTMLImageById">
+  <documentation>Service definition of function bmd230__getHTMLImageById</documentation>
+  <input message="tns:getHTMLImageByIdRequest"/>
+  <output message="tns:getHTMLImageByIdResponse"/>
+ </operation>
+ <operation name="verifyInvoiceById">
+  <documentation>Service definition of function bmd230__verifyInvoiceById</documentation>
+  <input message="tns:verifyInvoiceByIdRequest"/>
+  <output message="tns:verifyInvoiceByIdResponse"/>
+ </operation>
+ <operation name="verifyInvoiceWithDetailsById">
+  <documentation>Service definition of function bmd230__verifyInvoiceWithDetailsById</documentation>
+  <input message="tns:verifyInvoiceWithDetailsByIdRequest"/>
+  <output message="tns:verifyInvoiceWithDetailsByIdResponse"/>
+ </operation>
+ <operation name="SendAdvice">
+  <documentation>Service definition of function bmd230__SendAdvice</documentation>
+  <input message="tns:SendAdviceRequest"/>
+  <output message="tns:SendAdviceResponse"/>
+ </operation>
+ <operation name="SendAdviceWithParameters">
+  <documentation>Service definition of function bmd230__SendAdviceWithParameters</documentation>
+  <input message="tns:SendAdviceWithParametersRequest"/>
+  <output message="tns:SendAdviceWithParametersResponse"/>
+ </operation>
+ <operation name="getInvoicePack">
+  <documentation>Service definition of function bmd230__getInvoicePack</documentation>
+  <input message="tns:getInvoicePackRequest"/>
+  <output message="tns:getInvoicePackResponse"/>
+ </operation>
+ <operation name="getHTMLImage">
+  <documentation>Service definition of function bmd230__getHTMLImage</documentation>
+  <input message="tns:getHTMLImageRequest"/>
+  <output message="tns:getHTMLImageResponse"/>
+ </operation>
+ <operation name="verifyInvoice">
+  <documentation>Service definition of function bmd230__verifyInvoice</documentation>
+  <input message="tns:verifyInvoiceRequest"/>
+  <output message="tns:verifyInvoiceResponse"/>
+ </operation>
+ <operation name="verifyInvoiceSimplified">
+  <documentation>Service definition of function bmd230__verifyInvoiceSimplified</documentation>
+  <input message="tns:verifyInvoiceSimplifiedRequest"/>
+  <output message="tns:verifyInvoiceSimplifiedResponse"/>
+ </operation>
+ <operation name="verifyInvoiceWithDetails">
+  <documentation>Service definition of function bmd230__verifyInvoiceWithDetails</documentation>
+  <input message="tns:verifyInvoiceWithDetailsRequest"/>
+  <output message="tns:verifyInvoiceWithDetailsResponse"/>
+ </operation>
+ <operation name="countInvoice">
+  <documentation>Service definition of function bmd230__countInvoice</documentation>
+  <input message="tns:countInvoiceRequest"/>
+  <output message="tns:countInvoiceResponse"/>
+ </operation>
+ <operation name="getFile">
+  <documentation>Service definition of function bmd230__getFile</documentation>
+  <input message="tns:getFileRequest"/>
+  <output message="tns:getFileResponse"/>
+ </operation>
+ <operation name="bmdInsertFileChunkStart">
+  <documentation>Service definition of function bmd230__bmdInsertFileChunkStart</documentation>
+  <input message="tns:bmdInsertFileChunkStartRequest"/>
+  <output message="tns:bmdInsertFileChunkStartResponse"/>
+ </operation>
+ <operation name="bmdInsertFileChunkIter">
+  <documentation>Service definition of function bmd230__bmdInsertFileChunkIter</documentation>
+  <input message="tns:bmdInsertFileChunkIterRequest"/>
+  <output message="tns:bmdInsertFileChunkIterResponse"/>
+ </operation>
+ <operation name="bmdGetFileChunkStart">
+  <documentation>Service definition of function bmd230__bmdGetFileChunkStart</documentation>
+  <input message="tns:bmdGetFileChunkStartRequest"/>
+  <output message="tns:bmdGetFileChunkStartResponse"/>
+ </operation>
+ <operation name="bmdGetFileChunkIter">
+  <documentation>Service definition of function bmd230__bmdGetFileChunkIter</documentation>
+  <input message="tns:bmdGetFileChunkIterRequest"/>
+  <output message="tns:bmdGetFileChunkIterResponse"/>
+ </operation>
+ <operation name="bmdGetArchPackInChunk">
+  <documentation>Service definition of function bmd230__bmdGetArchPackInChunk</documentation>
+  <input message="tns:bmdGetArchPackInChunkRequest"/>
+  <output message="tns:bmdGetArchPackInChunkResponse"/>
+ </operation>
+ <operation name="bmdStartTransaction">
+  <documentation>Service definition of function bmd230__bmdStartTransaction</documentation>
+  <input message="tns:bmdStartTransactionRequest"/>
+  <output message="tns:bmdStartTransactionResponse"/>
+ </operation>
+ <operation name="bmdStopTransaction">
+  <documentation>Service definition of function bmd230__bmdStopTransaction</documentation>
+  <input message="tns:bmdStopTransactionRequest"/>
+  <output message="tns:bmdStopTransactionResponse"/>
+ </operation>
+ <operation name="bmdCreateDirectory">
+  <documentation>Service definition of function bmd230__bmdCreateDirectory</documentation>
+  <input message="tns:bmdCreateDirectoryRequest"/>
+  <output message="tns:bmdCreateDirectoryResponse"/>
+ </operation>
+ <operation name="bmdGetDirectoryDetails">
+  <documentation>Service definition of function bmd230__bmdGetDirectoryDetails</documentation>
+  <input message="tns:bmdGetDirectoryDetailsRequest"/>
+  <output message="tns:bmdGetDirectoryDetailsResponse"/>
+ </operation>
+ <operation name="bmdCreateLink">
+  <documentation>Service definition of function bmd230__bmdCreateLink</documentation>
+  <input message="tns:bmdCreateLinkRequest"/>
+  <output message="tns:bmdCreateLinkResponse"/>
+ </operation>
+ <operation name="bmdCreateLinks">
+  <documentation>Service definition of function bmd230__bmdCreateLinks</documentation>
+  <input message="tns:bmdCreateLinksRequest"/>
+  <output message="tns:bmdCreateLinksResponse"/>
+ </operation>
+ <operation name="bmdCreateCascadeLinks">
+  <documentation>Service definition of function bmd230__bmdCreateCascadeLinks</documentation>
+  <input message="tns:bmdCreateCascadeLinksRequest"/>
+  <output message="tns:bmdCreateCascadeLinksResponse"/>
+ </operation>
+ <operation name="bmdCreateManyCascadeLinks">
+  <documentation>Service definition of function bmd230__bmdCreateManyCascadeLinks</documentation>
+  <input message="tns:bmdCreateManyCascadeLinksRequest"/>
+  <output message="tns:bmdCreateManyCascadeLinksResponse"/>
+ </operation>
+ <operation name="bmdDeleteCascadeLinks">
+  <documentation>Service definition of function bmd230__bmdDeleteCascadeLinks</documentation>
+  <input message="tns:bmdDeleteCascadeLinksRequest"/>
+  <output message="tns:bmdDeleteCascadeLinksResponse"/>
+ </operation>
+ <operation name="bmdConservateTimestamps">
+  <documentation>Service definition of function bmd230__bmdConservateTimestamps</documentation>
+  <input message="tns:bmdConservateTimestampsRequest"/>
+  <output message="tns:bmdConservateTimestampsResponse"/>
+ </operation>
+ <operation name="bmdDeleteReplacedLobs">
+  <documentation>Service definition of function bmd230__bmdDeleteReplacedLobs</documentation>
+  <input message="tns:bmdDeleteReplacedLobsRequest"/>
+  <output message="tns:bmdDeleteReplacedLobsResponse"/>
+ </operation>
+</portType>
+
+<binding name="Service" type="tns:ServicePortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="testConnection">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdInsertFile">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdInsertSignedFile">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdInsertFileList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateFileVersion">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteFileByID">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteDirByID">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateMetadata">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateSystemMetadata">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateDefaultMetadataValue">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdAddSignature">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdLogin">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdSearchFiles">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdSearchFilesCSV">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdAdvancedSearchFiles">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdAdvancedCountFiles">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdHistory">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdSearchUnreceived">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdRegisterNewUser">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdAddCertificateToIdentity">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateUserRights">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetUsersList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteUser">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDisableUser">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDisableIdentity">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdRegisterNewRole">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateRole">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetRolesList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteRole">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdRegisterNewGroup">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateGroup">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetGroupsList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteGroup">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdRegisterNewClass">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdUpdateClass">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetClassList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteClass">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdRegisterNewSecurityCategory">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetSecurityList">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFileById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetArchiveFileVersion">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFileByHash">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFileByIdInZipPack">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFilePropByID">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFilePKIById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetTimeStamp">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetArchPack">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetAccessObjects">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetVersionsHistory">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetActionsHistoryById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getInvoicePackById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getHTMLImageById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyInvoiceById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyInvoiceWithDetailsById">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="SendAdvice">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="SendAdviceWithParameters">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getInvoicePack">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getHTMLImage">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyInvoice">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyInvoiceSimplified">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="verifyInvoiceWithDetails">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="countInvoice">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getFile">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdInsertFileChunkStart">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdInsertFileChunkIter">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFileChunkStart">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetFileChunkIter">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetArchPackInChunk">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdStartTransaction">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdStopTransaction">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdCreateDirectory">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdGetDirectoryDetails">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdCreateLink">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdCreateLinks">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdCreateCascadeLinks">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdCreateManyCascadeLinks">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteCascadeLinks">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdConservateTimestamps">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bmdDeleteReplacedLobs">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="parameters" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="parameters" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="Service">
+ <documentation>gSOAP 2.7.17 generated service definition</documentation>
+ <port name="Service" binding="tns:Service">
+  <SOAP:address location="https://127.0.0.1:9999"/>
+ </port>
+</service>
+
+</definitions>

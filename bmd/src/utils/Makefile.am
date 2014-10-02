@@ -1,0 +1,1 @@
+SUBDIRS=bmd_mkcnf rencryption

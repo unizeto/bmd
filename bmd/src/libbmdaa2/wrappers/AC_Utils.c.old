@@ -1,0 +1,182 @@
+#include <bmd/libbmdaa_unix/wrappers/AC_Utils.h>
+#include <bmd/libbmdutils/libbmdutils.h>
+
+/*************************************************************************
+* Wyswietlanie OBJECT_IDENTIFIER_t 	 		 		 *
+*************************************************************************/
+/* Funkcja zbudowana na bazie przykłądu Lev'a Walkina, umieszczonego 	*/
+/* w OBJECT_IDENTIFIER.h						*/
+int OID_print(OBJECT_IDENTIFIER_t *oid)
+{
+unsigned long fixed_arcs[10];
+unsigned long *arcs = fixed_arcs;
+int arc_type_size = sizeof(fixed_arcs[0]);
+int arc_slots = sizeof(fixed_arcs)/sizeof(fixed_arcs[0]);
+int count;
+int i;
+int err=0;
+
+	count = OBJECT_IDENTIFIER_get_arcs(oid, arcs, arc_type_size, arc_slots);
+	
+	if(count > arc_slots)
+	{
+		arc_slots = count;
+		arcs = malloc(arc_type_size * arc_slots);
+		if(arcs == NULL)
+		{
+			return NO_MEMORY;
+		}
+		count = OBJECT_IDENTIFIER_get_arcs(oid, arcs, arc_type_size, arc_slots);
+		if(count != arc_slots)
+		{
+			return -20; /* FIXME assign error number */
+		}
+	}
+ 
+	for(i = 0; i < count-1; i++)
+		printf("%ld.", arcs[i]);
+	printf("%ld", arcs[count-1]);
+	printf("\n");
+ 
+	if(arcs != fixed_arcs) free(arcs);
+	return err;
+}
+ 
+	
+/*************************************************************************
+* Zamiana stringa na UniqueIdentifier_t					 *
+*************************************************************************/
+int str_to_UID(const char *string, const char *pattern, UniqueIdentifier_t *UID)
+{
+SubstringsGenBuf_t substrings;		/* genbuf zawierajacy substringi i ich ilosc */
+unsigned char *bit_string_buff;		/* bufor na bitstring */
+int bits_unused = 0;			/* ilosc bitow nieuzywanych w ostatnim oktecie */
+int bit_string_buff_size;		/* rozmiar powyzszego bufora */
+GenBuf_t analized_genbuf;		/* nalizowany bufor zawierajacy tekst z pliku */
+char *regexp = "[0-1]+";		/* domyslne wyrazenie wyszukujace elementy bitstringa */
+int err = 0;
+int i = 0;
+int k = 0;
+int length_of_string = 0;
+char tmp_string[9];			/* tymczasowy bufor na string osmioznakowy + NULL */
+	
+	/* jesli podano wlasne wyrazenie regulerne to je podstaw, 	*/
+	/* inaczej uzywane bedzie wyrazenie domyslne 			*/
+	if (pattern != NULL)
+	{
+		regexp = (char *) pattern;
+	}
+	
+	/* tworze genbuf do analizy - wyszukania UIDu */
+	analized_genbuf.buf = (unsigned char *) string;
+	analized_genbuf.size = strlen(string);
+	
+	/* Szukaj w pojedynczj linii (w stringu), wielokrotnego dopasowania do 		*/
+	/* wzorca - czyli szukaj liczb							*/
+	err = find_substrings(&analized_genbuf, regexp, &substrings, SINGLELINE, YES);
+	if (err != 0) return err;
+	
+	/* Tablica substrings->substrings_table zawiera kolejne dopasowania 		*/
+	/* zas substrings->no_of_substrings ilosc dopasowanych elementow w tablicy	*/
+	
+	bit_string_buff_size = sizeof(unsigned char) * substrings.no_of_substrings;
+	bit_string_buff = (unsigned char *) malloc (bit_string_buff_size);
+	if (bit_string_buff == NULL)
+	{
+		return NO_MEMORY;
+	}
+	
+	for (i=0; i<substrings.no_of_substrings; i++)
+	{
+		/* do substringow o dlugosci < 8 nalezy od konca dodac znaki zera, liczbe */
+		/* zer wpisac do unused bits 						  */
+		length_of_string = strlen(substrings.substrings_table[i]);
+		
+		if (length_of_string < 8) /* koncowce bitstringa nalezy sie specjalna obsluga */
+		{
+			strcpy(tmp_string, substrings.substrings_table[i]); /** bez nulla **/
+			bits_unused = 8-length_of_string;
+			for (k=0; k<bits_unused; k++)
+			{
+				*(tmp_string + length_of_string + k) = '0';
+			}
+			*(tmp_string + 8) = 0;
+			bit_string_buff[i] = strtol(tmp_string, (char **)NULL, 2);
+		}
+		else		/* a normalny bitstring dlugosci 8 bitow leci do bufora */
+		{
+			bit_string_buff[i] = strtol(substrings.substrings_table[i], (char **)NULL, 2);	
+		}
+	}
+
+	/* substrings.no_of_substrings to liczba bajtow 	*/
+	/* bo kazdy substring zawiera osiem zer lub jedynak	*/
+	/* czyli kodowanie binarne jednego bajta. 		*/
+	UID->buf = (uint8_t *) malloc (sizeof (uint8_t) * substrings.no_of_substrings);
+	if (UID->buf == NULL)
+	{
+		return NO_MEMORY;
+	}
+	
+	for(i = 0; i < substrings.no_of_substrings; i++)
+	{
+		UID->buf[i] = bit_string_buff[i];
+	}
+	UID->size = substrings.no_of_substrings;	
+	UID->bits_unused = bits_unused;
+	
+	
+	if (err != 0)
+	{
+		free(bit_string_buff);
+		return err;
+	}
+	
+	/* teraz substringi nie sa juz nam potrzebne */
+	free_substrings(&substrings);
+	
+	/* teraz mozna spokojnie wyczyscic bit_string_buff	*/
+	free(bit_string_buff);
+	bit_string_buff = NULL;
+	/* debug */
+	/* asn_fprint(stdout, &asn_DEF_UniqueIdentifier, UID); */
+	return err;
+}
+
+int AC_read_GenBuf_from_file(const char *filename, GenBuf_t **gbuf)
+{
+int err=0, fd=0, readed=0;
+struct stat filestat;
+	*gbuf = (GenBuf_t *) malloc (sizeof(GenBuf_t));
+	if(*gbuf==NULL) return NO_MEMORY;
+
+	err = stat(filename, &filestat);
+	if (err) return ERR_AA_OPEN_FILE;
+	
+	fd = open(filename, O_RDONLY, 0666);
+	if(fd==-1) return ERR_AA_OPEN_FILE;
+
+	(*gbuf)->buf = (unsigned char *) malloc (sizeof(unsigned char) * filestat.st_size + 2);
+	memset((*gbuf)->buf, 0 , filestat.st_size + 1);
+	if((*gbuf)->buf==NULL) return NO_MEMORY;
+	(*gbuf)->size=filestat.st_size;
+		
+	if ( (readed=read(fd,(*gbuf)->buf,(*gbuf)->size)) == -1 ){
+		return ERR_AA_READ_FILE;
+	}
+	close(fd);
+	return err;
+}
+
+int AC_GenBuf_free(GenBuf_t **gbuf)
+{
+int err = 0;
+	if(gbuf == NULL || *gbuf == NULL)
+		return ERR_WRONG_ARG_1;
+	
+	if((*gbuf)->buf) { free((*gbuf)->buf); (*gbuf)->buf=NULL; }
+	free(*gbuf);
+	*gbuf=NULL;
+	return err;
+}
+

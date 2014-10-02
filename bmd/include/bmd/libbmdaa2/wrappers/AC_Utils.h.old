@@ -1,0 +1,16 @@
+#ifndef _AC_UTILS_INCLUDED_
+#define _AC_UTILS_INCLUDED_
+
+#include <bmd/common/bmd-common.h>
+#include <bmd/libbmdaa_unix/wrappers/AC_wrappers.h>
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+/*	int OID_print(OBJECT_IDENTIFIER_t *oid);
+	int str_to_UID(const char *string, const char *pattern,
+			UniqueIdentifier_t *UID);*/
+#if defined(__cplusplus)
+}
+#endif /*__cplusplus*/
+#endif /*_AC_UTILS_INCLUDED_*/

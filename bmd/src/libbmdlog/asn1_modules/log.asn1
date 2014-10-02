@@ -1,0 +1,47 @@
+-- definicja struktury logu
+
+BMDLog DEFINITIONS ::=
+BEGIN
+
+BMDLogElements ::= SEQUENCE {
+
+     -- składowe obowiązkowe
+     -- wysyłane przez główny serwer logów
+
+     remoteHost			[0]  OCTET STRING OPTIONAL,
+     remotePort			[1]  OCTET STRING OPTIONAL, 
+
+     -- składowe obowiązkowe
+     -- wysyłane przez programy klienckie
+
+     srcFile			[2]  OCTET STRING OPTIONAL,
+     srcLine			[3]  OCTET STRING OPTIONAL,
+     srcFunction		[4]  OCTET STRING OPTIONAL,
+     dateTimeBegin		[5]  OCTET STRING OPTIONAL, 
+     remotePid			[6]  OCTET STRING OPTIONAL,
+     logOwner			[7]  OCTET STRING OPTIONAL,
+     service			[8]  OCTET STRING OPTIONAL,
+     operationType		[9]  OCTET STRING OPTIONAL,
+
+     -- składowe opcjonalne
+     -- wysyłane przez programy klienckie
+
+     logLevel			[10] OCTET STRING OPTIONAL,
+     dateTimeEnd		[11] OCTET STRING OPTIONAL,
+     logString			[12] OCTET STRING OPTIONAL, 
+     logReason			[13] OCTET STRING OPTIONAL, 
+     logSolution		[14] OCTET STRING OPTIONAL, 
+     documentSize		[15] OCTET STRING OPTIONAL,
+     documentFileName		[16] OCTET STRING OPTIONAL, 
+     logReferto			[17] OCTET STRING OPTIONAL,
+     eventCode			[18] OCTET STRING OPTIONAL,
+     logOwnerEventVisible	[19] OCTET STRING OPTIONAL,
+     logRefertoEventVisible	[20] OCTET STRING OPTIONAL,
+     userData1			[21] OCTET STRING OPTIONAL,
+     userData2			[22] OCTET STRING OPTIONAL,
+     userData3			[23] OCTET STRING OPTIONAL,
+     userData4			[24] OCTET STRING OPTIONAL,
+     userData5			[25] OCTET STRING OPTIONAL
+
+}
+END

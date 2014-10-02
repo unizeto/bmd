@@ -1,0 +1,424 @@
+Autor: Włodzimierz Szczygieł (Dział Programowania, Unizeto Technologies SA)
+
+
+Dokumentacja do libbmdmime - P7S API
+
+
+Przeznaczenie biblioteki:
+Biblioteka udostępnia API do tworzenia i wysyłania podpisanych wiadmości z załącznikami.
+W ramach uzupełnienia, udostępniona jest również możliwość wysyłki wiadomości bez podpisu.
+
+
+Zależności z innymi bibliotekami:
+1) Wysyłanie podpisanych wiadomości odbywa się przy wykorzystaniu biblioteki libbmdmail opartej na libesmtp.
+2) Kryptografia realizowana jest za pomocą funkcjonalności biblioteki libbmdpki.
+3) Do sprowadzania przesyłanych danych do postaci kanonicznej wykorzystywane są funkcję z biblioteki libbmdbase64.
+4) Zależność z libbmd - Należy pamietać, że wszędzie tam, gdzie wykorzystywane jest P7S API, na początku
+	zaincjalizować należy bibliotekę libbmd za pomocą funkcji bmd_init() oraz sfinalizować jej
+	wykorzystanie za pomocą funkcji bmd_end().
+
+
+Wykorzystanie P7S API biblioteki libbmdmime:
+Przygotowanie wiadomości oraz jej wysłanie możliwe jest przez wywołanie sekwencji funkcji 
+udostępnianych przez API opisywanej biblioteki. Biblioteka wprowadza strukturę typu bmd_smime_msg, która jest 
+odpowiednikiem przygotowywanej do wysłania wiadomości i operują na niej wszystkie funkcje oferowane przez API.
+Sekwencja wywołań wygląda następująco:
+1) Za pomocą funkcji bmd_smime_create() wykonuje się inicjalizacje struktury bmd_smime_msg.
+2) Funkcją bmd_smime_set_header() ustawia się nadawcę, adresata oraz temat wiadomości.
+3) Treść wiadomości ustawia się funkcją bmd_smime_set_body().
+4) W celu dodania do wiadomości załącznika należy wywołać funkcję bmd_smime_add_attachment() bądź 
+	bmd_smime_add_attachment_from_buf().
+5) Po podaniu wszystkich danych, wiadomość zostaje skomponowana za pomocą jednej z dwóch funkcji:
+	a) bmd_smime_sign() komponuje wiadomość z podpisem
+	b) bmd_smime_noSign() komponuje wiadomośc bez podpisu
+6) Przygotowana wiadomość zostaje wysłana za pomocą funkcji bmd_smime_send().
+7) Za pomocą funkcji bmd_smime_destroy() niszczy się strukturę bmd_smime_msg.
+
+Uwaga:
+Należy zaznaczyć, że w sytuacji, gdy trzeba skomponować kilka podobnych wiadości, nie trzeba za każdym razem niszczyć i tworzyć na nowo strukturę bmd_smime_msg. Wystarczy (w zależności od potrzeb) ustawić ponownie header lub treść, zmodyfikować listę załączników za pomocą funkcji udostępnionych przez opisywane API. Wówczas można podpisać i wysłać wiadomość bez konieczności przejścia od początku całej sekwencji wywołań funkcji.
+
+
+/*--------*/
+libbmdmime P7S API - szczegółowy opis
+/*--------*/
+
+
+
+int bmd_smime_create(bmd_smime_msg ** msg);
+
+Funkcja bmd_smime_create() alokuje i inicjalizuje strukturę typu bmd_smime_msg.
+
+Parametry:
+- msg to adres wskaźnika do bmd_smime_msg, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie 
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów)
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+bmd_smime_create(&msg);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_set_header(bmd_smime_msg * msg, char *from, char *to, char *subject);
+
+Funkcja bmd_smime_set_header() ustawia nagłówek wiadomości tj. nadawcę, adresata oraz temat wiadomości.
+Funkcja ta pozwala również na zmianę nadawcy, adresata czy temat wiadmości po uprzednim ustawieniu tych 
+danych oraz przygotowaniu wiadomości. Po takiej zmianie należy jeszcze raz złożyć wiadmość za pomocą 
+bmd_smime_sign() / bmd_smime_noSign().
+
+Parametry:
+- msg	 to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- from	 to łańcuch znakowy z adresem mailowym nadawcy
+- to	 to łańcuch znakowy z adresem mailowym adresata wiadomości
+- subject to łańcuch znakowy z tematem wiadomości
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów)
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+//inicjalizacja msg
+bmd_smime_set_header(msg, "jkowalski@unet.pl", "znowak@unet.pl", "Zaproszenie" );
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_set_body(bmd_smime_msg * msg, GenBuf_t *body, unsigned int body_type, unsigned int body_charset);
+
+Funkcja bmd_smime_set_body() ustawia treść wiadomości. Pozwala ona również na zmianę treści po jej wcześniejszym
+ustawieniu i złożeniu wiadmości. Po takiej zmianie należy jeszcze raz przygotować wiadmość za pomocą funkcji
+bmd_smime_sign() / bmd_smime_noSign().
+
+Parametry:
+- msg	 to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- body	 to bufor z treścią wiadmości
+- body_type	to flaga wskazująca typ treści np. text/plain, text/html itp. 
+	W chwili obecnej dostępna jest tylko flaga BODY_TYPE_TEXT_PLAIN i BODY_TYPE_TEXT_HTML. Podając inną wartość domyślnie włączony jest ten pierwszy typ zawartości.
+- body_charset 	to flaga wskazująca kodowanie znaków, z jakim zapisana jest ustawiana zawartość
+	W chwili obecnej destępne są następujące flagi:
+		- BODY_CHARSET_UTF8 - dla kodowania UTF-8
+		- BODY_CHARSET_ISO8859_1 - dla kodowania ISO-8859-1
+		- BODY_CHARSET_ISO8859_2 - dla kodowania ISO-8859-2
+		- BODY_CHARSET_CP1250 - dla kodowania WINDOWS-1250
+	Podając inną wartość domyślnie włączone jest kodowanie UTF-8.
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów)
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+GenBuf_t *body=NULL;
+//inicjalizacja msg i wrzucenie treści do bufora body
+bmd_smime_set_body(msg, body, BODY_TYPE_TEXT_PLAIN, BODY_CHARSET_UTF8);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_add_attachment(bmd_smime_msg * msg, char * file_name, int hidden_flag);
+
+Funkcja bmd_smime_add_attachment() załącza plik do wiadomości. Do wiadomości można załączyć wiele plików
+wywołując kilkukrotnie opisywaną funkcję. Można przy tym rozróżnić, czy załącznik ma pojawić się na liście załączników 
+w kliencie poczty, czy też załączany plik ma być ukryty.
+
+Parametry:
+- msg	 to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- file_name to łańcuch znakowy ze ścieżką do pliku, który ma zostać załączony do wiadomości
+- hidden_flag to flaga determinująca widoczność załącznika. Można dokonać dwóch ustawień:
+	a) BMD_SMIME_SHOW_ATTACHMENT oznacza załącznik, jako widoczny na liście załączników
+	b) BMD_SMIME_HIDDEN_ATTACHMENT oznacza załącznik, jako ukryty tzn. załącznik nie pojawi się na liście
+		załączników. Dodatkowym działaniem w przypadku użycia tej flagi jest przypisanie załącznikowi 
+		identyfikatora Content-ID. Wartością identyfikatora jest nazwa załączanego pliku. Wartość tę
+		można wykorzystywać do osadzania pliku w html (cid).
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów)
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+//inicjalizacja msg
+bmd_smime_add_attachment(msg, "plik.pdf", BMD_SMIME_HIDDEN_ATTACHMENT);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_add_attachment_from_buf(bmd_smime_msg * msg, char *file_buf, int file_len, char *file_name, int hidden_flag);
+
+Funkcja bmd_smime_add_attachment_from_buf() załącza plik do wiadomości. Można przy tym rozróżnić, czy załącznik
+ma pojawić się na liście załączników w kliencie poczty, czy też załączany plik ma być ukryty. Funkcja jest przydatna wtedy, gdy
+załączany plik został już wcześniej wczytany do pamięci. Do wiadomości można załączyć wiele plików wywołując kilkukrotnie opisywaną
+funkcję. Funkcja ta może być stosowana naprzemiennie z funkcją bmd_smime_add_attachment(). 
+
+Parametry:
+- msg to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- file_buf to bufor z zawartością wczytanego wcześniej pliku
+- file_len to dlugosc bufora file_buf
+- file_name to łańcuch znakowy z nazwą załączanego pliku
+- hidden_flag to flaga determinująca widoczność załącznika. Można dokonać dwóch ustawień:
+	a) BMD_SMIME_SHOW_ATTACHMENT oznacza załącznik, jako widoczny na liście załączników
+	b) BMD_SMIME_HIDDEN_ATTACHMENT oznacza załącznik, jako ukryty tzn. załącznik nie pojawi się na liście
+		załączników. Dodatkowym działaniem w przypadku użycia tej flagi jest przypisanie załącznikowi 
+		identyfikatora Content-ID. Wartością identyfikatora jest nazwa załączanego pliku. Wartość tę
+		można wykorzystywać do osadzania pliku w html (cid).
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów)
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+char *bufor=NULL;
+int bufor_len=0;
+//inicjalizacja msg i wczytanie pliku zalaczanika do pamieci (wskaznik bufor, dlugosc bufora bufor_len)
+bmd_smime_add_attachment_from_buf(msg, bufor, bufor_len, "plik.pdf", BMD_SMIME_SHOW_ATTACHMENT);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_remove_attachment(bmd_smime_msg * msg, char *file_name);
+
+Funkcja bmd_smime_remove_attachment() pozwala na usunięcie załączonego pliku z listy załączników.
+
+Uwaga:
+Pamiętać należy, że o ile przy dodawaniu załącznika można podać ścieżkę do pliku, to przy jego usuwaniu z listy załączników
+podaje sie samą nazwę pliku, a nie całą ścieżkę. W przeciwnym razie plik nie zostanie odnaleziony w liście załączników.
+
+Parametry:
+- msg to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- file_name to nazwa załącznika, który ma zostać usunięty z listy załączników
+
+Wartość zwracana:
+0 w przypadku sukcesu operacji
+-1 jeśli za msg podano NULL
+-2 jeśli za file_name przekazano NULL
+-3 jeśli file_name to pusty łańcuch
+-10 jeśli nie odnaleziono załącznika o podanej nazwie
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+//inicjalizacja msg i dodanie zalaczanika
+bmd_smime_remove_attachment(msg, "plik.pdf");
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+long bmd_smime_has_attachment(bmd_smime_msg * msg, char *file_name);
+
+Funkcja bmd_smime_has_attachment() pozwala na sprawdzenie, czy plik o podanej nazwie jest już dołączony
+do listy załączników. Można podać ścieżkę do pliku - funkcja sama wyodrębni nazwę pliku.
+
+Parametry:
+- msg to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- file_name to nazwa pliku załącznika
+
+Wartość zwracana:
+1 jeśli plik znajduje się już w załącznikach wiadomości
+0 jeśli plik nie został jeszcze dodany jako załącznik wiadomości
+Wartość ujemna w przypadku błędu:
+-1 jeśli za msg podano NULL
+-2 jeśli za file_name podano NULL
+-3 jeśli file_name jest pustym łańcuchem
+-4 jesli wystapił błąd podczas wyszukiwania załącznika
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+//inicjalizacja msg, dodawanie załączników itp.
+bmd_smime_has_attachment(msg, "attach.pdf");
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_noSign(bmd_smime_msg *msg);
+
+Funkcja bmd_smime_noSign() na podstawie ustawionych danych składa wiadomość bez podpisu. Funkcja musi zostać wywołana
+po ustawieniu nagłówka, treści oraz załączników wiadomości.
+
+Parametry:
+- msg	 to wskaźnik do zainicjowanej struktury bmd_smime_msg
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów).
+Dla rozpoznania etapu, w którym ta funkcja zawodzi, zdefiniowano trzy dodatkowe kody błędów:
+	- BMD_SMIME_ERR_CREATE_ENTITY, jeśli wystąpił błąd podczas przygotowywania wiadomości
+	- BMD_SMIME_ERR_CREATE_SMIME, jeśli wystąpił błąd podczas składania wiadomości MIME
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+//inicjalizacja i ustawianie potrzebnych danych
+bmd_smime_noSign(msg);
+.
+.
+
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_sign(bmd_smime_msg *msg, bmd_crypt_ctx_t *ctx);
+
+Funkcja bmd_smime_sign() składa wiadomość na podstawie ustawionych danych oraz podpisuje ją wykorzystując wcześniej przygotowany kontekst. Funkcja musi zostać wywołana po ustawieniu nagłówka, treści oraz załączników wiadomości.
+
+Parametry:
+- msg	 to wskaźnik do zainicjowanej struktury bmd_smime_msg
+- ctx	 to przygotowany wcześniej kontekst kryptograficzny do podpisania wiadmości
+Uwaga:
+Raz ustawiony kontekst podpisujący może być wielokrotnie wykorzystywany do podpisywania.
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów).
+Dla rozpoznania etapu, w którym ta funkcja zawodzi, zdefiniowano trzy dodatkowe kody błędów:
+	- BMD_SMIME_ERR_CREATE_ENTITY, jeśli wystąpił błąd podczas przygotowywania wiadomości do podpisu
+	- BMD_SMIME_ERR_SIGN_ENTITY, jeśli wystąpił problem podczas podpisywania wiadomości
+	- BMD_SMIME_ERR_CREATE_SMIME, jeśli wystąpił błąd podczas składania wiadomości SMIME (wiadomość + podpis)
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+bmd_crypt_ctx_t *ctx=NULL;
+//inicjalizacja i ustawianie potrzebnych danych, przygotowanie kontekstu kryptograficznego
+bmd_smime_sign(msg, ctx);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_send(bmd_smime_msg * msg, mail_send_info_t * mailer);
+
+Funkcja bmd_smime_send() wysyła podpisaną wiadomość. Funkcja oparta jest na bibliotece libbmdmail i wymaga odpowiednio przygotowanej strukury mail_send_info_t. Funckja musi zostać wywołana po przygotowaniu wiadmości za pomocą funkcji bmd_smime_sign() / bmd_smime_noSign().
+
+Parametry:
+- msg	 to wskaźnik do przygotowanej struktury bmd_smime_msg
+- mailer to wskaźnik na przygotowaną strukturę mail_send_info_t definiowaną w bibliotece libbmdmail. W strukturze
+	wypełnione muszą być
+	- adres serwera smtp
+	- adres odbiorcy wiadomości
+	- dane autoryzacyjne, jeśli autoryzacja jest wymagana
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów).
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+mail_send_info_t * mailer=NULL;
+//przygotowanie i podpisanie wiadomości
+//przygotowanie struktury mailer
+bmd_smime_send(msg, mailer);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_toGenBuf(bmd_smime_msg * msg, GenBuf_t ** dest);
+
+Funkcja bmd_smime_toGenBuf() alokuje bufor i wrzuca do niego podpisaną wiadomość.
+
+Parametry:
+- msg	 to wskaźnik do przygotowanej struktury bmd_smime_msg
+- dest	 to adres wskaźnika do tworzonego i wypełnianego bufora
+
+Wartość zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+albo odpowiedni kod błędu (zgodny z predefiniowanymi kodami błedów).
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+GenBuf_t *bufor=NULL;
+//przygotawanie i podpisanie wiadomosci
+bmd_smime_toGenBuf(msg, &bufor);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_destroy(bmd_smime_msg ** msg);
+
+Funkcja bmd_smime_destroy() niszczy strukturę bmd_smime_msg i zwalnia zaalokowaną pamięć.
+
+Parametry:
+- msg	 adres wskaźnika na strukturę bmd_smime_msg, która ma zostać zniszczona
+
+Wartośc zwracana:
+BMD_OK, jeśli operacja przebiegła poprawnie
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+//stworzenie, przygotowanie i wysłanie wiadomości
+bmd_smime_destroy(&msg);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmd_smime_fill_mailer(bmd_smime_msg *msg, mail_send_info_t * mailer)
+
+Funkcja bmd_smime_fill_mailer() pozwala ustawić pola mail_body oraz recepient_to struktury mail_send_info_t
+na podstawie wiadomości MIME reprezentowanej przez msg.
+
+Parametry:
+- msg to przygotowana struktura bmd_smime_msg
+- mailer to struktura mail_send_info_t, w której mają zostać ustawione pola odpowiadające treści wysyłanej wiadomości i adres nadawcy
+
+Wartość zwracana:
+0, jeśli operacja przebiegła poprawnie
+W przypadku błędu odpowiednia wartość ujemna:
+-1 jeśli za msg podano NULL
+-2 jeśli za mailer podano NULL
+-3 jeśli nie został ustawiony adreat bądź nie złożono wiadomości za pomocą bmd_smime_sign() / bmd_smime_noSign()
+-4, -5 jeśli wystąpiły problemy z alokacją pamięci
+
+Przykład wywołania:
+.
+bmd_smime_msg *msg=NULL;
+mail_send_info_t mailer;
+//przygotowanie wiadomości
+bmd_smime_fill_mailer(msg, &mailer);
+.
+.

@@ -1,0 +1,13 @@
+GOTOWE TESTY:
+
+Testy wykorzystują słowniki zdefiniowane w test_dictionary.h .
+
+1) test_config.c
+Plik zawiera kod do testowania obsługi konfiguracji zawartej w pliku.
+W zależności od zdefniowania/braku definicji TEST_LOAD_MEM, przeprowadzany jest test przy wykorzystaniu funkcji
+bmdconf_load_memory()/bmdconf_load_file().
+Testy przeprowadzane są dla pliku konfiguracyjnego test_file.conf .
+
+2) test_confdb.c
+Plik zawiera kod do testowania obsługi konfiguracji zawartej w bazie danych. Testowa baza danych tworzona jest
+skryptem testdb.sql .

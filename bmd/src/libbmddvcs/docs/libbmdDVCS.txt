@@ -1,0 +1,853 @@
+Autor: Włodzimierz Szczygieł (Dział Programowania, Unizeto Technologies SA)
+
+Przeznaczenie biblioteki:
+Biblioteka libbmddvcs pozwala na integrację z usługami świadczonymi przez serwery DVCS.
+Z założenia umożliwia realizację usług za pomocą prostego API. 
+Realizowane usługi, to:
+1) poświadczenie poprawności podpisanego dokumentu (podpisu wewnętrznego oraz zewnętrznego)
+2) poświadczenie ważności certyfikatu
+3) poświadczenie posiadania danych
+4) poświadczenie istnienia danych
+
+
+Zależności z innymi bibliotekami:
+1) Transmisja sieciowa realizowana jest za pomocą mechanizmów bilbioteki CURL.
+2) Kryptografia realizowana jest za pomocą funkcjonalności biblioteki libbmdpki.
+3) Zależność z libbmd - Należy pamietać, że wszędzie tam, gdzie wykorzystywane jest API libbmdDVCS, na początku
+	zaincjalizować należy bibliotekę libbmd za pomocą funkcji bmd_init() oraz sfinalizować jej
+	wykorzystanie za pomocą funkcji bmd_end(). 
+
+
+Wykorzystanie API biblioteki libbmdDVCS:
+
+Wykonanie określonej usługi możliwe jest za pomocą wywołania sekwencji funkcji bibliotecznych, z których każda
+operuje na strukturze bmdDVCS_t. Struktura ta przechowuje adres url serwera DVCS oraz dane, na podstawie których
+ma zostać wygenerowane odpowiednie żądanie. Wypełnienie struktury odbywa się za pomocą odpowiednio
+przygotowanych funkcji. Sekwencja wywołań funkcji wyglada następująco
+1) Inicjalizacja struktury bmdDVCS_t za pomocą jednej z funkcji: 
+	a) bmdDVCS_load_Sig(), bmdDVCS_load_fileSig() dla sprawdzenia poprawności podpisu.
+		W zainicjowanej strukturze można dodatkowo ustawić
+		znacznik czasu dla weryfikowanego podpisu ( za pomocą funkcji bmdDVCS_set_proof_TimestampToken() ),
+		albo czas wyciągniety ze znacznika czasu ( za pomocą funkcji bmdDVCS_set_proof_Time() ).
+		Pozwala to na weryfikowanie podpisu z uwzględnieniem wartości dowodowej.
+	b) bmdDVCS_load_Cert(), bmdDVCS_load_fileCert(), bmdDVCS_load_memCert dla sprawdzenia ważności certyfikatu
+	c) bmdDVCS_load_data(), bmdDVCS_load_fileData() dla poświadczenia posiadania/istnienia danych
+2) Ustawienie adresu serwera DVCS za pomocą funkcji bmdDVCS_set_server() i opcjonalne ustawienie timeout'u za pomocą funkcji
+   bmdDVCS_set_connectionTimeout().
+3) Wykonanie odpowiedniej usługi:
+	a) bmdDVCS_validate_signature() dla sprawdzenia poprawności podpisu wewnętrznego
+	b) bmdDVCS_validate_externalSignature() dla sprawdzenia poprawności podpisu zewnętrznego
+		W przypadku weryfikacji podpisu zewnętrznego na podstawie skrótu z podpisanych danych (flaga BMDDVCS_EXTERNAL_DOCUMENT_HASH),
+		wywołanie tej funkcji musi być poprzedzone wywołaniem funkcji bmdDVCS_set_hash_algorithm().
+	c) bmdDVCS_verify_cert() dla sprawdzenia ważności certyfikatu
+	d) bmdDVCS_certify_possession_of_data() dla poświadczenia posiadania danych
+	e) bmdDVCS_certify_existence_of_data() dla poświadczenia istnienia danych (na podstawie skrótu)
+4) Opcjonalne pobranie poświadczenia wydanego przez serwer DVCS za pomocą funkcji bmdDVCS_get_dvcsCert()
+5) Opcjonalne pobranie komunikatu błędu w przypadku, gdy wystąpił błąd przy próbie wykonania usługi DVCS
+   ( za pomocą funkcji bmdDVCS_get_errString() )
+6) Niszczenie struktury za pomocą funkcji bmdDVCS_destroy()
+
+
+
+
+/*--------*/
+libbmdDVCS API - szczegółowy opis:
+/*--------*/
+
+
+
+int bmdDVCS_load_fileSig(char *file_name, bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_load_fileSig() alokuje strukture bmdDVCS_t i ładuje do niej podpis, którego poprawność 
+ma zostać sprawdzona. Podpis znajduje się w pliku o wksazanej ścieżce.
+
+Parametry wejściowe:
+- file_name to łańcuch znakowy ze ścieżką do pliku zawierającego podpis
+
+Parametry wyjściowe:
+- input_data to adres wskaznika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0, jeśli operacja przebiegła poprawnie 
+W przypadku niepowodzenia odpowiednia wartość ujemna:
+-1 jeśli za file_name podano NULL
+-2 jeśli za input_data podano NULL
+-3 jeśli wartość wyłuskana z input_data nie jest wyNULLowana
+-4 jeśli nie można wczytać pliku file_name
+-5 w przypadku problemów z alokacją pamięci
+
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+bmdDVCS_load_fileSig("plik.sig", &data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_load_Sig(GenBuf_t *signature, bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_load_Sig() działa analogicznie do funkcji bmdDVCS_load_fileSig(). Podpis w tym przypadku nie
+jest ładowany ze wskazanego pliku, tylko z przygotowanego wcześniej bufora generycznego.
+
+Parametry wejściowe:
+- signature to bufor generyczny z podpisem w postaci binarnej
+
+Parametry wyjściowe:
+- input_data to adres wskaznika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie.
+W przypadku niepowodzenia odpowiednia wartość ujemna:
+-1 jeśli za signature podano NULL
+-2 jeśli bufor signature jest pusty
+-3 jeśli za input_data podano NULL
+-4 jeśli wartość wyłuskana z input_data nie jest wyNULLowana
+-5, -6, -7 w przypadku problemów z alokacją pamięci
+
+
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+GenBuf_t *bufor=NULL;
+// alokacja i wypelnianie bufora ...
+bmdDVCS_load_Sig(bufor, &data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_set_server(bmdDVCS_t *input_data, char *url);
+
+Funkcja bmdDVCS_set_server() ustawia adres serwera, który będzie miał wykonać żądaną usługę. Adres serwera DVCS
+można zmieniać dopóki struktura bmdDVCS_t nie zostanie zniszczona. Dzięki temu, jeśli żądana usługa nie
+zostanie wykonana na jednem serwerze, można probować na innych serwerach bez potrzeby ponownego przygotowywania
+struktury bmdDVCS_t.
+
+Parametry wejściowe:
+- input_data to wskaznik na przygotowaną strukturę bmdDVCS_t
+- url to łańcuch znakowy z adresem serwera DVCS (komunikacja odbywa się protokołem HTTP i na początku adresu 
+	wymagane jest wstawienie "http://")
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+W przypadku niepowodzenia odpowiednia wartość ujemna:
+-1 jeśli za input_data podano NULL
+-2 jeśli za url podano NULL
+-3 w przypadku problemu z alokacją pamięci
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+// przygotowanie struktury bmdDVCS_t ... 
+bmdDVCS_set_server(data, "http://www.cebit.unizeto.pl:80/dvcsserver");
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_set_connectionTimeout(bmdDVCS_t *input_data, int timeout);
+
+Funkcja bmdDVCS_set_connectionTimeout() ustawia timeout na połączenie z serwerem DVCS.
+Jeśli timeout minie, wówczas funkcje wysyłające żądanie wykonania odpowiedniej usługi wyjdą z kodem oznaczającym,
+że wystąpił błąd podczas próby wykonania usługi. Funkcję można wykonywać wielokrotnie na strukturze bmdDVCS_t.
+
+Perametry wejściowe:
+- input_data to wskaźnik na przygotowaną strukturę bmdDVCS_t
+- timeout to ilosc sekund określających wielkość timeout'u
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+W przypadku niepowodzenia odpowiednia wartość ujemna:
+-1 jeśli za input_data podano NULL
+-2 jeśli za timeout podano 0 lub ujemną liczbę sekund
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+// przygotowanie struktury bmdDVCS_t ...
+bmdDVCS_set_connectionTimeout(data, 30);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_set_proof_TimestampToken(bmdDVCS_t* input_data, GenBuf_t* binaryTimestampToken);
+
+Funkcja bmdDVCS_set_proof_TimestampToken() ustawia znacznik czasu, który będzie uwzględniany przy weryfikacji podpisu.
+W przypadku, gdy niniejsza funkcja wywołana jest kolejny raz dla tej samej struktury bmdDVCS_t, lub poprzedzało ją wywołanie
+funkcji bmdDVCS_set_proof_Time(), wówczas poprzednio ustawione wartości zastępowane są nowymi (nie ma możliwości jednoczesnego
+ustawienia znacznika czasu oraz czasu wyciągnietego ze znacznika czasu dla tej samej struktury bmdDVCS_t).
+
+Parametry wejściowe:
+- input_data to wskaznik na przygotowaną strukturę bmdDVCS_t
+- binaryTimestampToken to bufor ze znacznikiem czasu dla weryfikowanego podpisu
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+W przypadku niepowodzenia odpowiednia wartość ujemna:
+-1 jeśli za input_data podano NULL
+-2 jeśli za binaryTimestampToken podano NULL
+-3 jeśli bufor binaryTimestampToken jest pusty
+-11 jeśli nie można zdekodować znacznika czasu
+-12 jeśli zawartość buforu nie zawiera podpisu (tj.znacznika czasu)
+-13 w przypadku problemów z alokacją pamięci
+
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+GenBuf_t *timestamp=NULL;
+// przygotowanie struktury bmdDVCS_t oraz wczytanie znacznika czasu do bufora... 
+bmdDVCS_set_proof_TimestampToken(data, timestamp);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_set_proof_Time(bmdDVCS_t* input_data, GenBuf_t* binaryTimestampToken);
+
+Funkcja bmdDVCS_set_proof_Time() ustawia czas (wyciagniety z przekazywanego jako parametr znacznika czasu), który będzie
+uwzględniany przy weryfikacji podpisu. W przypadku, gdy niniejsza funkcja wywołana jest kolejny raz dla tej samej struktury
+bmdDVCS_t, lub poprzedzało ją wywołanie funkcji bmdDVCS_set_proof_TimestampToken(), wówczas poprzednio ustawione wartości
+zastępowane są nowymi (nie ma możliwości jednoczesnego ustawienia znacznika czasu oraz czasu wyciągnietego ze znacznika czasu
+dla tej samej struktury bmdDVCS_t).
+
+Parametry wejściowe:
+- input_data to wskaznik na przygotowaną strukturę bmdDVCS_t
+- binaryTimestampToken to bufor ze znacznikiem czasu dla weryfikowanego podpisu
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+W przypadku niepowodzenia odpowiednia wartość ujemna:
+-1 jeśli za input_data podano NULL
+-2 jeśli za binaryTimestampToken podano NULL
+-3 jeśli bufor binaryTimestampToken jest pusty
+-11, -13, -15 jeśli nie można zdekodować znacznika czasu
+-12, -14 jeśli zawartość buforu nie zawiera podpisu (tj.znacznika czasu)
+-16 w przypadku problemów z alokacją pamięci
+
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+GenBuf_t *timestamp=NULL;
+// przygotowanie struktury bmdDVCS_t oraz wczytanie znacznika czasu do bufora... 
+bmdDVCS_set_proof_Time(data, timestamp);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_clear_proof(bmdDVCS_t* input_data);
+
+Funkcja bmdDVCS_clear_proof() czyści informacje ustawiane za pomocą wywołania funkcji bmdDVCS_set_proof_TimestampToken() lub
+bmdDVCS_set_proof_Time(). Dzięki temu możliwa jest rezygnacja z uwzględniania znacznika czasu przy weryfikacji podpisu bez
+konieczności przygotowywania od początku struktury bmdDVCS_t.
+
+Parametry wejściowe:
+- input_data to wskaznik na przygotowaną strukturę bmdDVCS_t
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+// przygotowanie struktury bmdDVCS_t oraz ustawienie znacznika czasu
+bmdDVCS_clear_proof(data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+long bmdDVCS_set_hash_algorithm(bmdDVCS_t* input_data, char* hashAlgorithmOid);
+
+Funkcja bmdDVCS_set_hash_algorithm() ustawia OID funkcji skrótu zastosowanej przy
+generowaniu weryfikowanego podpisu. Funkcja potrzebna jest tylko w przypadku
+weryfikacji podpisu zewnętrznego w oparciu o skrót z podpisanych danych
+i wówczas musi być wywołana przed funkcją bmdDVCS_validate_externalSignature().
+
+Parametry wejściowe:
+- input_date to wskaźnik na przygotowaną wcześciej strukture bmdDVCS_t
+- hashAlgorithmOid to wskaźnik do łańucha z OID'em funkcji skrótu
+
+Wartość zwracana:
+0	jeśli operacja się powiodła
+-1	jeśli za input_data podano NULL
+-2	jeśli za hashAlgorithmOid podano NULL
+-3	jeśli hashAlgorithmOid ma niepoprawny format (wymagana notacja liczbowo-kropkowa)
+-11	jeśli wystąpiły problemy z alokacją pamięci
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+// przygotowanie struktury bmdDVCS_t
+bmdDVCS_set_hash_algorithm(data, "1.3.14.3.2.26"); // SHA-1
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_validate_signature(bmdDVCS_t *input_data, bmd_crypt_ctx_t *context);
+
+Funkcja bmdDVCS_validate_signature() pozwala na wykonanie usługi sprawdzenia poprawności podpisu wewnętrznego.
+
+Parametry wejściowe:
+- input_data to wskaznik na przygotowana wcześciej strukture bmdDVCS_t. Dla tej funkcji struktura bmdDVCS_t
+	może zostać przygotowana za pomocą funkcji: 
+		a) bmdDVCS_load_fileSig() bądź
+		b) bmdDVCS_load_Sig();
+- context to przygotowany wcześniej kontekst kryptograficzny z certyfikatem, którym podpisane zostanie żądanie 
+	usługi DVCS.
+
+Wartość zwracana:
+0	jeśli podpis jest poprawny (podpis kwalifikowany)	
+1	jeśli podpis jest poprawny (poświadczenie wydane warunkowo, podpis zwykły)
+-1, jeśli podpis nie jest poprawny (również jeśli certyfikat wykorzystany do podpisania jest nieważny)
+
+Inna wartość ujemna w przypadku niepowodzenia operacji:
+-11	jeśli za input_data podano NULL
+-12	jeśli nie został ustawiony adres serwera DVCS
+-13	jeśli za context podano NULL
+-14	jeśli wystąpił błąd podczas próby wykonania usługi
+
+Przykład wywołania:
+.
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *data=NULL;
+// przygotowanie kontekstu kryptograficznego i struktury bmdDVCS_t
+bmdDVCS_validate_signature(data, context);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_validate_externalSignature(bmdDVCS_t *input_data, GenBuf_t *document, long document_type, bmd_crypt_ctx_t *context);
+
+Funkcja bmdDVCS_validate_externalSignature() pozwala na wykonanie usługi sprawdzenia poprawności podpisu zewnętrznego.
+Uwaga:
+Należy zaznaczyć, że obecna implementacja nie realizuje strumieniowości przesyłania danych i uniemożliwia weryfikcję
+podpisu wykonanego na danych o dużym rozmiarze, tzn. takich, których nie można wczytać do pamięci.
+
+Parametry wejściowe:
+- input_data to wskaznik na przygotowana wcześciej strukture bmdDVCS_t. Dla tej funkcji struktura bmdDVCS_t
+	może zostać przygotowana za pomocą funkcji: 
+		a) bmdDVCS_load_fileSig() bądź
+		b) bmdDVCS_load_Sig();
+- document to wskaźnik na bufor z danymi, które zostały podpisane (bądź skrót z tych danych np. 20 bajtow dla SHA-1),
+	a wykonany podpis zostal zaladowany za pomocą funkcji bmdDVCS_load_fileSig() bądź bmdDVCS_load_Sig()
+- document_type to flaga określająca, że:
+	a) document to bufor z danymi, które zostały podpisane (wartość BMDDVCS_EXTERNAL_DOCUMENT_CONTENT)
+	b) document to bufor ze skrótem SHA-1 z danych, które zostały podpisane (wartość BMDDVCS_EXTERNAL_DOCUMENT_HASH)
+- context to przygotowany wcześniej kontekst kryptograficzny z certyfikatem, którym podpisane zostanie żądanie 
+	usługi DVCS.
+
+Uwaga:
+W buforze, zamiast danych na których wykonano podpis, może być umieszczony skrót wyliczony z tych danych.
+"Wówczas wydawane jest poświadczenie ze statusem "Warunkowo zweryfikowany pozytywnie", co przerzuca na weryfikującego
+część odpowiedzialności."
+
+Wartość zwracana:
+0	jeśli podpis jest poprawny (podpis kwalifikowany)	
+1	jeśli podpis jest poprawny (poświadczenie wydane warunkowo, podpis zwykły)
+-1, jeśli podpis nie jest poprawny (również jeśli certyfikat wykorzystany do podpisania jest nieważny)
+
+Inna wartość ujemna w przypadku niepowodzenia operacji:
+-11	jeśli za input_data podano NULL
+-12	jeśli nie został ustawiony adres serwera DVCS
+-13	jeśli za document podano NULL
+-14	jeśli bufor document jest pusty mime rozmiaru ustawionego na wartość > 0
+-15	jeśli za context podano NULL
+-16	jeśli wystąpił błąd podczas próby wykonania usługi
+-17	jeśli załadowano wcześniej dane tak jak dla poświadczania posiadania/istnienia danych
+
+Przykład wywołania:
+.
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *data=NULL;
+GenBuf_t *document=NULL;
+// przygotowanie kontekstu kryptograficznego i struktury bmdDVCS_t, wczytanie danych, na których wykonano podpis
+bmdDVCS_validate_externalSignature(data, document, BMDDVCS_EXTERNAL_DOCUMENT_CONTENT, context);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_get_dvcsCert(bmdDVCS_t *input_data, GenBuf_t **dvcsCert);
+
+Funkcja bmdDVCS_get_dvcsCert() tworzy bufor z poświadczeniem wydanym przez serwer DVCS, przesłanym w odpowiedzi na żądanie.
+Bufor zawiera zakodowaną w DER strukturę DVCSCertInfo.
+
+Parametry wejściowe:
+- input_data to wskaźnik na strukturę bmdDVCS_t
+
+Parametry wyjściowe:
+- dvcsCert to adres wskaźnika na tworzony bufor z poświadczeniem
+
+Wartość zwracana:
+0 jeśli operacja się powiodła
+Odpowiednia wartość ujemna w przydadku niepowodzenia:
+-1 jeśli za input_data podano NULL
+-2 jeśli za dvcsCert podano NULL
+-3 jeśli wartość wyłuskana z dvcsCert nie jest wyNULLowana
+-4 jeśli w odpowiedzi serwera DVCS nie było poświadczenia
+-5 w przypadku problemów z alokacją pamięci
+Uwaga!!!
+Poswiadczenie może "poswiadczać" zarówno poprawność jak i nieważność podpisu/certyfikatu !!!
+
+Przykład wywołania:
+.
+GenBuf_t *poswiadczenie=NULL;
+bmdDVCS_t *data=NULL;
+// weryfikacja poprawności podpisu/ważności certyfikatu
+bmdDVCS_get_dvcsCert(data, &poswiadczenie);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+int bmdDVCS_get_errString(bmdDVCS_t *input_data, char** errString);
+
+Funkcja bmdDVCS_get_errString() wydobywa komunikat błędu zwracany w odpowiedzi serwera DVCS.
+Komunikat ten można odczytac, gdy wystąpi błąd podczas przetwarzania żądania na serwerze DVCS.
+W przypadku poprawnie obsłużonego żądania w komunikacie znajdzie się jedynie kod odpowiedzi HTTP.
+W przypadku, gdy połączenie z serwerem DVCS jest niemożliwe, komunikat ten nie jest dostępny.
+
+Parametry wejściowe:
+- input_data to wskaźnik na strukturę bmdDVCS_t
+
+Parametry wyjściowe:
+- errString to adres wskaźnika na łańcuch z komunikatem błędu
+	(łańcuch jest alokowany dynamicznie i po wykorzystaniu należy ręcznie zwolnić pamięć)
+
+Wartość zwracana:
+- 0 w przypadku sukcesu tj. jeśli dostępny jest komunikat błędu serwera DVCS
+Odpowiednia wartość ujemna w przydadku niepowodzenia:
+-1 jeśli za input_data podano NULL
+-2 jeśli za errString podano NULL
+-3 jeśli wartość wyłuskana z errString nie jest wyNULLowana
+-4 jeśli w odpowiedzi serwera DVCS nie ma komunikatu błędu
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+char *errString=NULL;
+// weryfikacja poprawności podpisu/ważności certyfikatu
+bmdDVCS_get_errString(data, &errString);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+int bmdDVCS_destroy(bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_destroy() niszczy strukturę bmdDVCS_t.
+
+Parametry wejściowe:
+- input_data to adres wskaźnika na niszczoną strukturę bmdDVCS_t
+
+Wartość zwracana:
+- 0 w przypadku sukcesu (funkcja zawsze zwraca tę wartość)
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+// przygotowanie struktury bmdDVCS_t i wykonanie żądanej usługi
+bmdDVCS_destroy(&data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_load_fileCert(char *pfx_path, char *password, bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_load_fileCert() alokuje strukture bmdDVCS_t i ładuje do niej certyfikat, którego ważność
+ma zostać sprawdzona. Certyfikat znajduje się w pliku o wskazanej ścieżce (*.pfx, *.p12).
+
+Parametry wejściowe:
+- pfx_path to łańcuch znakowy ze ścieżką do pliku przechowującego certyfikat przeznaczony do sprawdzenia
+- password to łańcuch znakowy z hasłem do wczytywanego certyfikatu
+
+Parametry wyjściowe:
+- input_data to adres wskaznika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+Odpowiednia wartość ujemna w przypadku niepowodzenia operacji:
+-1 jeśli za pfx_path podano NULL
+-2 jeśli za password podano NULL
+-3 jeśli za input_data podano NULL
+-4 jeśli wartość wyłuskana z input_data nie jest wyNULLowana
+-5 jeśli nie można wczytać kontenera PKCS#12
+-6 w przypadku problemów z alokacją pamięci
+-7 jeśli nie można wydobyć certyfikatu z kontenera PKCS#12
+
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+bmdDVCS_load_fileCert("certyfikat.pfx", "54321", &data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_load_memCert(GenBuf_t *cert, bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_load_memCert() alokuje strukture bmdDVCS_t i ładuje do niej certyfikat, którego ważność
+ma zostać sprawdzona. Certyfikat znajduje się już w pamięci.
+
+Uwaga!!!
+Zawartości bufora z certyfikatem NIE MYLIĆ z zawartością pliku .pfx !!!
+
+Parametry wejściowe:
+- cert to bufor z certyfikatem przeznaczonym do sprawdzenia
+
+Parametry wyjściowe:
+- input_data to adres wskaźnika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+Odpowiednia wartość ujemna w przypadku niepowodzenia operacji:
+-1 jeśli za cert podano NULL
+-2 jeśli bufor cert jest pusty
+-3 jeśli za input_data podano NULL
+-4 jeśli wartość wyłuskana z input_data nie jest wyNULLowana
+-5 jeśli wystapił problem z alokacją pamięci
+-6 jeśli zawartość bufora cert nie jest poprawną strukturą certyfikatu
+
+Przykład wywołania:
+.
+GenBuf_t *cert=NULL;
+bmdDVCS_t *data=NULL;
+//wczytanie certyfikatu do bufora cert
+bmdDVCS_load_memCert(cert, &data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_load_Cert(char *pkcs11_library_path, bmdDVCS_t **input_data, unsigned int cert_num);
+
+Funkcja bmdDVCS_load_Cert() działa analogicznie do funkcji bmdDVCS_load_fileCert(). Certyfikat w tym przypadku
+nie jest ładowany ze wskazanego pliku, tylko z karty.
+
+Parametry wejściowe:
+- pkcs11_library_path to łańcuch znakowy ze ścieżką do bilbioteki PKCS11
+- cert_num określa numer certyfikatu w liscie ( w przypadku wielu czytników ); obowiązuje numeracja od 0;
+	dla jednego czytnika musi być 0;
+
+Parametry wyjściowe:
+- input_data to adres wskaznika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0 jeśli operacja przebiegła poprawnie
+Odpowiednia wartość ujemna w przypadku niepowodzenia operacji:
+-1 jeśli za pkcs11_library_path podano NULL
+-2 jeśli za input_data podano NULL
+-3 jeśli wartość wyłuskana z input_data nie jest wyNULLowana
+-4 jeśli nie można stworzyć kontekstu kryptograficznego
+-5 w przypadku problemu z alokacją pamięci
+-6 jeśli nie można wydobyć certyfikatu z karty
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+bmdDVCS_load_Cert("cryptoCertumPKCS11.dll", &data, 0);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_verify_cert(bmdDVCS_t *input_data, bmd_crypt_ctx_t *context);
+
+Funkcja bmdDVCS_verify_cert() pozwala na wykonanie usługi sprawdzenia ważności certyfikatu.
+
+Parametry wejściowe:
+- input_data to wskaźnik na przygotowana wcześciej strukture bmdDVCS_t. Dla tej funkcji struktura bmdDVCS_t
+	może zostać przygotowana za pomocą funkcji:
+		a) bmdDVCS_load_fileCert()
+		b) bmdDVCS_load_Cert()
+		c) bmdDVCS_load_memCert();
+- context to przygotowany wcześniej kontekst kryptograficzny z certyfikatem, którym podpisane zostanie żądanie 
+	usługi DVCS.
+
+Wartość zwracana:
+0	jeśli certyfikat jest ważny (certyfikat kwalifikowany)
+1	jeśli certyfikat jest ważny (poświadczenie wydane warunkowo, certyfikat zwykły)
+-1	jeśli certyfikat nie jest ważny
+Inna wartość ujemna w przypadku niepowodzenia operacji:
+-11 jeśli za input_data podano NULL
+-12 jeśli nie ustawiono adresu serwera DVCS
+-13 jeśli za context podano NULL
+-14 jeśli wystąpił błąd podczas próby wykonania usługi
+
+
+Przykład wywołania:
+.
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *data=NULL;
+// przygotowanie kontekstu kryptograficznego i struktury bmdDVCS_t
+bmdDVCS_verify_cert(data, context);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_load_data(GenBuf_t *data, bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_load_data() alokuje strukture bmdDVCS_t i ładuje dane, dla których będzie wykonywane poświadczanie
+posiadania bądź istnienia. Dane znajdują się w załadowanym wcześniej buforze data. Tworzona jest kopia tego bufora.
+
+Parametry wejściowe:
+- data to wskaźnik na bufor z danymi, których posiadanie/istnienie ma zostać poświadczone
+
+Parametry wyjściowe:
+- input_data to adres wskaźnika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0 w przypadu sukcesu operacji
+Odpowiednia wartość ujemna w przypadku błędu:
+-1 gdy z data podano NULL
+-2 gdy bufor data jest pusty
+-3 gdy za input_data podano NULL
+-4 gdy wartość wyłuskana z input_data nie jest wyNULLowana
+-5, -6 w przypadku problemów z alokacją pamięci
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+GenBuf_t *document=NULL;
+//ustawienie danych w buforze document
+bmdDVCS_load_data(document, &data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_load_fileData(char *file_name, bmdDVCS_t **input_data);
+
+Funkcja bmdDVCS_load_fileData() alokuje strukture bmdDVCS_t i ładuje dane, dla których będzie wykonywane poświadczanie
+posiadania bądź istnienia. Dane znajdują się w pliku file_name.
+
+Parametry wejsciowe:
+- file_name to nazwa pliku z danymi, których posiadanie/istnienie ma zostać poświadczone
+
+Parametry wyjściowe:
+- input_data to adres wskaźnika do bmdDVCS_t, pod którym dostępna będzie zaalokowana struktura
+
+Wartość zwracana:
+0 w przypadu sukcesu operacji
+Odpowiednia wartość ujemna w przypadku błędu:
+-1 gdy z file_name podano NULL
+-2 gdy łańcuch file_name jest pusty
+-3 gdy za input_data podano NULL
+-4 gdy wartość wyłuskana z input_data nie jest wyNULLowana
+-5 w przypadku problemów z alokacją pamięci
+-6 gdy nie można załadować pliku file_name
+
+Przykład wywołania:
+.
+bmdDVCS_t *data=NULL;
+bmdDVCS_load_fileData("plik.doc", &data);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_certify_possession_of_data(bmdDVCS_t *input_data, bmd_crypt_ctx_t *context);
+
+
+Funkcja bmdDVCS_certify_possession_of_data() pozwala uzyskać poświadczenie posiadania danych załadowanych wcześniej 
+za pomocą funkcji bmdDVCS_load_data() lub bmdDVCS_load_fileData().
+
+Parametry wejściowe:
+- input_data to wskaźnik na przygotowana wcześciej strukture bmdDVCS_t. Dla tej funkcji struktura bmdDVCS_t
+	może zostać przygotowana za pomocą funkcji:
+		a) bmdDVCS_load_data()
+		b) bmdDVCS_load_fileData();
+- context to przygotowany wcześniej kontekst kryptograficzny z certyfikatem, którym podpisane zostanie żądanie 
+	usługi DVCS.
+
+Wartość zwracana:
+0 gdy wydane zostało poświadczenie posiadania danych
+-1 gdy wydane zostało poświadczenie, ale jego status mówi, że serwer DVCS miał problem z wykonaniem tej operacji
+	(taki wynik intepretuje się, jakby posiadanie danych nie zostało poświadczone)
+Inna wartość ujemna w przypadku błędu:
+-11 jesli za input_data podano NULL
+-12 jesli nie został ustawiony adres usługi DVCS
+-13 jesli nie zostały ustawione dane, których posiadanie ma być poświadczone
+-14 jesli za context podano NULL
+-15 jesli wystąpił błąd podczas wykonywania usługi DVCS
+
+Przykład wywołania:
+.
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *data=NULL;
+// przygotowanie kontekstu kryptograficznego i struktury bmdDVCS_t
+bmdDVCS_certify_possesion_of_data(data, context);
+.
+.
+
+/*----------------------------------------------------------------*/
+
+
+
+int bmdDVCS_certify_existence_of_data(bmdDVCS_t *input_data, bmd_crypt_ctx_t *context, unsigned int countHashFlag);
+
+
+Funkcja bmdDVCS_certify_existence_of_data() pozwala uzyskać poświadczenie istnienia danych załadowanych wcześniej 
+za pomocą funkcji bmdDVCS_load_data() lub bmdDVCS_load_fileData(). W zależności od wartości coutHashFlag, poświadczane
+dane będą interpretowane jako wyliczony skrót SHA-1, bądź też skrót SHA-1 dopiero zostanie wyliczony.
+
+Parametry wejściowe:
+- input_data to wskaźnik na przygotowaną wcześciej strukturę bmdDVCS_t. Dla tej funkcji struktura bmdDVCS_t
+	może zostać przygotowana za pomocą funkcji:
+		a) bmdDVCS_load_data()
+		b) bmdDVCS_load_fileData();
+- context to przygotowany wcześniej kontekst kryptograficzny z certyfikatem, którym podpisane zostanie żądanie 
+	usługi DVCS.
+- countHashFlag to flaga mówiąca, czy poświadczane dane traktowane są jako wyliczony skrót SHA-1, czy też skrót SHA-1
+	ma zostać dopiero policzony. Zdefiniowane są następujące flagi:
+		a) BMDDVCS_HASH_AT_INPUT - jeśli załadowane dane są wyliczonym skrótem SHA-1
+		b) BMDDVCS_COUNT_HASH - jeśli skrót SHA-1 ma zostać dopiero policzony z załadowanych danych
+
+Wartość zwracana:
+0 gdy wydane zostało poświadczenie istnienia danych
+-1 gdy wydane zostało poświadczenie, ale jego status mówi, że serwer DVCS miał problem z wykonaniem tej operacji
+	(taki wynik intepretuje się, jakby istnienie danych nie zostało poświadczone)
+Inna wartość ujemna w przypadku błędu:
+-11 jesli za input_data podano NULL
+-12 jesli nie został ustawiony adres usługi DVCS
+-13 jesli nie zostały ustawione dane, których istnienie ma być poświadczone
+-14 jesli za context podano NULL
+-15 jesli wystąpił błąd podczas wykonywania usługi DVCS
+-16 jesli załadowane dane interpretowane są jako skrót SHA-1, jednak mają rozmiar inny niż 160 bitów (20 bajtów)
+
+Przykład wywołania:
+.
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *data=NULL;
+// przygotowanie kontekstu kryptograficznego i struktury bmdDVCS_t
+bmdDVCS_certify_existence_of_data(data, context, BMDDVCS_COUNT_HASH);
+.
+.
+
+
+
+/*----------------------------------------------------------------*/
+/*----------------------------------------------------------------*/
+/*----------------------------------------------------------------*/
+
+
+
+Przykłady:
+
+A) Sprawdzenie ważności certyfikatu (poniższy kod nie uwzględnia obsługi błędów):
+
+main()
+{
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *input=NULL;
+
+bmd_init(); 		/* wymagana inicjacja biblioteki libbmd */
+
+/* przygotowanie struktury bmdDVCS_t do żądania sprawdzenia certyfikatu */
+bmdDVCS_load_fileCert("cert1.pfx", "12345", &input); 
+
+/* ustawianie adresu serwera DVCS, do którego ma zostać skierowane żądanie */
+bmdDVCS_set_server(input, "http://www.cebit.unizeto.pl:80/dvcsserver");
+
+/* ustawienie kontekstu kryptograficznego z certyfikatem podpisującym żądanie */
+bmd_set_ctx_file("req.pfx", "54321", strlen("54321"), &context);
+
+/* realizacja usługi sprawdzenia ważności certyfikatu */
+if(bmdDVCS_verify_cert(input, context) == 0)
+	{ printf("certyfikat ważny\n"); }
+
+bmdDVCS_destroy(&input);	/* niszczenie struktury bmdDVCS_t */
+bmd_ctx_destroy(&context);	/* niszczenie kontekstu kryptograficznego */
+bmd_end();		/* finalizacja wykorzystania biblioteki libbmd*/
+
+}
+
+/*-----*/
+
+B) Sprawdzenie poprawności podpisanego dokumentu (poniższy kod nie uwzględnia obsługi błędów):
+
+main()
+{
+bmd_crypt_ctx_t *context=NULL;
+bmdDVCS_t *input=NULL;
+
+bmd_init(); 		/* wymagana inicjacja biblioteki libbmd */
+
+/* przygotowanie struktury bmdDVCS_t do żądania sprawdzenia poprawności podpisanego dokumentu */
+bmdDVCS_load_fileSig("test.sig", &input);
+
+/* ustawianie adresu serwera DVCS, do którego ma zostać skierowane żądanie */
+bmdDVCS_set_server(input, "http://www.cebit.unizeto.pl:80/dvcsserver");
+
+/* ustawienie kontekstu kryptograficznego z certyfikatem podpisującym żądanie */
+bmd_set_ctx_file("req.pfx", "54321", strlen("54321"), &context);
+
+/* realizacja usługi sprawdzenia ważności certyfikatu */
+if(bmdDVCS_validate_signature(input, context) == 0)
+	{ printf("podpis poprawny\n"); }
+
+/* zmiana adresu serwera DVCS, do którego ma zostać skierowane żądanie */
+bmdDVCS_set_server(input, "http://172.27.1.147:8021/dvcsserver");
+
+/* jeszcze raz realizacja usługi sprawdzenia ważności certyfikatu */
+if(bmdDVCS_validate_signature(input, context) == 0)
+	{ printf("podpis poprawny\n"); }
+
+bmdDVCS_destroy(&input);	/* niszczenie struktury bmdDVCS_t */
+
+bmd_ctx_destroy(&context);	/* niszczenie kontekstu kryptograficznego */
+
+bmd_end();		/* finalizacja wykorzystania biblioteki libbmd*/
+
+}
+
+

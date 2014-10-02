@@ -1,0 +1,14 @@
+LIBRARY "libbmdbase64"
+DESCRIPTION "BASE64 and CRC32 library"
+EXPORTS
+	base64_init_decodestate
+	base64_decode_value
+	base64_decode_block
+	base64_init_encodestate
+	base64_encode_value
+	base64_encode_block
+	base64_encode_blockend
+	crc32_new_context
+	crc32_del_context
+	crc32_get_data
+	crc32_put_data

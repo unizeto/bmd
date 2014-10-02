@@ -1,0 +1,13 @@
+
+Instrukcja wygenerowania skryptu slq pozwalającego na dodanie dużej ilości załączników jpeg do bazy serwera awizo:
+
+1) umieszczenienie zalaczników w jednym katalogu (w tym folderze nie moze byc żadnych innych plików poza załącznikami)
+2) wykonie skryptu ./gen_sql_attachments.sh folder_zalacznikow idSzablonu plik_wynikowy
+	- gdzie za folder_zalacznikow nalezy podac sciezke do przygotowanego katalogu z załącznikami (KONIECZNIE bez '/' na koncu sciezki)
+	- gdzie za idSZablonu nalezy podsac wartosc kolumny mailing_email_template.id dla szablonu, do ktorego ma byc przyporzadkowane zalaczniki
+		(szabon musi być już w bazie)
+	- gdzie za plik_wynikowy nalezy podac nazwe generowanego skryptu sql (zostanie stworzony w current working directory)
+Przykład wywołania:
+./gen_sql_attachments.sh ./images 3 wynik.sql
+
+3) wykonąć wygenerowany skrypt sql na bazie danych (dodanie załączników do bazy)

@@ -1,0 +1,58 @@
+BMDDatagram {iso(1) member-body(2) pl(616) unizeto(113527)
+	bmd(4) request(1)}
+
+	DEFINITIONS IMPLICIT TAGS ::=
+
+	BEGIN
+		-- EXPORTS ALL --
+
+		-- tutaj definicje OID
+		BMDDatagramSet ::= SEQUENCE {
+			bmdDatagramsTable [1] SEQUENCE OF BMDDatagram, --tablica datagramow
+			bmdDatagramsTransmissionCount [2] INTEGER,
+			bmdDatagramsAllCount [3] INTEGER
+		}
+
+		BMDDatagram ::= SEQUENCE {
+			protocolVersion [1] INTEGER,
+			datagramType [2] INTEGER,
+
+			actionMetaDatas [3] MetaDatas OPTIONAL,	
+			userMetaDatas [4] MetaDatas OPTIONAL, -- metadane uzytkownika
+			sysMetaDatas [5] MetaDatas OPTIONAL,  -- metadane systemowe
+			pkiMetaDatas [6] MetaDatas OPTIONAL,  -- metadane dowodowe
+								    -- zawieraja:
+								    -- qualifiedCert
+								    -- timeStamp
+								    -- signature
+								    -- signatureAlgorithm
+								    -- CRLe, ARLe, OCSP itp.
+			additionalMetaDatas [7] MetaDatas OPTIONAL,  -- metadane dodatkowe
+			protocolData [8] OCTET STRING OPTIONAL,         -- 1 plik i n requestow ze względu na oszczednosc pamieci
+			protocolDataFilename [9] OCTET STRING OPTIONAL, -- nazwa pliku
+			protocolDataFileLocationId[10] OCTET STRING OPTIONAL, --identyfikator lokalizacji
+			protocolDataFileId [11] OCTET STRING OPTIONAL,   -- jednoznaczny identyfikator pliku z bazy danych
+			protocolDataOwner [12] OCTET STRING OPTIONAL,   -- identyfikator z nazwa wlasciciela pliku
+			randId [13] INTEGER,			    -- losowa liczba zapobiegajaca atakowi przez powtorzenie
+			filesRemaining	[14] INTEGER,		    -- pozostala ilosc plikow w przetwarzaniu wsadowym (np. plikow z katalogu)
+			datagramStatus [15] INTEGER,		    -- kod statusu (bledy, flagi - zawarte w odpowiedzi)
+			datagramNumber	[16] INTEGER		-- numer porzadkowy datagramu
+		}
+
+		MetaDatas ::= SEQUENCE {
+	                	oids OCTET STRING,
+				lenOfOids SEQUENCE OF INTEGER,
+
+				datas OCTET STRING,
+				lenOfDatas SEQUENCE OF INTEGER,
+
+				myIds OCTET STRING,
+				lenOfMyIds SEQUENCE OF INTEGER,
+
+				ownerIds  OCTET STRING,
+				lenOfOwnerIds SEQUENCE OF INTEGER,
+
+				ownerTypes  OCTET STRING,
+				lenOfOwnerTypes SEQUENCE OF INTEGER
+		}
+	END
